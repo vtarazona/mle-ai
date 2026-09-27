@@ -9,7 +9,8 @@
 <meta property="og:title" content="MLE·AI — Machine Learning Engineering &amp; Artificial Intelligence">
 <meta property="og:description" content="Teoría rigurosa, código que se ejecuta y simulaciones interactivas: del álgebra lineal a los Transformers.">
 <meta property="og:locale" content="es_ES">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" as="image" href="img/transformer-pixelart.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1621'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='11' font-weight='700' fill='%236E9BFF' text-anchor='middle'%3EML%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"MLE·AI","description":"Portal de Machine Learning Engineering e Inteligencia Artificial","inLanguage":"es"}</script>
 <title>MLE·AI — Machine Learning Engineering</title>
@@ -164,6 +165,27 @@ h1,h2,h3{text-wrap:balance}
 .stack small{font:12px var(--mono);color:var(--console-mu);text-align:right}
 .stack .arr{color:var(--console-mu)}
 @media (max-width:420px){.stack small{display:none}.stack a{grid-template-columns:36px 1fr 16px}}
+
+
+/* ---------- hero art + knowledge map ---------- */
+.hero-art{margin:0;background:#070a18;border:1px solid var(--console-line);border-radius:14px;padding:10px;box-shadow:0 30px 60px -30px rgba(12,18,48,.55)}
+.hero-art img{display:block;width:100%;height:auto;aspect-ratio:4/3;image-rendering:pixelated;image-rendering:crisp-edges;border-radius:6px;background:#070a18}
+.hero-art figcaption{display:flex;gap:10px;align-items:baseline;font:500 12px/1.4 var(--mono);color:#8D9BAB;padding:10px 4px 2px}
+.hero-art figcaption span{white-space:nowrap;color:#6E9BFF;text-transform:uppercase;letter-spacing:.06em}
+.kmap{margin-top:8px;background:var(--console);border:1px solid var(--console-line);border-radius:14px;padding:16px;color:var(--console-ink)}
+.kmap-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 2px 12px}
+.kmap .kicker{color:#6E9BFF}
+.kmap-note{font:500 12px var(--mono);color:var(--console-mu)}
+.kmap ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;counter-reset:k}
+.kmap li{position:relative}
+.kmap li:not(:last-child)::after{content:"→";position:absolute;right:-8px;top:50%;transform:translate(50%,-50%);color:var(--console-mu);font:12px var(--mono);z-index:1}
+.kmap a{display:flex;flex-direction:column;gap:3px;height:100%;padding:11px 10px;border-radius:9px;text-decoration:none;color:var(--console-ink);background:rgba(255,255,255,.04);border:1px solid var(--console-line);transition:background .15s,border-color .15s}
+.kmap a:hover{background:rgba(110,155,255,.14);border-color:#6E9BFF}
+.kmap .lv{font:600 11px var(--mono);color:#6E9BFF}
+.kmap b{font:600 14px/1.25 var(--body)}
+.kmap small{font:11.5px/1.35 var(--mono);color:var(--console-mu)}
+@media (max-width:1100px){.kmap ol{grid-template-columns:repeat(4,minmax(0,1fr))}.kmap li:nth-child(4)::after{display:none}}
+@media (max-width:560px){.kmap ol{grid-template-columns:repeat(2,minmax(0,1fr))}.kmap li:nth-child(2n)::after{display:none}.kmap li:nth-child(4)::after{display:none}}
 
 /* ---------- cards ---------- */
 .lab-card{display:flex;flex-direction:column;gap:10px}
@@ -430,6 +452,9 @@ footer.site a:hover{color:var(--accent)}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script>
+/* Ruta de la ilustración de portada (la sustituye el script de build). */
+const HERO_IMG = 'img/transformer-pixelart.png';
+
 /* =========================================================================
    CONTENIDO DEL PORTAL
    Todo el contenido vive aquí como datos. Cada entrada tiene un id estable,
@@ -777,12 +802,16 @@ const PAGES = {
         <div class="cta"><a class="btn primary" href="#path">Empezar la ruta</a><a class="btn" href="#lab">Abrir el laboratorio</a><a class="btn ghost" href="#transformer">Transformer Visualizer →</a></div>
         <dl class="stats"><div><dt>Laboratorios</dt><dd>${LABS.length}</dd></div><div><dt>Temas</dt><dd>${AREAS.reduce((a, x) => a + x.topics.length, 0)}</dd></div><div><dt>Papers</dt><dd>${PAPERS.length}</dd></div><div><dt>Niveles</dt><dd>${PATH.length}</dd></div></dl>
       </div>
-      <nav class="stack" aria-label="Mapa del conocimiento">
-        <span class="stack-title">Mapa del conocimiento</span>
-        <ol>${STACK.map((s, i) => `<li><a href="#${s.r}"><span class="lv">L${i + 1}</span><b>${s.t}</b><small>${s.m()}</small><span class="arr">→</span></a></li>`).join('')}</ol>
-        <span class="stack-foot">Cada capa se apoya en la anterior</span>
-      </nav>
+      <figure class="hero-art">
+        <img src="${HERO_IMG}" width="200" height="150" alt="Ilustración en pixel art de un Transformer: las palabras «el gato» entran por abajo, pasan por embedding, atención, add &amp; norm y feed forward, y sale la palabra «come». A la izquierda, un robot conectado; a la derecha, un mapa de atención." decoding="async" fetchpriority="high">
+        <figcaption><span>fig. 1</span> Un bloque Transformer: de «el gato» a «come»</figcaption>
+      </figure>
     </section>
+
+    <nav class="kmap" aria-label="Mapa del conocimiento">
+      <div class="kmap-head"><span class="kicker">Mapa del conocimiento</span><span class="kmap-note">Cada capa se apoya en la anterior</span></div>
+      <ol>${STACK.map((s, i) => `<li><a href="#${s.r}"><span class="lv">L${i + 1}</span><b>${s.t}</b><small>${s.m()}</small></a></li>`).join('')}</ol>
+    </nav>
 
     <section class="band">
       <div class="band-head"><h2>Laboratorios</h2><a href="#lab">Ver todos →</a></div>

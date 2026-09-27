@@ -1,3 +1,6 @@
+/* Ruta de la ilustración de portada (la sustituye el script de build). */
+const HERO_IMG = '__HERO_IMG__';
+
 /* =========================================================================
    CONTENIDO DEL PORTAL
    Todo el contenido vive aquí como datos. Cada entrada tiene un id estable,

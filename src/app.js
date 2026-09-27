@@ -101,12 +101,16 @@ const PAGES = {
         <div class="cta"><a class="btn primary" href="#path">Empezar la ruta</a><a class="btn" href="#lab">Abrir el laboratorio</a><a class="btn ghost" href="#transformer">Transformer Visualizer →</a></div>
         <dl class="stats"><div><dt>Laboratorios</dt><dd>${LABS.length}</dd></div><div><dt>Temas</dt><dd>${AREAS.reduce((a, x) => a + x.topics.length, 0)}</dd></div><div><dt>Papers</dt><dd>${PAPERS.length}</dd></div><div><dt>Niveles</dt><dd>${PATH.length}</dd></div></dl>
       </div>
-      <nav class="stack" aria-label="Mapa del conocimiento">
-        <span class="stack-title">Mapa del conocimiento</span>
-        <ol>${STACK.map((s, i) => `<li><a href="#${s.r}"><span class="lv">L${i + 1}</span><b>${s.t}</b><small>${s.m()}</small><span class="arr">→</span></a></li>`).join('')}</ol>
-        <span class="stack-foot">Cada capa se apoya en la anterior</span>
-      </nav>
+      <figure class="hero-art">
+        <img src="${HERO_IMG}" width="200" height="150" alt="Ilustración en pixel art de un Transformer: las palabras «el gato» entran por abajo, pasan por embedding, atención, add &amp; norm y feed forward, y sale la palabra «come». A la izquierda, un robot conectado; a la derecha, un mapa de atención." decoding="async" fetchpriority="high">
+        <figcaption><span>fig. 1</span> Un bloque Transformer: de «el gato» a «come»</figcaption>
+      </figure>
     </section>
+
+    <nav class="kmap" aria-label="Mapa del conocimiento">
+      <div class="kmap-head"><span class="kicker">Mapa del conocimiento</span><span class="kmap-note">Cada capa se apoya en la anterior</span></div>
+      <ol>${STACK.map((s, i) => `<li><a href="#${s.r}"><span class="lv">L${i + 1}</span><b>${s.t}</b><small>${s.m()}</small></a></li>`).join('')}</ol>
+    </nav>
 
     <section class="band">
       <div class="band-head"><h2>Laboratorios</h2><a href="#lab">Ver todos →</a></div>

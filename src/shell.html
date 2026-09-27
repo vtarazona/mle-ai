@@ -151,6 +151,27 @@ h1,h2,h3{text-wrap:balance}
 .stack .arr{color:var(--console-mu)}
 @media (max-width:420px){.stack small{display:none}.stack a{grid-template-columns:36px 1fr 16px}}
 
+
+/* ---------- hero art + knowledge map ---------- */
+.hero-art{margin:0;background:#070a18;border:1px solid var(--console-line);border-radius:14px;padding:10px;box-shadow:0 30px 60px -30px rgba(12,18,48,.55)}
+.hero-art img{display:block;width:100%;height:auto;aspect-ratio:4/3;image-rendering:pixelated;image-rendering:crisp-edges;border-radius:6px;background:#070a18}
+.hero-art figcaption{display:flex;gap:10px;align-items:baseline;font:500 12px/1.4 var(--mono);color:#8D9BAB;padding:10px 4px 2px}
+.hero-art figcaption span{white-space:nowrap;color:#6E9BFF;text-transform:uppercase;letter-spacing:.06em}
+.kmap{margin-top:8px;background:var(--console);border:1px solid var(--console-line);border-radius:14px;padding:16px;color:var(--console-ink)}
+.kmap-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 2px 12px}
+.kmap .kicker{color:#6E9BFF}
+.kmap-note{font:500 12px var(--mono);color:var(--console-mu)}
+.kmap ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;counter-reset:k}
+.kmap li{position:relative}
+.kmap li:not(:last-child)::after{content:"→";position:absolute;right:-8px;top:50%;transform:translate(50%,-50%);color:var(--console-mu);font:12px var(--mono);z-index:1}
+.kmap a{display:flex;flex-direction:column;gap:3px;height:100%;padding:11px 10px;border-radius:9px;text-decoration:none;color:var(--console-ink);background:rgba(255,255,255,.04);border:1px solid var(--console-line);transition:background .15s,border-color .15s}
+.kmap a:hover{background:rgba(110,155,255,.14);border-color:#6E9BFF}
+.kmap .lv{font:600 11px var(--mono);color:#6E9BFF}
+.kmap b{font:600 14px/1.25 var(--body)}
+.kmap small{font:11.5px/1.35 var(--mono);color:var(--console-mu)}
+@media (max-width:1100px){.kmap ol{grid-template-columns:repeat(4,minmax(0,1fr))}.kmap li:nth-child(4)::after{display:none}}
+@media (max-width:560px){.kmap ol{grid-template-columns:repeat(2,minmax(0,1fr))}.kmap li:nth-child(2n)::after{display:none}.kmap li:nth-child(4)::after{display:none}}
+
 /* ---------- cards ---------- */
 .lab-card{display:flex;flex-direction:column;gap:10px}
 .lab-card h3{font:700 19px/1.2 var(--display);margin:4px 0 0}
