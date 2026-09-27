@@ -1,0 +1,1697 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Portal de Machine Learning e Inteligencia Artificial: teoría, laboratorios interactivos, Transformer Visualizer, ruta de aprendizaje, papers y datasets.">
+<meta name="theme-color" content="#0E1621">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MLE·AI — Machine Learning Engineering &amp; Artificial Intelligence">
+<meta property="og:description" content="Teoría rigurosa, código que se ejecuta y simulaciones interactivas: del álgebra lineal a los Transformers.">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1621'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='11' font-weight='700' fill='%236E9BFF' text-anchor='middle'%3EML%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"MLE·AI","description":"Portal de Machine Learning Engineering e Inteligencia Artificial","inLanguage":"es"}</script>
+<title>MLE·AI — Machine Learning Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --soft:#EDF0F4; --ink:#0E1621; --muted:#566376; --line:#D8DEE6;
+  --accent:#2458D6; --accent-ink:#FFFFFF; --pos:#2563C9; --neg:#C8453A; --ok:#1F8A5B; --warn:#B7791F;
+  --a-ml:#0E8C7A; --a-dl:#2458D6; --a-math:#A86A12; --a-llm:#6D4AD1; --a-mlops:#4B5B70; --a-research:#B83E6B; --a-prog:#2E7D32;
+  --code-bg:#0E1621; --code-ink:#E5ECF3; --code-k:#8DB4F5; --code-s:#F2B278; --code-c:#7C8A99; --code-n:#9FD9B8;
+  --console:#0B121B; --console-ink:#E5ECF3; --console-mu:#8D9BAB; --console-line:#223041;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --maxw:1240px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0A0F15; --surface:#111922; --soft:#17212C; --ink:#E5ECF3; --muted:#8D9BAB; --line:#233040;
+    --accent:#6E9BFF; --accent-ink:#0A0F15; --pos:#5C95F0; --neg:#EE7266; --ok:#4CC08A; --warn:#E5B05A;
+    --a-ml:#3CC7B0; --a-dl:#6E9BFF; --a-math:#E0A94A; --a-llm:#A98BF5; --a-mlops:#9AA9BC; --a-research:#EE7EA6; --a-prog:#6CC070;
+    --code-bg:#070B10; --console:#070B10; --console-line:#1D2936;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0A0F15; --surface:#111922; --soft:#17212C; --ink:#E5ECF3; --muted:#8D9BAB; --line:#233040;
+  --accent:#6E9BFF; --accent-ink:#0A0F15; --pos:#5C95F0; --neg:#EE7266; --ok:#4CC08A; --warn:#E5B05A;
+  --a-ml:#3CC7B0; --a-dl:#6E9BFF; --a-math:#E0A94A; --a-llm:#A98BF5; --a-mlops:#9AA9BC; --a-research:#EE7EA6; --a-prog:#6CC070;
+  --code-bg:#070B10; --console:#070B10; --console-line:#1D2936;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);margin:0}
+body.noscroll{overflow:hidden}
+a{color:var(--accent);text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+code{font-family:var(--mono);font-size:.9em}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:16px}
+@media (min-width:700px){.wrap{padding-inline:28px}}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{display:flex;align-items:center;gap:14px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);flex:none}
+.brand .mk{font:600 12px/1 var(--mono);background:var(--ink);color:var(--bg);padding:7px 7px;border-radius:6px;letter-spacing:.02em}
+.brand b{font:700 16px/1.1 var(--display);letter-spacing:-.01em}
+.brand small{display:block;font:500 11px/1.2 var(--body);color:var(--muted)}
+.mainnav{display:flex;align-items:center;gap:2px;margin-left:8px}
+.mainnav a,.mainnav button{font:500 14px/1 var(--body);color:var(--muted);text-decoration:none;padding:9px 10px;border-radius:7px;background:none;border:0;cursor:pointer;white-space:nowrap}
+.mainnav a:hover,.mainnav button:hover{color:var(--ink);background:var(--soft)}
+.mainnav a.on,.mainnav button.on{color:var(--ink);background:var(--soft);box-shadow:inset 0 -2px 0 var(--accent)}
+.spacer{flex:1}
+.searchbtn{display:flex;align-items:center;gap:10px;font:500 14px/1 var(--body);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;min-width:190px}
+.searchbtn kbd{margin-left:auto;font:500 11px var(--mono);border:1px solid var(--line);border-radius:4px;padding:2px 5px;color:var(--muted)}
+.iconbtn{width:38px;height:38px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:17px;line-height:1;flex:none}
+#menu-btn{display:none}
+.mega{position:absolute;left:0;right:0;top:100%;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 16px 40px -20px rgba(0,0,0,.35)}
+.mega .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;height:auto;padding-block:16px}
+.mega-item{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:8px;text-decoration:none;color:var(--ink);border:1px solid transparent}
+.mega-item:hover{background:var(--soft);border-color:var(--line)}
+.mega-item small{color:var(--muted);font-size:12.5px}
+.mega-item.hl{background:var(--soft)}
+.drawer{display:none}
+@media (max-width:1080px){
+  .mainnav,.searchbtn{display:none}
+  #menu-btn{display:block}
+  .drawer{position:fixed;inset:0;top:calc(61px + env(safe-area-inset-top,0px));background:var(--bg);z-index:39;overflow:auto;padding:16px 16px calc(24px + env(safe-area-inset-bottom,0px));display:none;flex-direction:column;gap:4px}
+  body.drawer-open .drawer{display:flex}
+  .drawer a{font:500 17px/1.3 var(--body);color:var(--ink);text-decoration:none;padding:12px 8px;border-bottom:1px solid var(--line)}
+  .drawer .dl{font:600 11px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:18px 8px 6px}
+  .drawer .searchbtn{display:flex;margin-bottom:8px}
+}
+@media (min-width:1081px){.mobile-search{display:none!important}}
+
+/* ---------- search ---------- */
+.search{position:fixed;inset:0;z-index:60;background:rgba(5,10,16,.55);display:flex;justify-content:center;align-items:flex-start;padding:calc(10vh + env(safe-area-inset-top,0px)) 16px 16px}
+.search-box{width:min(680px,100%);background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);overflow:hidden}
+.search-box label{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.search-box input{flex:1;font:500 17px var(--body);border:0;outline:0;background:transparent;color:var(--ink)}
+.search-box kbd{font:500 11px var(--mono);border:1px solid var(--line);border-radius:4px;padding:2px 6px;color:var(--muted)}
+#search-results{max-height:60vh;overflow:auto}
+#search-results ul{list-style:none;margin:0;padding:6px}
+#search-results li{display:grid;grid-template-columns:96px 1fr;gap:0 12px;padding:10px 12px;border-radius:8px;cursor:pointer}
+#search-results li.on,#search-results li:hover{background:var(--soft)}
+#search-results .rt{grid-row:span 2;font:600 11px/1.6 var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.04em}
+#search-results small{color:var(--muted);font-size:13px}
+.hint{padding:16px;color:var(--muted);margin:0;font-size:14.5px}
+.search-foot{font-size:12px;color:var(--muted);padding:8px 16px;border-top:1px solid var(--line)}
+
+/* ---------- generic ---------- */
+main#app{min-height:70vh;padding-block:20px 64px}
+.kicker{font:600 12px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+h1,h2,h3{text-wrap:balance}
+.page-head{padding-block:18px 26px;max-width:860px}
+.page-head h1{font:800 clamp(32px,5vw,52px)/1.02 var(--display);letter-spacing:-.02em;margin:10px 0 14px}
+.lede{font-size:18px;line-height:1.6;color:var(--muted);margin:0;max-width:68ch}
+.meta{font-size:14px;color:var(--muted);margin:12px 0 0}
+.honest{font-size:14px;color:var(--muted);border-left:3px solid var(--warn);padding:4px 0 4px 12px;margin:16px 0 0;max-width:72ch}
+.crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--muted);padding-top:8px}
+.crumbs a{color:var(--muted);text-decoration:none}.crumbs a:hover{color:var(--accent)}
+.crumbs .sep{opacity:.5}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:600 14.5px/1 var(--body);padding:12px 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;cursor:pointer}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--accent)}
+.btn.sm{padding:8px 11px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:default}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))} .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:980px){.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.g2,.g3{grid-template-columns:1fr}}
+.tag{display:inline-block;font:600 11px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:5px 7px;border-radius:5px;background:var(--soft);color:var(--muted)}
+.t-ml{color:var(--a-ml);background:color-mix(in srgb,var(--a-ml) 12%,transparent)}
+.t-dl{color:var(--a-dl);background:color-mix(in srgb,var(--a-dl) 12%,transparent)}
+.t-math{color:var(--a-math);background:color-mix(in srgb,var(--a-math) 13%,transparent)}
+.t-llm{color:var(--a-llm);background:color-mix(in srgb,var(--a-llm) 13%,transparent)}
+.t-mlops{color:var(--a-mlops);background:color-mix(in srgb,var(--a-mlops) 15%,transparent)}
+.t-research{color:var(--a-research);background:color-mix(in srgb,var(--a-research) 12%,transparent)}
+.band{padding-block:34px 8px}
+.band.tight{padding-block:4px 20px}
+.band.two{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+@media (max-width:900px){.band.two{grid-template-columns:1fr}}
+.band-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;gap:10px}
+.band-head h2,.h2s{font:700 24px/1.2 var(--display);margin:0;letter-spacing:-.01em}
+.h2s{font-size:18px;margin-bottom:10px}
+.band-head a{font-size:14px;text-decoration:none;font-weight:600}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:40px;align-items:center;padding-block:36px 24px;position:relative}
+@media (max-width:980px){.hero{grid-template-columns:1fr;gap:28px;padding-block:20px 8px}}
+.hero h1{font:800 clamp(38px,6vw,72px)/.98 var(--display);letter-spacing:-.03em;margin:14px 0 18px}
+.hero h1 span{color:var(--accent)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.stats{display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:4px 32px;margin:30px 0 0}
+@media (max-width:520px){.stats{grid-template-columns:repeat(2,auto)}}
+.stats dt{font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.stats dd{margin:0;font:700 30px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.stack{background:var(--console);color:var(--console-ink);border-radius:14px;padding:18px;border:1px solid var(--console-line);background-image:linear-gradient(var(--console-line) 1px,transparent 1px),linear-gradient(90deg,var(--console-line) 1px,transparent 1px);background-size:100% 26px,26px 100%;background-position:0 -1px}
+.stack-title,.stack-foot{display:block;font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--console-mu)}
+.stack-title{margin-bottom:12px}.stack-foot{margin-top:12px;text-align:right}
+.stack ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column-reverse;gap:6px}
+.stack a{display:grid;grid-template-columns:36px 1fr auto 16px;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;text-decoration:none;color:var(--console-ink);background:rgba(255,255,255,.035);border:1px solid var(--console-line);transition:background .15s,transform .15s}
+.stack a:hover{background:rgba(110,155,255,.14);transform:translateX(3px)}
+@media (prefers-reduced-motion:reduce){.stack a:hover{transform:none}}
+.stack .lv{font:600 12px var(--mono);color:#6E9BFF}
+.stack b{font:600 15px var(--body)}
+.stack small{font:12px var(--mono);color:var(--console-mu);text-align:right}
+.stack .arr{color:var(--console-mu)}
+@media (max-width:420px){.stack small{display:none}.stack a{grid-template-columns:36px 1fr 16px}}
+
+/* ---------- cards ---------- */
+.lab-card{display:flex;flex-direction:column;gap:10px}
+.lab-card h3{font:700 19px/1.2 var(--display);margin:4px 0 0}
+.lab-card h3 a{color:var(--ink);text-decoration:none}
+.lab-card h3 a:hover{color:var(--accent)}
+.lab-card .tag,.feature .tag,.proj .tag{align-self:flex-start}
+.lab-card p{margin:0;color:var(--muted);font-size:14.5px;flex:1}
+.card-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.feature{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--ink);margin-bottom:12px;transition:border-color .15s}
+.feature:hover{border-color:var(--accent)}
+.feature h3{font:700 22px/1.2 var(--display);margin:2px 0 0}
+.feature p{margin:0;color:var(--muted);font-size:15px}
+.feature .more{font-weight:600;color:var(--accent);font-size:14px}
+.algo-list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.algo-list li+li{border-top:1px solid var(--line)}
+.algo-list a{display:flex;flex-direction:column;gap:2px;padding:13px 16px;text-decoration:none;color:var(--ink)}
+.algo-list a:hover{background:var(--soft)}
+.algo-list span{font-size:13px;color:var(--muted)}
+.path-strip{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media (max-width:760px){.path-strip{grid-template-columns:repeat(2,1fr)}}
+.path-strip a{display:flex;flex-direction:column;gap:4px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);font-weight:600;height:100%}
+.path-strip a:hover{border-color:var(--accent)}
+.path-strip span{font:600 12px var(--mono);color:var(--accent)}
+.topic{display:flex;flex-direction:column;gap:8px;scroll-margin-top:80px}
+.topic h3{font:700 18px/1.25 var(--display);margin:0}
+.topic p{margin:0;color:var(--muted);font-size:14.5px;flex:1}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font:600 12px/1 var(--body);padding:7px 9px;border-radius:999px;text-decoration:none;border:1px solid var(--line)}
+.p-lab{color:var(--a-ml);border-color:color-mix(in srgb,var(--a-ml) 45%,var(--line))}
+.p-art{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.p-soon{color:var(--muted);border-style:dashed}
+.chips-row{display:flex;flex-wrap:wrap;gap:8px}
+.chip-link{font:500 14px var(--body);padding:8px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.chip-link:hover{border-color:var(--a-ml);color:var(--a-ml)}
+.note-card{margin-top:14px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.note-card h3{margin:0;font:700 19px var(--display)}.note-card p{margin:0;color:var(--muted)}
+.flash{animation:flash 1.6s ease}
+@keyframes flash{0%,40%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none;box-shadow:0 0 0 3px var(--accent)}}
+dl.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 14px;margin:12px 0 0;font-size:14.5px}
+dl.kv dt{color:var(--muted);font-weight:500}
+dl.kv dd{margin:0}
+@media (max-width:520px){dl.kv{grid-template-columns:1fr}dl.kv dt{margin-top:6px}}
+
+/* ---------- lab page ---------- */
+.lab-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-block:14px 16px}
+.lab-head h1{font:800 clamp(28px,4vw,40px)/1.05 var(--display);margin:8px 0 6px;letter-spacing:-.02em}
+.lab-head p{margin:0;color:var(--muted);max-width:70ch}
+.lab-frame{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.lab-frame iframe{display:block;width:100%;height:85vh;border:0}
+.lab-frame .loading{padding:40px;text-align:center;color:var(--muted);margin:0}
+.lab-frame .err{margin:16px}
+.lab-nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.lab-nav a{text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:2px}
+.lab-nav a.right{text-align:right}
+.lab-nav small{color:var(--muted)}
+
+/* ---------- papers / datasets / projects ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.filters button{font:500 13px/1 var(--body);border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:8px 11px;border-radius:999px;cursor:pointer}
+.filters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.paper-list{display:flex;flex-direction:column;gap:10px}
+.paper{padding:0;scroll-margin-top:80px}
+.paper summary{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;padding:16px 18px;cursor:pointer;list-style:none}
+.paper summary::-webkit-details-marker{display:none}
+.paper .py{font:700 18px var(--mono);color:var(--accent)}
+.paper .pt b{display:block;font:600 16px/1.35 var(--body)}
+.paper .pt small{color:var(--muted);font-size:13px}
+.paper[open] summary{border-bottom:1px solid var(--line)}
+.paper dl{padding:4px 18px 18px}
+@media (max-width:640px){.paper summary{grid-template-columns:44px 1fr}.paper summary .tag{grid-column:2}}
+.ds{scroll-margin-top:80px;display:flex;flex-direction:column;gap:6px}
+.ds h3{margin:0;font:700 20px var(--display)}.ds .src{margin:0;font-size:13px;color:var(--muted)}
+.ds .pill{align-self:flex-start;margin-top:8px}
+.proj{display:flex;flex-direction:column;gap:8px}
+.proj h3{margin:0;font:700 19px/1.25 var(--display)} .proj h3 a{color:var(--ink)}
+.proj p{margin:0;color:var(--muted);font-size:14.5px;flex:1}
+.proj .status{font:600 12px var(--mono);color:var(--ok)}
+.proj.planned{border-style:dashed}.proj.planned .status{color:var(--muted)}
+
+/* ---------- path ---------- */
+.progress{position:relative;height:30px;background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:18px;max-width:520px}
+.progress span{position:absolute;inset:0 auto 0 0;background:color-mix(in srgb,var(--ok) 28%,transparent)}
+.progress b{position:relative;font:600 13px/30px var(--mono);padding-left:12px}
+.timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;position:relative}
+.timeline li{display:grid;grid-template-columns:52px 1fr;gap:14px;position:relative}
+.timeline li::before{content:"";position:absolute;left:25px;top:52px;bottom:-14px;width:2px;background:var(--line)}
+.timeline li:last-child::before{display:none}
+.tl-n{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 16px var(--mono);background:var(--surface);border:2px solid var(--line)}
+.is-done .tl-n{background:var(--ok);border-color:var(--ok);color:#fff}
+.tl-card header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.tl-card h3{margin:0;font:700 20px var(--display)}
+.tl-card .pills{margin-top:12px}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer}
+
+/* ---------- article ---------- */
+.article{display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px;align-items:start}
+@media (max-width:980px){.article{grid-template-columns:1fr}.article>.toc{display:none}}
+.article>.toc{position:sticky;top:calc(80px + env(safe-area-inset-top,0px));max-height:calc(100vh - 100px);overflow:auto;padding-top:24px;font-size:13.5px}
+.toc-t{display:block;font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px 8px}
+.article .toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.article .toc a{display:grid;grid-template-columns:24px 1fr;gap:4px;padding:5px 8px;border-radius:6px;text-decoration:none;color:var(--muted);line-height:1.35}
+.article .toc a span{font:500 11px var(--mono);padding-top:2px}
+.article .toc a:hover{color:var(--ink);background:var(--surface)}
+.article .toc a.on{color:var(--ink);background:var(--surface);box-shadow:inset 2px 0 0 var(--accent)}
+.prose{max-width:800px;min-width:0}
+.prose.wide{max-width:900px}
+.page-head.in-article{padding-top:18px}
+.prose .sec{scroll-margin-top:80px;padding-block:22px 10px;border-top:1px solid var(--line)}
+.prose h2{font:700 clamp(22px,3vw,28px)/1.2 var(--display);margin:4px 0 14px;display:flex;gap:12px;align-items:baseline;letter-spacing:-.01em}
+.prose h2 .n{font:500 13px var(--mono);color:var(--muted)}
+.prose h4{font:700 17px/1.3 var(--display);margin:22px 0 6px}
+.prose p,.prose li{max-width:70ch}
+.prose ul,.prose ol{padding-left:22px}
+.prose li{margin-bottom:5px}
+.math-block{overflow-x:auto;padding:14px 16px;margin:10px 0 16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;font-size:1.08em}
+.math-block math{font-size:1.1em}
+.tex-fallback{white-space:pre-wrap}
+.callout{background:color-mix(in srgb,var(--accent) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));border-radius:10px;padding:12px 16px;font-size:15px}
+.callout.warn{background:color-mix(in srgb,var(--warn) 10%,var(--surface));border-color:color-mix(in srgb,var(--warn) 40%,var(--line))}
+.steps-ol li{padding-left:4px}
+pre.pseudo,pre.tree{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.tbl{overflow-x:auto;margin:10px 0 16px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;background:var(--surface);border:1px solid var(--line)}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-size:12.5px;color:var(--muted);background:var(--soft);font-weight:600}
+table.cm td{text-align:center;font:600 18px var(--mono)}
+table.cm td.ok{color:var(--ok)} table.cm td.bad{color:var(--neg)}
+.grid.tight{gap:14px;align-items:start}
+.refs li{margin-bottom:8px}
+.pipeline{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-wrap:wrap;gap:6px;counter-reset:p}
+.pipeline li{counter-increment:p;font:500 13px var(--body);padding:6px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line)}
+.pipeline li::before{content:counter(p) " ";font:600 11px var(--mono);color:var(--accent)}
+.chart{margin:12px 0 18px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}
+.chart svg{width:100%;height:auto;display:block}
+.chart figcaption{font-size:13.5px;color:var(--muted);margin-top:8px}
+.chart .gl{stroke:var(--line)} .chart .ax{fill:var(--muted);font:11px var(--mono)} .chart .ln{fill:none;stroke:var(--accent);stroke-width:2.5}
+.chart .pt{fill:var(--accent)} .chart .lbl{fill:var(--ink);font:600 12px var(--body)}
+.hbars{display:flex;flex-direction:column;gap:6px}
+.hb{display:grid;grid-template-columns:170px 1fr 52px;gap:10px;align-items:center;font-size:13.5px}
+@media (max-width:520px){.hb{grid-template-columns:120px 1fr 44px;font-size:12.5px}}
+.hbt{height:12px;background:var(--soft);border-radius:3px;overflow:hidden}.hbt i{display:block;height:100%;background:var(--a-ml)}
+.hbn{font:500 12.5px var(--mono);text-align:right}
+
+/* ---------- code ---------- */
+.code{margin:10px 0 18px}
+.code .lab{display:flex;justify-content:space-between;align-items:center;font:600 11.5px/1 var(--mono);color:var(--muted);margin-bottom:6px;letter-spacing:.02em}
+.code .lab button{font:600 12px/1 var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 9px;border-radius:6px;cursor:pointer}
+pre{margin:0;background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:14px 16px;overflow-x:auto;font:13.5px/1.6 var(--mono);tab-size:4}
+pre .k{color:var(--code-k)} pre .s{color:var(--code-s)} pre .c{color:var(--code-c);font-style:italic} pre .n{color:var(--code-n)}
+
+/* ---------- transformer visualizer ---------- */
+.tv{display:flex;flex-direction:column;gap:16px}
+.tv-input label{font-weight:600;font-size:14px}
+.tv-row{display:flex;gap:8px;margin:6px 0}
+.tv-row input{flex:1;min-width:0;font:500 17px var(--mono);padding:11px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.tv-input .note{margin:0;font-size:13.5px;color:var(--muted)}
+.tv-steps{list-style:none;margin:0;padding:4px 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+.tv-steps button{display:flex;align-items:center;gap:6px;font:500 13px/1 var(--body);white-space:nowrap;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tv-steps button span{font:600 11px var(--mono);color:var(--muted)}
+.tv-steps button.done{color:var(--ink)}
+.tv-steps button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tv-steps button.on span{color:var(--bg)}
+.tv-steps li:not(:last-child)::after{content:"→";color:var(--muted);margin-left:6px}
+.tv-steps li{display:flex;align-items:center}
+.tv-panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.tv-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.tv-head h2{font:800 30px/1.1 var(--display);margin:6px 0 0;letter-spacing:-.01em}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.shape{font:600 12px var(--mono);color:var(--a-llm);background:color-mix(in srgb,var(--a-llm) 12%,transparent);padding:4px 7px;border-radius:5px;white-space:nowrap}
+.shape.big{font-size:13px;padding:7px 10px;white-space:normal}
+.tv-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px}
+@media (max-width:980px){.tv-grid{grid-template-columns:1fr}}
+.tv-explain p{margin:0 0 14px}
+.tv-viz{min-width:0;display:flex;flex-direction:column;gap:12px}
+.tv-nav{display:flex;justify-content:space-between;margin-top:18px;gap:10px}
+.mx{margin:0;min-width:0}
+.mx figcaption{font-size:13px;margin-bottom:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mx-scroll{overflow-x:auto}
+.mx-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.mxt{border:0;width:auto;font:11.5px var(--mono);font-variant-numeric:tabular-nums}
+.mxt th,.mxt td{padding:4px 6px;border:1px solid var(--surface);text-align:right;white-space:nowrap}
+.mxt thead th{background:transparent;color:var(--muted);font-weight:500}
+.mxt tbody th{background:transparent;color:var(--ink);font-weight:600;text-align:left}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips.big{gap:8px}
+.chip{font:500 14px var(--mono);padding:7px 10px;border-radius:7px;background:var(--soft);border:1px solid var(--line)}
+.chips.big .chip{font-size:16px}
+.chip.ghost{border-style:dashed;color:var(--muted)}
+.chip.new{background:var(--a-llm);color:#fff;border-color:var(--a-llm)}
+.chip.id{display:flex;flex-direction:column;align-items:center;font-weight:600}
+.chip.id small{font-weight:400;font-size:11px;color:var(--muted)}
+.chip.id em{font-size:10px;color:var(--neg);font-style:normal}
+.chip.sm{font-size:12px;padding:4px 7px}
+.vocab{margin-top:8px}.vocab summary{cursor:pointer;font-size:13.5px;color:var(--accent);margin-bottom:8px}
+.topbars{display:flex;flex-direction:column;gap:5px}
+.tb{display:grid;grid-template-columns:90px 1fr 64px;gap:8px;align-items:center;font-size:13.5px}
+.tbw{font-family:var(--mono)}
+.tbt{height:12px;background:var(--soft);border-radius:3px;overflow:hidden}.tbt i{display:block;height:100%}
+.tbn{font:500 12.5px var(--mono);text-align:right}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;align-self:flex-start}
+.seg button{font:600 12.5px/1 var(--body);padding:8px 11px;border:0;background:var(--surface);color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.temp{display:flex;align-items:center;gap:10px;font-size:14px;flex-wrap:wrap}
+.temp output{font:600 14px var(--mono)}
+.temp input{flex:1;min-width:140px;accent-color:var(--a-llm)}
+.note{color:var(--muted);font-size:14px}
+
+/* ---------- footer ---------- */
+footer.site{border-top:1px solid var(--line);padding-block:28px calc(28px + env(safe-area-inset-bottom,0px));color:var(--muted);font-size:14px}
+footer.site .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
+footer.site nav{display:flex;flex-wrap:wrap;gap:6px 16px}
+footer.site a{color:var(--muted);text-decoration:none}
+footer.site a:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="MLE·AI, inicio"><span class="mk">ML/AI</span><span><b>MLE·AI</b><small>Machine Learning Engineering</small></span></a>
+    <nav class="mainnav" aria-label="Principal">
+      <button type="button" id="topics-btn" data-nav="topics" aria-expanded="false" aria-controls="mega">Temas ▾</button>
+      <a href="#lab" data-nav="lab">Laboratorio</a>
+      <a href="#transformer" data-nav="transformer">Transformer</a>
+      <a href="#path" data-nav="path">Ruta</a>
+      <a href="#projects" data-nav="projects">Proyectos</a>
+      <a href="#papers" data-nav="papers">Papers</a>
+      <a href="#datasets" data-nav="datasets">Datasets</a>
+    </nav>
+    <span class="spacer"></span>
+    <button type="button" class="searchbtn" data-open-search aria-label="Buscar">⌕ Buscar en el portal<kbd>/</kbd></button>
+    <button type="button" class="iconbtn" id="theme-btn" aria-label="Cambiar tema">☾</button>
+    <button type="button" class="iconbtn" id="menu-btn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  </div>
+  <div class="mega" id="mega" hidden><div class="wrap" id="mega-inner"></div></div>
+</header>
+<nav class="drawer" aria-label="Menú móvil">
+  <button type="button" class="searchbtn mobile-search" data-open-search>⌕ Buscar en el portal</button>
+  <span class="dl">Secciones</span>
+  <a href="#home">Inicio</a><a href="#lab">Laboratorio</a><a href="#transformer">Transformer Visualizer</a><a href="#path">Ruta de aprendizaje</a><a href="#projects">Proyectos</a><a href="#papers">Papers</a><a href="#datasets">Datasets</a>
+  <span class="dl">Temas</span>
+  <div id="drawer-topics" style="display:contents"></div>
+</nav>
+
+<main id="app" class="wrap"></main>
+
+<div class="search" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscador">
+  <div class="search-box">
+    <label for="search-input">⌕<input id="search-input" type="search" placeholder="Conceptos, algoritmos, papers, datasets…" autocomplete="off" maxlength="80"><kbd>Esc</kbd></label>
+    <div id="search-results"></div>
+    <div class="search-foot">↑ ↓ para moverte · Enter para abrir · búsqueda por texto sobre todo el contenido</div>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <span>MLE·AI · Machine Learning Engineering &amp; Artificial Intelligence</span>
+    <nav aria-label="Pie"><a href="#ml">Machine Learning</a><a href="#dl">Deep Learning</a><a href="#math">Matemáticas</a><a href="#prog">Programación</a><a href="#llm">LLM</a><a href="#mlops">MLOps</a><a href="#research">Investigación</a><a href="#about">Arquitectura</a></nav>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script>
+/* =========================================================================
+   CONTENIDO DEL PORTAL
+   Todo el contenido vive aquí como datos. Cada entrada tiene un id estable,
+   un tipo y texto indexable: es el mismo formato que usará el buscador y,
+   más adelante, la ingesta para embeddings/RAG (ver ARCH en app.js).
+   ========================================================================= */
+
+const LABS = [
+  { id:'gd', file:'labs/descenso-gradiente.html', url:'',
+    t:'Descenso de gradiente', d:'SGD, Momentum, RMSProp y Adam compiten sobre cuatro superficies de pérdida. Cambia la tasa de aprendizaje, el punto inicial y el ruido.',
+    area:'math', tags:['optimización','gradiente','adam','sgd','learning rate'] },
+  { id:'overfit', file:'labs/sobreajuste.html', url:'',
+    t:'Sobreajuste y regresión polinómica', d:'Sube el grado del polinomio y observa cómo el error de validación forma una U. Regularización L2 incluida.',
+    area:'ml', tags:['regresión','sesgo','varianza','validación'] },
+  { id:'reg', file:'labs/regularizacion.html', url:'',
+    t:'Lasso contra Ridge', d:'La geometría del rombo L1 y el círculo L2, y los caminos de regularización de un modelo de 8 variables.',
+    area:'ml', tags:['regularización','l1','l2','lasso','ridge'] },
+  { id:'tree', file:'labs/arbol-decision.html', url:'',
+    t:'Árbol de decisión y Random Forest', d:'El árbol crece corte a corte buscando la menor impureza de Gini. Compáralo con un bosque de 25 árboles.',
+    area:'ml', tags:['árbol','gini','random forest','ensemble','clasificación'] },
+  { id:'kmeans', file:'labs/kmeans.html', url:'',
+    t:'K-means paso a paso', d:'Asignar y actualizar hasta converger. Inicialización aleatoria contra k-means++ y método del codo.',
+    area:'ml', tags:['clustering','no supervisado','centroides'] },
+  { id:'sigmoid', file:'labs/sigmoide.html', url:'',
+    t:'La función sigmoide', d:'La activación, su derivada y la saturación. Comparación con tanh y ReLU.',
+    area:'dl', tags:['activación','neurona','derivada'] },
+  { id:'boundary', file:'labs/frontera-decision.html', url:'',
+    t:'Frontera de decisión de una red', d:'Entrena un MLP en directo sobre círculos, XOR o espirales y mira qué aprende cada neurona.',
+    area:'dl', tags:['mlp','red neuronal','clasificación','relu'] },
+  { id:'backprop', file:'labs/red-neuronal.html', url:'',
+    t:'Backpropagation paso a paso', d:'Una red 3→4→3 con softmax y entropía cruzada: los 11 pasos de una iteración con números reales.',
+    area:'dl', tags:['backprop','softmax','entropía cruzada','gradiente'] },
+  { id:'attn', file:'labs/atencion.html', url:'',
+    t:'Visualizador de atención', d:'Query, Key y Value con las cuentas a la vista, dos cabezas y máscara causal.',
+    area:'llm', tags:['attention','transformer','qkv','self-attention'] },
+];
+
+/* Áreas temáticas. Cada tema: t título, d definición breve, lab (id de laboratorio), art (id de artículo). */
+const AREAS = [
+  { id:'ml', t:'Machine Learning', kicker:'Algoritmos clásicos', d:'Modelos que aprenden patrones a partir de datos tabulares o vectores de características: la base de todo lo demás.', topics:[
+    {t:'Introducción al ML', d:'Aprender una función a partir de ejemplos en vez de programarla a mano: datos, modelo, pérdida y optimizador.', lab:'overfit'},
+    {t:'Aprendizaje supervisado', d:'Se entrena con pares entrada–respuesta correcta para predecir la respuesta en casos nuevos.'},
+    {t:'Aprendizaje no supervisado', d:'Solo hay datos, sin etiquetas: se busca estructura, grupos o representaciones compactas.', lab:'kmeans'},
+    {t:'Aprendizaje por refuerzo', d:'Un agente actúa en un entorno y aprende qué acciones maximizan la recompensa acumulada.'},
+    {t:'Regresión', d:'Predecir un valor numérico continuo, como un precio o una temperatura.', lab:'overfit'},
+    {t:'Clasificación', d:'Predecir una categoría. La salida suele ser una probabilidad por clase.', lab:'boundary'},
+    {t:'Clustering', d:'Agrupar puntos parecidos sin conocer los grupos de antemano: K-means, DBSCAN, jerárquico.', lab:'kmeans'},
+    {t:'Reducción de dimensionalidad', d:'Comprimir muchas variables en pocas conservando la información: PCA, t-SNE, UMAP.'},
+    {t:'Ensemble Learning', d:'Combinar muchos modelos débiles para obtener uno fuerte: bagging, boosting y stacking.', lab:'tree'},
+    {t:'Random Forest', d:'Muchos árboles entrenados sobre muestras bootstrap y subconjuntos de variables que votan la predicción.', lab:'tree', art:'random-forest'},
+    {t:'Gradient Boosting', d:'Árboles en serie donde cada uno corrige el error residual de los anteriores siguiendo el gradiente de la pérdida.'},
+    {t:'XGBoost', d:'Implementación de gradient boosting con regularización y optimizaciones de sistema; referente en datos tabulares.'},
+    {t:'SVM', d:'Busca el hiperplano de máximo margen entre clases; con kernels separa datos no lineales.'},
+    {t:'KNN', d:'Predice según los k vecinos más cercanos. No entrena nada: guarda los datos y compara distancias.'},
+    {t:'Naive Bayes', d:'Aplica el teorema de Bayes suponiendo variables independientes dada la clase. Rápido y sólido en texto.'},
+    {t:'Regularización L1 y L2', d:'Penalizar los pesos grandes para generalizar mejor; L1 además selecciona variables.', lab:'reg'},
+  ]},
+  { id:'dl', t:'Deep Learning', kicker:'Redes neuronales', d:'Modelos formados por capas de neuronas que aprenden representaciones jerárquicas: visión, audio, texto.', topics:[
+    {t:'Redes neuronales', d:'Composición de capas lineales y activaciones no lineales entrenada con descenso de gradiente.', lab:'boundary'},
+    {t:'Perceptrón', d:'La neurona original de Rosenblatt: suma ponderada y umbral. Solo separa clases linealmente separables.', lab:'sigmoid'},
+    {t:'MLP', d:'Perceptrón multicapa: capas ocultas totalmente conectadas capaces de aproximar funciones no lineales.', lab:'boundary'},
+    {t:'Backpropagation', d:'La regla de la cadena aplicada de la salida hacia la entrada para obtener el gradiente de cada peso.', lab:'backprop'},
+    {t:'Descenso de gradiente', d:'Actualizar los pesos un paso en contra del gradiente de la pérdida; variantes SGD, Momentum, Adam.', lab:'gd'},
+    {t:'CNN', d:'Redes convolucionales: filtros compartidos que recorren la imagen y detectan bordes, texturas y objetos.'},
+    {t:'RNN', d:'Redes recurrentes que procesan secuencias manteniendo un estado oculto paso a paso.'},
+    {t:'LSTM', d:'RNN con puertas que controlan qué recordar y qué olvidar, para dependencias largas.'},
+    {t:'Attention', d:'Cada elemento de una secuencia combina información de los demás ponderada por relevancia.', lab:'attn'},
+    {t:'Transformers', d:'Arquitectura basada solo en atención y capas feed-forward; base de los LLM actuales.', route:'transformer'},
+    {t:'Embeddings', d:'Vectores densos que representan palabras, imágenes o usuarios de forma que la cercanía refleja similitud.'},
+    {t:'Fine-tuning', d:'Continuar el entrenamiento de un modelo preentrenado con datos de una tarea concreta.'},
+    {t:'LoRA / QLoRA', d:'Fine-tuning eficiente: se congelan los pesos y se entrenan matrices de bajo rango; QLoRA además cuantiza a 4 bits.'},
+  ]},
+  { id:'math', t:'Matemáticas para IA', kicker:'Fundamentos', d:'Lo mínimo imprescindible para leer un paper y entender qué hace un modelo por dentro.', topics:[
+    {t:'Álgebra lineal', d:'Vectores, matrices y productos: todo modelo es, al final, multiplicación de matrices.'},
+    {t:'Cálculo', d:'Cómo cambian las funciones: la base para optimizar la pérdida.'},
+    {t:'Derivadas', d:'Pendiente de una función en un punto; la regla de la cadena permite derivar composiciones.', lab:'sigmoid'},
+    {t:'Gradientes', d:'Vector de derivadas parciales: indica la dirección de máxima subida de la pérdida.', lab:'gd'},
+    {t:'Probabilidad', d:'Lenguaje para la incertidumbre: distribuciones, esperanza, probabilidad condicionada.'},
+    {t:'Estadística', d:'Inferir propiedades de una población a partir de muestras; estimación, contrastes, intervalos.'},
+    {t:'Teorema central del límite', d:'La media de muchas variables independientes tiende a una normal, sea cual sea su distribución original.'},
+    {t:'Bayes', d:'P(A|B) = P(B|A)·P(A)/P(B): actualizar creencias con evidencia nueva.'},
+    {t:'Optimización', d:'Encontrar los parámetros que minimizan una función: convexidad, mínimos locales, puntos de silla.', lab:'gd'},
+    {t:'Métodos numéricos', d:'Cálculo aproximado con ordenadores: estabilidad, precisión en coma flotante, softmax estable.'},
+  ]},
+  { id:'prog', t:'Programación', kicker:'Herramientas', d:'El ecosistema de Python con el que se construye casi todo el machine learning actual.', topics:[
+    {t:'Python', d:'El lenguaje de facto para datos e IA por su legibilidad y su ecosistema.'},
+    {t:'NumPy', d:'Arrays n-dimensionales y álgebra lineal vectorizada; la base de todas las demás librerías.'},
+    {t:'Pandas', d:'DataFrames para cargar, limpiar, unir y agregar datos tabulares.'},
+    {t:'Matplotlib', d:'La librería de gráficos de referencia para explorar datos y resultados.'},
+    {t:'Scikit-learn', d:'API uniforme fit/predict para ML clásico, preprocesado, validación y métricas.', art:'random-forest'},
+    {t:'PyTorch', d:'Tensores con autograd y GPU; el framework dominante en investigación y LLM.', route:'transformer'},
+    {t:'TensorFlow', d:'Framework de Google con Keras como API de alto nivel y buen soporte de despliegue.'},
+    {t:'Hugging Face', d:'Hub de modelos y datasets y las librerías transformers, datasets y peft.'},
+  ]},
+  { id:'llm', t:'LLM', kicker:'Modelos de lenguaje', d:'Cómo funcionan los modelos de lenguaje grandes, de la tokenización a los agentes.', topics:[
+    {t:'Arquitectura Transformer', d:'Bloques de atención multi-cabeza y feed-forward con conexiones residuales y normalización.', route:'transformer'},
+    {t:'Tokenización', d:'Partir el texto en unidades (a menudo subpalabras BPE) y asignar a cada una un id.', route:'transformer'},
+    {t:'Embeddings', d:'Cada token id se convierte en un vector aprendido de dimensión d_model.', route:'transformer'},
+    {t:'Self-Attention', d:'Cada token calcula cuánto atender a los demás de la misma secuencia.', lab:'attn'},
+    {t:'Q, K y V', d:'Proyecciones de cada token: qué busca (Query), qué ofrece (Key) y qué transmite (Value).', lab:'attn'},
+    {t:'Multi-Head Attention', d:'Varias atenciones en paralelo, cada una en su subespacio, concatenadas al final.', route:'transformer'},
+    {t:'Positional Encoding', d:'Información de posición sumada a los embeddings, porque la atención por sí sola no conoce el orden.', route:'transformer'},
+    {t:'Pretraining', d:'Entrenar con enormes cantidades de texto a predecir el siguiente token.'},
+    {t:'Fine-tuning', d:'Adaptar el modelo preentrenado a instrucciones o dominios con datos supervisados o preferencias.'},
+    {t:'RAG', d:'Recuperar documentos relevantes con búsqueda vectorial e incluirlos en el prompt para responder con datos propios.'},
+    {t:'Agentes IA', d:'LLM que planifican y usan herramientas (APIs, código, búsqueda) en un bucle para completar tareas.'},
+    {t:'Modelos locales', d:'Ejecutar LLM abiertos en tu propio hardware, normalmente cuantizados (GGUF, llama.cpp, Ollama).'},
+    {t:'Inferencia', d:'Generar tokens uno a uno: KV cache, batching, cuantización y estrategias de muestreo.', route:'transformer'},
+  ]},
+  { id:'mlops', t:'MLOps', kicker:'Producción', d:'Llevar modelos a producción de forma reproducible, observable y segura.', topics:[
+    {t:'Docker', d:'Contenedores que empaquetan código, dependencias y modelo para que funcione igual en cualquier sitio.'},
+    {t:'APIs', d:'Exponer el modelo como servicio HTTP con contratos claros de entrada y salida.'},
+    {t:'FastAPI', d:'Framework Python para APIs con validación por tipos (Pydantic) y documentación automática.'},
+    {t:'Bases de datos', d:'Guardar datos de entrenamiento, predicciones y metadatos de forma consultable.'},
+    {t:'PostgreSQL', d:'Base de datos relacional robusta; con pgvector también sirve como base vectorial.'},
+    {t:'Vector databases', d:'Índices de búsqueda por similitud sobre embeddings: pgvector, Qdrant, FAISS.'},
+    {t:'Git', d:'Control de versiones del código; con DVC o LFS también de datos y modelos.'},
+    {t:'CI/CD', d:'Tests y despliegues automáticos en cada cambio: GitHub Actions, GitLab CI.'},
+    {t:'Despliegue de modelos', d:'Batch, tiempo real o en el borde; versionado de modelos y despliegues graduales.'},
+    {t:'Monitorización', d:'Vigilar latencia, errores y deriva de datos para saber cuándo reentrenar.'},
+    {t:'GPUs', d:'Hardware paralelo para multiplicaciones de matrices; la memoria VRAM limita el tamaño del modelo.'},
+    {t:'Cloud computing', d:'Infraestructura bajo demanda para entrenar y servir: AWS, GCP, Azure.'},
+  ]},
+  { id:'research', t:'Investigación', kicker:'Estado del arte', d:'De los papers fundacionales a las líneas abiertas de la IA actual.', topics:[
+    {t:'Papers fundamentales', d:'Los trabajos que definieron el campo: backprop, CNN, LSTM, Transformer, BERT, GPT.', route:'papers'},
+    {t:'Papers recientes', d:'LoRA, RAG, CLIP y otros trabajos que marcan cómo se construyen los sistemas actuales.', route:'papers'},
+    {t:'Estado del arte', d:'Qué funciona hoy en cada tarea y con qué coste: benchmarks y sus limitaciones.'},
+    {t:'Arquitecturas emergentes', d:'Mixture of Experts, modelos de espacio de estados y otras alternativas o complementos al Transformer.'},
+    {t:'IA multimodal', d:'Modelos que combinan texto, imagen, audio y vídeo en un mismo espacio de representación.'},
+    {t:'Modelos fundacionales', d:'Modelos grandes preentrenados de propósito general que se adaptan a muchas tareas.'},
+    {t:'Robótica', d:'Aprendizaje de políticas de control, simulación y transferencia al mundo real.'},
+    {t:'IA científica', d:'ML aplicado a ciencia: plegamiento de proteínas, materiales, clima, matemáticas.'},
+  ]},
+];
+
+/* Biblioteca de papers. Solo referencias reales y verificables. */
+const PAPERS = [
+  { id:'backprop-1986', t:'Learning representations by back-propagating errors', a:'D. E. Rumelhart, G. E. Hinton, R. J. Williams', y:1986, v:'Nature 323, 533–536', area:'Redes neuronales',
+    p:'Cómo entrenar redes con capas ocultas, cuyos pesos no tienen un valor objetivo directo.',
+    c:'Popularizó la retropropagación del error: la regla de la cadena para calcular el gradiente de todos los pesos.',
+    arch:'Redes multicapa con activaciones sigmoides.', r:'Es el algoritmo con el que se entrenan prácticamente todas las redes neuronales actuales.', impl:'loss.backward() en PyTorch', lab:'backprop' },
+  { id:'lstm-1997', t:'Long Short-Term Memory', a:'S. Hochreiter, J. Schmidhuber', y:1997, v:'Neural Computation 9(8), 1735–1780', area:'RNN',
+    p:'Las RNN no aprendían dependencias largas porque el gradiente se desvanecía o explotaba.',
+    c:'Una celda con memoria y puertas multiplicativas que mantienen el flujo de error constante.',
+    arch:'Celda LSTM (en la versión original, puertas de entrada y salida; la puerta de olvido se añadió después).', r:'Dominó traducción, voz y series temporales hasta la llegada del Transformer.', impl:'torch.nn.LSTM' },
+  { id:'lenet-1998', t:'Gradient-based learning applied to document recognition', a:'Y. LeCun, L. Bottou, Y. Bengio, P. Haffner', y:1998, v:'Proceedings of the IEEE 86(11), 2278–2324', area:'CNN',
+    p:'Reconocer caracteres manuscritos sin diseñar las características a mano.',
+    c:'Redes convolucionales entrenadas de extremo a extremo (LeNet-5) y el dataset MNIST.',
+    arch:'Convoluciones, submuestreo y capas totalmente conectadas.', r:'Estableció la receta de las CNN que luego escaló a ImageNet.', impl:'torch.nn.Conv2d' },
+  { id:'rf-2001', t:'Random Forests', a:'L. Breiman', y:2001, v:'Machine Learning 45(1), 5–32', area:'Ensembles',
+    p:'Los árboles de decisión individuales son inestables y sobreajustan.',
+    c:'Combinar árboles decorrelacionados mediante bootstrap y selección aleatoria de variables en cada nodo; error out-of-bag.',
+    arch:'Conjunto de árboles CART no podados que votan.', r:'Uno de los algoritmos más usados en datos tabulares por su robustez.', impl:'sklearn.ensemble.RandomForestClassifier', lab:'tree' },
+  { id:'alexnet-2012', t:'ImageNet Classification with Deep Convolutional Neural Networks', a:'A. Krizhevsky, I. Sutskever, G. E. Hinton', y:2012, v:'NeurIPS 2012', area:'Visión artificial',
+    p:'Clasificar 1,2 millones de imágenes de ImageNet en 1.000 categorías.',
+    c:'Una CNN profunda entrenada en GPU con ReLU y dropout que redujo drásticamente el error en ILSVRC-2012.',
+    arch:'AlexNet: 5 capas convolucionales y 3 totalmente conectadas.', r:'Marcó el inicio de la era moderna del deep learning.', impl:'torchvision.models.alexnet' },
+  { id:'dropout-2014', t:'Dropout: A Simple Way to Prevent Neural Networks from Overfitting', a:'N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, R. Salakhutdinov', y:2014, v:'JMLR 15, 1929–1958', area:'Regularización',
+    p:'Las redes grandes sobreajustan con facilidad.',
+    c:'Apagar neuronas al azar durante el entrenamiento, lo que equivale a promediar muchas subredes.',
+    arch:'Aplicable a cualquier capa.', r:'Técnica de regularización estándar en redes profundas.', impl:'torch.nn.Dropout', lab:'overfit' },
+  { id:'adam-2015', t:'Adam: A Method for Stochastic Optimization', a:'D. P. Kingma, J. Ba', y:2015, v:'ICLR 2015', area:'Optimización',
+    p:'Elegir una tasa de aprendizaje que funcione para todos los parámetros.',
+    c:'Pasos adaptativos por parámetro con estimaciones de primer y segundo momento del gradiente y corrección de sesgo.',
+    arch:'Optimizador.', r:'El optimizador por defecto en la mayoría de redes profundas.', impl:'torch.optim.Adam', lab:'gd' },
+  { id:'dqn-2015', t:'Human-level control through deep reinforcement learning', a:'V. Mnih et al.', y:2015, v:'Nature 518, 529–533', area:'Aprendizaje por refuerzo',
+    p:'Aprender a jugar a partir de los píxeles de la pantalla y la puntuación.',
+    c:'Deep Q-Network: Q-learning con una CNN, experience replay y red objetivo; nivel humano en muchos juegos de Atari 2600.',
+    arch:'CNN que estima el valor Q de cada acción.', r:'Punto de partida del deep reinforcement learning.', impl:'Stable-Baselines3 DQN' },
+  { id:'resnet-2016', t:'Deep Residual Learning for Image Recognition', a:'K. He, X. Zhang, S. Ren, J. Sun', y:2016, v:'CVPR 2016', area:'Visión artificial',
+    p:'Las redes muy profundas eran más difíciles de optimizar que las menos profundas.',
+    c:'Conexiones residuales: cada bloque aprende una corrección que se suma a su entrada.',
+    arch:'ResNet, con variantes de hasta 152 capas en ImageNet.', r:'Las conexiones residuales están en casi toda arquitectura moderna, incluido el Transformer.', impl:'torchvision.models.resnet50' },
+  { id:'xgboost-2016', t:'XGBoost: A Scalable Tree Boosting System', a:'T. Chen, C. Guestrin', y:2016, v:'KDD 2016', area:'Ensembles',
+    p:'Hacer gradient boosting de árboles rápido y escalable.',
+    c:'Objetivo regularizado, algoritmo consciente de la dispersión de los datos y optimizaciones de sistema.',
+    arch:'Árboles de boosting.', r:'Referente en competiciones y en la industria con datos tabulares.', impl:'xgboost.XGBClassifier' },
+  { id:'attention-2017', t:'Attention Is All You Need', a:'A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, I. Polosukhin', y:2017, v:'NeurIPS 2017', area:'Transformers',
+    p:'Las RNN procesan en secuencia, lo que limita el paralelismo y las dependencias largas.',
+    c:'El Transformer: solo atención multi-cabeza y capas feed-forward, con codificación posicional.',
+    arch:'Encoder–decoder de 6 + 6 capas, d_model = 512, 8 cabezas en el modelo base.', r:'La arquitectura de BERT, GPT y prácticamente todos los LLM.', impl:'torch.nn.Transformer', lab:'attn' },
+  { id:'gpt-2018', t:'Improving Language Understanding by Generative Pre-Training', a:'A. Radford, K. Narasimhan, T. Salimans, I. Sutskever', y:2018, v:'Informe técnico de OpenAI', area:'GPT',
+    p:'Aprovechar texto sin etiquetar para mejorar tareas de lenguaje con pocos datos.',
+    c:'Preentrenamiento generativo con un decoder Transformer seguido de fine-tuning supervisado.',
+    arch:'Decoder Transformer de 12 capas.', r:'Origen de la familia GPT.', impl:'transformers.OpenAIGPTModel' },
+  { id:'bert-2019', t:'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding', a:'J. Devlin, M.-W. Chang, K. Lee, K. Toutanova', y:2019, v:'NAACL 2019', area:'BERT',
+    p:'Los modelos de lenguaje preentrenados solo miraban el contexto en una dirección.',
+    c:'Encoder bidireccional preentrenado con modelado de lenguaje enmascarado y predicción de la siguiente frase.',
+    arch:'Encoder Transformer (base: 12 capas; large: 24).', r:'Revolucionó la comprensión del lenguaje y los buscadores.', impl:'transformers.BertModel' },
+  { id:'gpt3-2020', t:'Language Models are Few-Shot Learners', a:'T. B. Brown et al.', y:2020, v:'NeurIPS 2020', area:'GPT',
+    p:'Cada tarea necesitaba su propio fine-tuning con datos etiquetados.',
+    c:'GPT-3, de 175.000 millones de parámetros, resuelve tareas nuevas con unos pocos ejemplos en el prompt (in-context learning).',
+    arch:'Decoder Transformer de 96 capas.', r:'Demostró el efecto de la escala e inauguró la era de los LLM.', impl:'—' },
+  { id:'rag-2020', t:'Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks', a:'P. Lewis et al.', y:2020, v:'NeurIPS 2020', area:'RAG',
+    p:'El conocimiento guardado en los parámetros es difícil de actualizar y de citar.',
+    c:'Combinar un recuperador denso de documentos con un generador seq2seq entrenados conjuntamente.',
+    arch:'Recuperador DPR + generador BART.', r:'Dio nombre y forma a los sistemas RAG actuales.', impl:'LangChain, LlamaIndex, pgvector' },
+  { id:'clip-2021', t:'Learning Transferable Visual Models From Natural Language Supervision', a:'A. Radford et al.', y:2021, v:'ICML 2021', area:'Multimodal',
+    p:'Los modelos de visión necesitaban etiquetas fijas y costosas.',
+    c:'CLIP: entrenar imagen y texto en un espacio común con aprendizaje contrastivo sobre pares imagen–texto de internet.',
+    arch:'Encoder de imagen (ResNet o ViT) + encoder de texto Transformer.', r:'Base de muchos modelos multimodales y generadores de imágenes.', impl:'open_clip' },
+  { id:'lora-2022', t:'LoRA: Low-Rank Adaptation of Large Language Models', a:'E. J. Hu et al.', y:2022, v:'ICLR 2022', area:'Fine-tuning',
+    p:'Ajustar todos los parámetros de un modelo enorme es carísimo.',
+    c:'Congelar los pesos y aprender actualizaciones de bajo rango ΔW = B·A en las capas de atención.',
+    arch:'Adaptadores de bajo rango.', r:'La forma estándar de hacer fine-tuning de LLM con poco hardware.', impl:'peft.LoraConfig' },
+];
+
+/* Datasets reales y conocidos. */
+const DATASETS = [
+  { id:'iris', t:'Iris', src:'R. A. Fisher (1936) · UCI · sklearn.datasets.load_iris', n:'150 filas', vars:'4 numéricas (largo y ancho de sépalo y pétalo, en cm)', types:'float', task:'Clasificación en 3 especies', models:'Regresión logística, KNN, árbol de decisión', ex:'5.1, 3.5, 1.4, 0.2 → setosa' },
+  { id:'breast', t:'Breast Cancer Wisconsin (Diagnostic)', src:'UCI · sklearn.datasets.load_breast_cancer', n:'569 filas (212 malignos, 357 benignos)', vars:'30 numéricas calculadas sobre imágenes de núcleos celulares', types:'float', task:'Clasificación binaria', models:'Random Forest, regresión logística, SVM', ex:'mean radius, worst area, worst concave points…', art:'random-forest' },
+  { id:'california', t:'California Housing', src:'Censo de EE. UU. de 1990 · sklearn.datasets.fetch_california_housing', n:'20.640 filas', vars:'8 numéricas (ingresos medios, edad de la vivienda, habitaciones, latitud, longitud…)', types:'float', task:'Regresión del valor mediano de la vivienda', models:'Gradient boosting, Random Forest, regresión lineal' },
+  { id:'ai4i', t:'AI4I 2020 Predictive Maintenance', src:'UCI Machine Learning Repository', n:'10.000 filas', vars:'Tipo de producto, temperatura del aire y del proceso, velocidad de giro, par, desgaste de herramienta y 5 modos de fallo', types:'categórica, float, int, binaria', task:'Clasificación de fallos de máquina (muy desbalanceada)', models:'Gradient boosting, Random Forest con class_weight', proj:'mantenimiento' },
+  { id:'mnist', t:'MNIST', src:'LeCun et al. (1998)', n:'70.000 imágenes (60.000 de entrenamiento y 10.000 de test)', vars:'Imágenes de 28×28 píxeles en escala de grises', types:'uint8', task:'Clasificación de dígitos 0–9', models:'MLP, CNN' },
+  { id:'cifar10', t:'CIFAR-10', src:'A. Krizhevsky (2009)', n:'60.000 imágenes (50.000 / 10.000)', vars:'Imágenes en color de 32×32 píxeles', types:'uint8 RGB', task:'Clasificación en 10 clases de objetos', models:'CNN, ResNet, Vision Transformer' },
+  { id:'wine', t:'Wine Quality', src:'Cortez et al. (2009) · UCI', n:'6.497 filas (1.599 tintos, 4.898 blancos)', vars:'11 fisicoquímicas (acidez, azúcar residual, sulfatos, alcohol…)', types:'float', task:'Regresión o clasificación de la calidad (0–10)', models:'Random Forest, gradient boosting' },
+  { id:'imdb', t:'IMDB Large Movie Review', src:'Maas et al. (2011)', n:'50.000 reseñas (25.000 / 25.000)', vars:'Texto libre en inglés', types:'texto', task:'Análisis de sentimiento binario', models:'Naive Bayes con TF-IDF, LSTM, BERT' },
+];
+
+/* Ruta de aprendizaje en 10 niveles. */
+const PATH = [
+  { n:1, t:'Matemáticas', th:'Vectores y matrices, derivadas y regla de la cadena, gradientes, probabilidad básica.', ex:'Calcula a mano el gradiente de f(x, y) = x² + 3xy y comprueba el resultado con diferencias finitas en Python.', pr:'Implementa el descenso de gradiente para minimizar una función de dos variables y dibuja la trayectoria.', ok:'Sabes explicar qué es un gradiente y por qué se resta en cada paso.', labs:['gd','sigmoid'] },
+  { n:2, t:'Python', th:'Sintaxis, funciones, NumPy vectorizado, Pandas y Matplotlib.', ex:'Carga un CSV con Pandas, limpia valores nulos y agrupa por una columna.', pr:'Análisis exploratorio completo del dataset Wine Quality con gráficos.', ok:'Escribes código NumPy sin bucles innecesarios y usas groupby con soltura.', labs:[] },
+  { n:3, t:'Estadística', th:'Distribuciones, media y varianza, correlación, teorema central del límite, contraste de hipótesis, Bayes.', ex:'Simula el teorema central del límite con medias de muestras de una distribución exponencial.', pr:'Estudio de correlaciones y outliers en California Housing.', ok:'Distingues correlación de causalidad y sabes interpretar un intervalo de confianza.', labs:[] },
+  { n:4, t:'Machine Learning', th:'Supervisado y no supervisado, validación, sobreajuste, regularización, árboles y ensembles, métricas.', ex:'Compara un árbol y un Random Forest con validación cruzada de 5 particiones.', pr:'Clasificador de fallos con AI4I 2020, con métricas adecuadas para clases desbalanceadas.', ok:'Eliges la métrica correcta y detectas sobreajuste con curvas de validación.', labs:['overfit','reg','tree','kmeans'] },
+  { n:5, t:'Deep Learning', th:'Neuronas, activaciones, MLP, backpropagation, optimizadores, CNN y RNN.', ex:'Implementa en NumPy una red de una capa oculta y verifica su gradiente numéricamente.', pr:'CNN en PyTorch para CIFAR-10 con aumento de datos.', ok:'Puedes escribir un bucle de entrenamiento en PyTorch desde cero y depurarlo.', labs:['boundary','backprop'] },
+  { n:6, t:'Transformers', th:'Tokenización, embeddings, codificación posicional, self-attention, multi-head, bloques residuales.', ex:'Implementa scaled dot-product attention en PyTorch y compara con nn.MultiheadAttention.', pr:'Un mini-GPT a nivel de carácter entrenado con un texto en castellano.', ok:'Sabes decir la forma de cada tensor en un bloque Transformer.', labs:['attn'], route:'transformer' },
+  { n:7, t:'LLM', th:'Preentrenamiento, fine-tuning, LoRA, muestreo, cuantización, RAG, evaluación.', ex:'Haz fine-tuning con LoRA de un modelo pequeño de Hugging Face.', pr:'Sistema RAG sobre tus propios documentos con pgvector.', ok:'Explicas cuándo conviene RAG y cuándo fine-tuning.', labs:[] },
+  { n:8, t:'MLOps', th:'Docker, APIs con FastAPI, bases de datos, CI/CD, monitorización y deriva de datos.', ex:'Empaqueta un modelo de scikit-learn en una API FastAPI dentro de Docker.', pr:'Despliegue del modelo de mantenimiento predictivo con monitorización.', ok:'Tu modelo se levanta con docker compose up y tiene tests.', labs:[] },
+  { n:9, t:'Agentes IA', th:'Uso de herramientas, planificación, memoria, evaluación y seguridad de agentes.', ex:'Un agente que responde preguntas consultando una API y una base de datos.', pr:'Agente de soporte técnico con RAG y herramientas, con registro de trazas.', ok:'Mides la tasa de éxito del agente con un conjunto de casos de prueba.', labs:[] },
+  { n:10, t:'Investigación', th:'Leer papers, reproducir resultados, diseñar experimentos y ablaciones.', ex:'Reproduce una figura de un paper clásico.', pr:'Replica un paper de la biblioteca con código abierto y documenta las diferencias.', ok:'Puedes defender una hipótesis con experimentos controlados.', labs:[], route:'papers' },
+];
+
+/* Proyectos. Solo el primero está desarrollado; el resto se marcan como planificados. */
+const PROJECTS = [
+  { id:'mantenimiento', t:'Mantenimiento predictivo en fresadoras', area:'Industria 4.0', status:'Plan detallado', d:'Predecir fallos de máquina con el dataset AI4I 2020 para programar mantenimiento antes de la avería.' },
+  { id:'telecom', t:'Predicción de bajas de clientes', area:'Telecomunicaciones', status:'Planificado', d:'Clasificación de churn con datos de uso y facturación.' },
+  { id:'redes', t:'Detección de anomalías en tráfico de red', area:'Redes', status:'Planificado', d:'Modelos no supervisados sobre flujos de red para detectar comportamientos anómalos.' },
+  { id:'energia', t:'Previsión de demanda eléctrica', area:'Energía', status:'Planificado', d:'Series temporales con estacionalidad diaria y semanal.' },
+  { id:'vision', t:'Inspección visual de defectos', area:'Visión artificial', status:'Planificado', d:'Clasificación de imágenes de piezas con CNN y transfer learning.' },
+  { id:'rag', t:'Asistente RAG documental', area:'RAG · Agentes', status:'Planificado', d:'Preguntas y respuestas sobre documentación técnica propia con pgvector.' },
+];
+
+/* =========================================================================
+   UTILIDADES
+   ========================================================================= */
+const U = {
+  esc: s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])),
+  norm: s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''),
+  slug: s => U.norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+  tex(src, display = true) {
+    try { if (window.katex) return katex.renderToString(src, { output: 'mathml', displayMode: display, throwOnError: false }); } catch (e) { console.warn('KaTeX', e); }
+    return `<code class="tex-fallback">${U.esc(src)}</code>`;
+  },
+  hlPy(code) {
+    const re = /(#.*$)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\b(def|class|return|for|in|if|else|elif|import|from|as|while|None|True|False|and|or|not|lambda|with|self|async|await|raise|try|except)\b|\b(\d+(?:\.\d+)?)\b/gm;
+    let out = '', last = 0, m;
+    while ((m = re.exec(code))) {
+      out += U.esc(code.slice(last, m.index));
+      const cls = m[1] ? 'c' : m[2] ? 's' : m[3] ? 'k' : 'n';
+      out += `<span class="${cls}">${U.esc(m[0])}</span>`;
+      last = m.index + m[0].length;
+    }
+    return out + U.esc(code.slice(last));
+  },
+  code(src, label = 'Python') {
+    return `<div class="code"><div class="lab">${label}<button type="button" data-copy>Copiar</button></div><pre><code>${U.hlPy(src)}</code></pre></div>`;
+  },
+  wireCopy(root) {
+    root.querySelectorAll('[data-copy]').forEach(btn => {
+      if (btn.dataset.wired) return; btn.dataset.wired = '1';
+      btn.addEventListener('click', () => {
+        const pre = btn.closest('.code').querySelector('pre');
+        const ok = () => { btn.textContent = 'Copiado'; setTimeout(() => btn.textContent = 'Copiar', 1500); };
+        const fb = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Seleccionado · Ctrl+C'; };
+        try { navigator.clipboard.writeText(pre.innerText).then(ok, fb); } catch (e) { fb(); }
+      });
+    });
+  },
+  store: {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* almacenamiento no disponible */ } },
+  },
+};
+LABS.forEach(l => { l.url = l.file; });
+const LAB = Object.fromEntries(LABS.map(l => [l.id, l]));
+const AREA = Object.fromEntries(AREAS.map(a => [a.id, a]));
+const AREA_TAG = { ml:'Machine Learning', dl:'Deep Learning', math:'Matemáticas', llm:'LLM', prog:'Programación', mlops:'MLOps', research:'Investigación' };
+
+/* =========================================================================
+   COMPONENTES
+   ========================================================================= */
+const C = {
+  labCard: l => `<article class="card lab-card">
+      <span class="tag t-${l.area}">${AREA_TAG[l.area]}</span>
+      <h3><a href="#lab-${l.id}">${l.t}</a></h3>
+      <p>${l.d}</p>
+      <div class="card-actions"><a class="btn sm primary" href="#lab-${l.id}">Abrir laboratorio</a><a class="btn sm ghost" href="${l.url}" target="_blank" rel="noopener">Pestaña nueva ↗</a></div>
+    </article>`,
+  topicCard: (tp, area) => {
+    const links = [];
+    if (tp.art) links.push(`<a class="pill p-art" href="#${tp.art}">Artículo completo</a>`);
+    if (tp.lab) links.push(`<a class="pill p-lab" href="#lab-${tp.lab}">Laboratorio</a>`);
+    if (tp.route === 'transformer') links.push(`<a class="pill p-lab" href="#transformer">Visualizador</a>`);
+    if (tp.route === 'papers') links.push(`<a class="pill p-art" href="#papers">Biblioteca</a>`);
+    if (!links.length) links.push(`<span class="pill p-soon">Artículo en preparación</span>`);
+    return `<article class="card topic" id="t-${U.slug(tp.t)}"><h3>${tp.t}</h3><p>${tp.d}</p><div class="pills">${links.join('')}</div></article>`;
+  },
+  paperCard: p => `<details class="card paper" id="p-${p.id}">
+      <summary><span class="py">${p.y}</span><span class="pt"><b>${p.t}</b><small>${p.a} · <i>${p.v}</i></small></span><span class="tag t-research">${p.area}</span></summary>
+      <dl class="kv">
+        <dt>Problema</dt><dd>${p.p}</dd>
+        <dt>Aportación</dt><dd>${p.c}</dd>
+        <dt>Arquitectura</dt><dd>${p.arch}</dd>
+        <dt>Relevancia</dt><dd>${p.r}</dd>
+        <dt>Implementación</dt><dd><code>${U.esc(p.impl)}</code>${p.lab ? ` · <a href="#lab-${p.lab}">laboratorio relacionado</a>` : ''}</dd>
+      </dl></details>`,
+  pageHead: (kicker, title, lede, extra = '') => `<header class="page-head"><span class="kicker">${kicker}</span><h1>${title}</h1>${lede ? `<p class="lede">${lede}</p>` : ''}${extra}</header>`,
+  crumbs: items => `<nav class="crumbs" aria-label="Migas de pan">${items.map(([t, h]) => h ? `<a href="#${h}">${t}</a>` : `<span>${t}</span>`).join('<span class="sep">/</span>')}</nav>`,
+};
+
+/* =========================================================================
+   PÁGINAS
+   ========================================================================= */
+const STACK = [
+  { t:'Matemáticas', r:'math', m:() => `${AREA.math.topics.length} temas` },
+  { t:'Programación', r:'prog', m:() => `${AREA.prog.topics.length} temas` },
+  { t:'Machine Learning', r:'ml', m:() => `${AREA.ml.topics.length} temas · 4 labs` },
+  { t:'Deep Learning', r:'dl', m:() => `${AREA.dl.topics.length} temas · 3 labs` },
+  { t:'Transformers', r:'transformer', m:() => 'visualizador de 13 etapas' },
+  { t:'LLM', r:'llm', m:() => `${AREA.llm.topics.length} temas · 1 lab` },
+  { t:'Agentes', r:'path', m:() => 'nivel 9 de la ruta' },
+  { t:'Investigación', r:'papers', m:() => `${PAPERS.length} papers` },
+];
+
+const PAGES = {
+  home() {
+    const recent = [...PAPERS].sort((a, b) => b.y - a.y).slice(0, 4);
+    return `
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="kicker">Portal de ingeniería · Aprendizaje automático</span>
+        <h1>Machine Learning Engineering <span>&amp;</span> Artificial Intelligence</h1>
+        <p class="lede">Teoría rigurosa, código que se ejecuta y simulaciones que se pueden tocar. Desde el álgebra lineal hasta cómo un Transformer elige la siguiente palabra.</p>
+        <div class="cta"><a class="btn primary" href="#path">Empezar la ruta</a><a class="btn" href="#lab">Abrir el laboratorio</a><a class="btn ghost" href="#transformer">Transformer Visualizer →</a></div>
+        <dl class="stats"><div><dt>Laboratorios</dt><dd>${LABS.length}</dd></div><div><dt>Temas</dt><dd>${AREAS.reduce((a, x) => a + x.topics.length, 0)}</dd></div><div><dt>Papers</dt><dd>${PAPERS.length}</dd></div><div><dt>Niveles</dt><dd>${PATH.length}</dd></div></dl>
+      </div>
+      <nav class="stack" aria-label="Mapa del conocimiento">
+        <span class="stack-title">Mapa del conocimiento</span>
+        <ol>${STACK.map((s, i) => `<li><a href="#${s.r}"><span class="lv">L${i + 1}</span><b>${s.t}</b><small>${s.m()}</small><span class="arr">→</span></a></li>`).join('')}</ol>
+        <span class="stack-foot">Cada capa se apoya en la anterior</span>
+      </nav>
+    </section>
+
+    <section class="band">
+      <div class="band-head"><h2>Laboratorios</h2><a href="#lab">Ver todos →</a></div>
+      <div class="grid g3">${LABS.slice(0, 6).map(C.labCard).join('')}</div>
+    </section>
+
+    <section class="band two">
+      <div>
+        <div class="band-head"><h2>Últimos artículos</h2></div>
+        <a class="card feature" href="#random-forest">
+          <span class="tag t-ml">Machine Learning · artículo completo</span>
+          <h3>Random Forest</h3>
+          <p>De la intuición a la implementación desde cero en NumPy, con resultados reales sobre el dataset Breast Cancer Wisconsin: 95,8 % de acierto en test y 0,995 de ROC-AUC.</p>
+          <span class="more">Leer artículo →</span>
+        </a>
+        <a class="card feature" href="#transformer">
+          <span class="tag t-llm">LLM · guía interactiva</span>
+          <h3>Un Transformer, etapa a etapa</h3>
+          <p>Del texto al token generado en 13 etapas, con tensores, ecuaciones y el código PyTorch equivalente.</p>
+          <span class="more">Abrir el visualizador →</span>
+        </a>
+      </div>
+      <div>
+        <div class="band-head"><h2>Algoritmos destacados</h2></div>
+        <ul class="algo-list">
+          <li><a href="#random-forest"><b>Random Forest</b><span>Ensembles · artículo + laboratorio</span></a></li>
+          <li><a href="#lab-kmeans"><b>K-means</b><span>Clustering · laboratorio</span></a></li>
+          <li><a href="#lab-gd"><b>Descenso de gradiente</b><span>Optimización · laboratorio</span></a></li>
+          <li><a href="#lab-backprop"><b>Backpropagation</b><span>Deep learning · laboratorio</span></a></li>
+          <li><a href="#lab-attn"><b>Self-attention</b><span>Transformers · laboratorio</span></a></li>
+          <li><a href="#lab-reg"><b>Lasso y Ridge</b><span>Regularización · laboratorio</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="band-head"><h2>Ruta de aprendizaje</h2><a href="#path">Ver la ruta →</a></div>
+      <ol class="path-strip">${PATH.map(l => `<li><a href="#path"><span>${String(l.n).padStart(2, '0')}</span>${l.t}</a></li>`).join('')}</ol>
+    </section>
+
+    <section class="band two">
+      <div>
+        <div class="band-head"><h2>Proyectos</h2><a href="#projects">Ver todos →</a></div>
+        <a class="card feature" href="#project-mantenimiento"><span class="tag t-mlops">${PROJECTS[0].area} · ${PROJECTS[0].status}</span><h3>${PROJECTS[0].t}</h3><p>${PROJECTS[0].d}</p><span class="more">Ver el proyecto →</span></a>
+      </div>
+      <div>
+        <div class="band-head"><h2>Papers</h2><a href="#papers">Biblioteca →</a></div>
+        <ul class="algo-list">${recent.map(p => `<li><a href="#papers" data-paper="${p.id}"><b>${p.t}</b><span>${p.a.split(',')[0]}${p.a.includes(',') || p.a.includes('et al') ? ' et al.' : ''} · ${p.y}</span></a></li>`).join('')}</ul>
+      </div>
+    </section>`;
+  },
+
+  area(id) {
+    const a = AREA[id]; const labs = LABS.filter(l => l.area === id || a.topics.some(t => t.lab === l.id));
+    const nl = new Set(labs.map(l => l.id)).size;
+    return C.crumbs([['Inicio', 'home'], [a.t]]) + C.pageHead(a.kicker, a.t, a.d, `<p class="meta">${a.topics.length} temas · ${nl} laboratorios relacionados · ${a.topics.filter(t => t.art).length} artículos completos</p>`) +
+      (labs.length ? `<section class="band tight"><h2 class="h2s">Laboratorios de esta área</h2><div class="chips-row">${[...new Map(labs.map(l => [l.id, l])).values()].map(l => `<a class="chip-link" href="#lab-${l.id}">${l.t}</a>`).join('')}</div></section>` : '') +
+      `<section class="grid g3 topics">${a.topics.map(t => C.topicCard(t, a)).join('')}</section>`;
+  },
+
+  lab() {
+    return C.crumbs([['Inicio', 'home'], ['Laboratorio']]) + C.pageHead('Laboratorio interactivo', 'Experimenta con los algoritmos', 'Nueve simulaciones que calculan todo en tu navegador. Cambia parámetros y mira el efecto al instante: tasa de aprendizaje, profundidad, regularización, número de grupos, capas de una red o cabezas de atención.') +
+      `<div class="grid g3">${LABS.map(C.labCard).join('')}</div>
+      <aside class="card note-card"><h3>Transformer Visualizer</h3><p>El recorrido completo de un Transformer, de texto a token generado, con tensores y código PyTorch en cada etapa.</p><a class="btn sm primary" href="#transformer">Abrir el visualizador</a></aside>`;
+  },
+
+  labDetail(id) {
+    const l = LAB[id]; if (!l) return PAGES.notFound();
+    return C.crumbs([['Inicio', 'home'], ['Laboratorio', 'lab'], [l.t]]) +
+      `<header class="lab-head"><div><span class="tag t-${l.area}">${AREA_TAG[l.area]}</span><h1>${l.t}</h1><p>${l.d}</p></div>
+       <div class="lab-actions"><a class="btn" href="${l.url}" target="_blank" rel="noopener">Abrir en pestaña nueva ↗</a></div></header>
+       <div class="lab-frame" id="lab-frame"><p class="loading">Cargando laboratorio…</p></div>
+       <nav class="lab-nav">${(() => { const i = LABS.indexOf(l); const p = LABS[(i + LABS.length - 1) % LABS.length], n = LABS[(i + 1) % LABS.length];
+         return `<a class="card" href="#lab-${p.id}"><small>← Anterior</small><b>${p.t}</b></a><a class="card right" href="#lab-${n.id}"><small>Siguiente →</small><b>${n.t}</b></a>`; })()}</nav>`;
+  },
+
+  transformer() {
+    return C.crumbs([['Inicio', 'home'], ['LLM', 'llm'], ['Transformer Visualizer']]) + C.pageHead('LLM · Transformer Visualizer', 'Del texto al siguiente token',
+      'Un Transformer decoder real de una capa (d<sub>model</sub> = 8, 2 cabezas, d<sub>ff</sub> = 16) que se ejecuta en tu navegador. Escribe una frase y recorre las 13 etapas: en cada una verás la forma de los tensores, la ecuación, los números y el código PyTorch equivalente.',
+      `<p class="honest">Los pesos son aleatorios con semilla fija: el modelo no está entrenado, así que la palabra que predice no tiene sentido. Las operaciones, las formas y los números sí son los que calcularía un modelo real con estos pesos.</p>`) +
+      `<div id="tv-root" class="tv"></div>`;
+  },
+
+  path() {
+    const done = U.store.get('mlai.path', {});
+    const pct = Math.round(PATH.filter(l => done[l.n]).length / PATH.length * 100);
+    return C.crumbs([['Inicio', 'home'], ['Ruta de aprendizaje']]) + C.pageHead('Ruta de aprendizaje', 'De las matemáticas a la investigación',
+      'Diez niveles en orden. Cada uno tiene teoría, un ejercicio, un proyecto y un criterio claro para saber si lo has completado. Marca los niveles terminados: el progreso se guarda solo en este navegador.',
+      `<div class="progress" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span><b>${pct} % completado</b></div>`) +
+      `<ol class="timeline">${PATH.map(l => `<li class="${done[l.n] ? 'is-done' : ''}">
+        <div class="tl-n">${String(l.n).padStart(2, '0')}</div>
+        <article class="card tl-card">
+          <header><h3>Nivel ${l.n} · ${l.t}</h3><label class="chk" for="lv-${l.n}"><input type="checkbox" id="lv-${l.n}" data-level="${l.n}" ${done[l.n] ? 'checked' : ''}> Completado</label></header>
+          <dl class="kv">
+            <dt>Teoría</dt><dd>${l.th}</dd>
+            <dt>Ejercicio</dt><dd>${l.ex}</dd>
+            <dt>Proyecto</dt><dd>${l.pr}</dd>
+            <dt>Está completo cuando…</dt><dd>${l.ok}</dd>
+          </dl>
+          ${(l.labs.length || l.route) ? `<div class="pills">${l.labs.map(id => `<a class="pill p-lab" href="#lab-${id}">${LAB[id].t}</a>`).join('')}${l.route === 'transformer' ? '<a class="pill p-lab" href="#transformer">Transformer Visualizer</a>' : ''}${l.route === 'papers' ? '<a class="pill p-art" href="#papers">Biblioteca de papers</a>' : ''}</div>` : ''}
+        </article></li>`).join('')}</ol>`;
+  },
+
+  papers() {
+    const areas = [...new Set(PAPERS.map(p => p.area))];
+    return C.crumbs([['Inicio', 'home'], ['Investigación', 'research'], ['Papers']]) + C.pageHead('Investigación · Biblioteca', 'Papers fundamentales',
+      `${PAPERS.length} trabajos que definieron el campo, ordenados por año. Cada ficha resume el problema, la aportación, la arquitectura y dónde está implementado hoy. Solo se incluyen referencias reales y verificables.`) +
+      `<div class="filters" role="group" aria-label="Filtrar por área"><button type="button" class="on" data-f="">Todos</button>${areas.map(a => `<button type="button" data-f="${U.esc(a)}">${a}</button>`).join('')}</div>
+       <div class="paper-list" id="paper-list">${[...PAPERS].sort((a, b) => a.y - b.y).map(C.paperCard).join('')}</div>`;
+  },
+
+  datasets() {
+    return C.crumbs([['Inicio', 'home'], ['Datasets']]) + C.pageHead('Datos', 'Datasets de referencia', 'Conjuntos de datos públicos y conocidos para practicar cada tipo de problema, con su tamaño, variables y los modelos que suelen funcionar mejor.') +
+      `<div class="grid g2">${DATASETS.map(d => `<article class="card ds" id="d-${d.id}"><h3>${d.t}</h3><p class="src">${d.src}</p>
+        <dl class="kv"><dt>Registros</dt><dd>${d.n}</dd><dt>Variables</dt><dd>${d.vars}</dd><dt>Tipos</dt><dd>${d.types}</dd><dt>Problema</dt><dd>${d.task}</dd><dt>Modelos</dt><dd>${d.models}</dd>${d.ex ? `<dt>Ejemplo</dt><dd><code>${U.esc(d.ex)}</code></dd>` : ''}</dl>
+        ${d.art ? `<a class="pill p-art" href="#${d.art}">Usado en el artículo de Random Forest</a>` : ''}${d.proj ? `<a class="pill p-art" href="#project-${d.proj}">Usado en un proyecto</a>` : ''}</article>`).join('')}</div>`;
+  },
+
+  projects() {
+    return C.crumbs([['Inicio', 'home'], ['Proyectos']]) + C.pageHead('Portfolio', 'Proyectos', 'Cada proyecto sigue el mismo recorrido: problema, datos, exploración, preprocesado, modelo, entrenamiento, evaluación, optimización, despliegue y resultados. Solo se publican resultados cuando el proyecto se ha ejecutado de verdad.') +
+      `<div class="grid g3">${PROJECTS.map(p => `<article class="card proj ${p.status === 'Planificado' ? 'planned' : ''}"><span class="tag t-mlops">${p.area}</span><h3>${p.id === 'mantenimiento' ? `<a href="#project-mantenimiento">${p.t}</a>` : p.t}</h3><p>${p.d}</p><span class="status">${p.status}</span></article>`).join('')}</div>`;
+  },
+
+  about() {
+    return C.crumbs([['Inicio', 'home'], ['Arquitectura']]) + C.pageHead('Sobre el portal', 'Arquitectura y hoja de ruta', 'Esta versión es un prototipo navegable autocontenido. Así se corresponde con la plataforma de producción prevista.') + ARCH;
+  },
+
+  notFound() { return C.pageHead('Error 404', 'Página no encontrada', 'Esa dirección no existe. Vuelve al <a href="#home">inicio</a> o usa el buscador.'); },
+};
+
+/* =========================================================================
+   BÚSQUEDA
+   Índice en memoria con el mismo esquema de documento que usará la API:
+   { id, type, title, text, route }. Sustituir search() por una llamada a
+   /api/search (pgvector) no cambia la interfaz.
+   ========================================================================= */
+const INDEX = [];
+function buildIndex() {
+  AREAS.forEach(a => {
+    INDEX.push({ type:'Área', title:a.t, text:a.d, route:a.id });
+    a.topics.forEach(t => INDEX.push({ type:'Tema', title:t.t, text:`${t.d} ${a.t}`, route:a.id, anchor:'t-' + U.slug(t.t) }));
+  });
+  LABS.forEach(l => INDEX.push({ type:'Laboratorio', title:l.t, text:`${l.d} ${l.tags.join(' ')}`, route:'lab-' + l.id }));
+  PAPERS.forEach(p => INDEX.push({ type:'Paper', title:p.t, text:`${p.a} ${p.y} ${p.area} ${p.c} ${p.impl}`, route:'papers', anchor:'p-' + p.id }));
+  DATASETS.forEach(d => INDEX.push({ type:'Dataset', title:d.t, text:`${d.task} ${d.vars} ${d.models}`, route:'datasets', anchor:'d-' + d.id }));
+  PROJECTS.forEach(p => INDEX.push({ type:'Proyecto', title:p.t, text:`${p.d} ${p.area}`, route:p.id === 'mantenimiento' ? 'project-mantenimiento' : 'projects' }));
+  PATH.forEach(l => INDEX.push({ type:'Ruta', title:`Nivel ${l.n} · ${l.t}`, text:`${l.th} ${l.ex} ${l.pr}`, route:'path' }));
+  RF_SECTIONS.forEach(s => INDEX.push({ type:'Artículo', title:`Random Forest · ${s.t}`, text:s.plain || '', route:'random-forest', anchor:'rf-' + s.id }));
+  INDEX.push({ type:'Visualizador', title:'Transformer Visualizer', text:'tokenización embeddings positional encoding qkv attention softmax multi-head feed forward logits probabilidades pytorch', route:'transformer' });
+  PM_STAGES.forEach(s => INDEX.push({ type:'Proyecto', title:`Mantenimiento predictivo · ${s.t}`, text:s.plain || '', route:'project-mantenimiento', anchor:'pm-' + U.slug(s.t) }));
+  INDEX.forEach((d, i) => { d.id = i; d._t = U.norm(d.title); d._x = U.norm(d.text); });
+}
+function search(q) {
+  const terms = U.norm(q).split(/\s+/).filter(t => t.length > 1);
+  if (!terms.length) return [];
+  const out = [];
+  for (const d of INDEX) {
+    let sc = 0, all = true;
+    for (const t of terms) {
+      const inT = d._t.includes(t), inX = d._x.includes(t);
+      if (!inT && !inX) { all = false; break; }
+      sc += inT ? (d._t.startsWith(t) || d._t.includes(' ' + t) ? 8 : 5) : 1;
+    }
+    if (all) out.push([sc + (d.type === 'Laboratorio' || d.type === 'Artículo' ? 1 : 0), d]);
+  }
+  return out.sort((a, b) => b[0] - a[0]).slice(0, 10).map(x => x[1]);
+}
+function openSearch() {
+  const dlg = document.getElementById('search'); dlg.hidden = false;
+  const inp = document.getElementById('search-input'); inp.value = ''; renderResults(''); inp.focus();
+  document.body.classList.add('noscroll');
+}
+function closeSearch() { document.getElementById('search').hidden = true; document.body.classList.remove('noscroll'); }
+let selIdx = 0, lastRes = [];
+function renderResults(q) {
+  const box = document.getElementById('search-results');
+  lastRes = search(q); selIdx = 0;
+  if (!q.trim()) { box.innerHTML = `<p class="hint">Busca conceptos, algoritmos, laboratorios, papers, datasets o proyectos. Por ejemplo: <i>gini</i>, <i>softmax</i>, <i>lora</i>, <i>adam</i>.</p>`; return; }
+  if (!lastRes.length) { box.innerHTML = `<p class="hint">Sin resultados para «${U.esc(q)}». Prueba con otra palabra o sin tildes.</p>`; return; }
+  box.innerHTML = `<ul role="listbox">${lastRes.map((d, i) => `<li role="option" aria-selected="${i === selIdx}" data-i="${i}" class="${i === selIdx ? 'on' : ''}"><span class="rt">${d.type}</span><b>${U.esc(d.title)}</b><small>${U.esc(d.text.slice(0, 110))}${d.text.length > 110 ? '…' : ''}</small></li>`).join('')}</ul>`;
+}
+function goResult(d) { closeSearch(); pendingAnchor = d.anchor || null; if (location.hash === '#' + d.route) route(); else location.hash = d.route; }
+
+/* =========================================================================
+   ROUTER (hash con un solo token: #ml, #lab-gd, #random-forest…)
+   ========================================================================= */
+let pendingAnchor = null, labTimer = null;
+function route() {
+  clearInterval(labTimer);
+  const h = (location.hash || '#home').slice(1) || 'home';
+  const app = document.getElementById('app');
+  let html, after = null, title = 'MLE·AI';
+  if (h === 'home') { html = PAGES.home(); }
+  else if (AREA[h]) { html = PAGES.area(h); title = AREA[h].t; }
+  else if (h === 'lab') { html = PAGES.lab(); title = 'Laboratorio'; }
+  else if (h.startsWith('lab-')) { const id = h.slice(4); html = PAGES.labDetail(id); title = LAB[id]?.t || 'Laboratorio'; after = () => mountLab(id); }
+  else if (h === 'transformer') { html = PAGES.transformer(); title = 'Transformer Visualizer'; after = () => TVUI.render(document.getElementById('tv-root')); }
+  else if (h === 'random-forest') { html = RF_PAGE(); title = 'Random Forest'; after = mountArticle; }
+  else if (h === 'project-mantenimiento') { html = PM_PAGE(); title = 'Mantenimiento predictivo'; after = mountArticle; }
+  else if (PAGES[h] && !['area', 'labDetail', 'notFound'].includes(h)) { html = PAGES[h](); title = { path:'Ruta de aprendizaje', papers:'Papers', datasets:'Datasets', projects:'Proyectos', about:'Arquitectura' }[h] || title; }
+  else { html = PAGES.notFound(); title = 'No encontrado'; }
+  app.innerHTML = html;
+  document.title = title === 'MLE·AI' ? 'MLE·AI — Machine Learning Engineering' : `${title} · MLE·AI`;
+  document.querySelectorAll('[data-nav]').forEach(a => { const n = a.dataset.nav; a.classList.toggle('on', h === n || (n === 'lab' && h.startsWith('lab')) || (n === 'topics' && !!AREA[h])); });
+  closeMenus();
+  U.wireCopy(app);
+  if (after) after();
+  wirePage(h);
+  if (pendingAnchor) { const el = document.getElementById(pendingAnchor); pendingAnchor = null; if (el) { if (el.tagName === 'DETAILS') el.open = true; el.scrollIntoView({ block:'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); return; } }
+  window.scrollTo(0, 0);
+}
+function wirePage(h) {
+  if (h === 'path') document.querySelectorAll('[data-level]').forEach(c => c.onchange = () => { const d = U.store.get('mlai.path', {}); d[c.dataset.level] = c.checked; U.store.set('mlai.path', d); const y = scrollY; route(); scrollTo(0, y); });
+  if (h === 'papers') document.querySelectorAll('.filters button').forEach(b => b.onclick = () => {
+    document.querySelectorAll('.filters button').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('.paper').forEach(p => { const pp = PAPERS.find(x => 'p-' + x.id === p.id); p.hidden = !!b.dataset.f && pp.area !== b.dataset.f; });
+  });
+  document.querySelectorAll('[data-paper]').forEach(a => a.onclick = () => { pendingAnchor = 'p-' + a.dataset.paper; });
+}
+function mountArticle() {
+  const links = [...document.querySelectorAll('.toc a')];
+  if (!links.length) return;
+  const map = new Map(links.map(a => [a.dataset.target, a]));
+  links.forEach(a => a.onclick = e => { e.preventDefault(); const el = document.getElementById(a.dataset.target); if (el) el.scrollIntoView({ block:'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); });
+  const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { links.forEach(l => l.classList.remove('on')); map.get(e.target.id)?.classList.add('on'); } }), { rootMargin:'-20% 0px -70% 0px' });
+  map.forEach((_, id) => { const el = document.getElementById(id); if (el) obs.observe(el); });
+}
+const labCache = {};
+async function mountLab(id) {
+  const l = LAB[id], box = document.getElementById('lab-frame'); if (!l || !box) return;
+  const fr = document.createElement('iframe');
+  fr.title = l.t; fr.src = l.file;
+  box.innerHTML = ''; box.appendChild(fr);
+  const fit = () => { try { const d = fr.contentDocument; if (d && d.body) { const t = document.documentElement.dataset.theme; if (t) d.documentElement.dataset.theme = t; const h = Math.max(d.documentElement.scrollHeight, d.body.scrollHeight); if (h > 50) fr.style.height = h + 'px'; } } catch (e) { fr.style.height = '85vh'; clearInterval(labTimer); } };
+  fr.onload = fit; fr.onerror = () => { box.innerHTML = `<div class="card err"><h3>No se ha podido cargar el laboratorio</h3><a class="btn primary" href="${l.file}">Abrir «${l.t}»</a></div>`; };
+  labTimer = setInterval(fit, 700);
+}
+
+/* =========================================================================
+   CABECERA, MENÚS Y TEMA
+   ========================================================================= */
+function closeMenus() { document.getElementById('mega').hidden = true; document.getElementById('topics-btn').setAttribute('aria-expanded', 'false'); document.body.classList.remove('drawer-open'); document.getElementById('menu-btn').setAttribute('aria-expanded', 'false'); }
+function initShell() {
+  document.getElementById('mega-inner').innerHTML = AREAS.map(a => `<a href="#${a.id}" class="mega-item"><b>${a.t}</b><small>${a.topics.length} temas · ${a.kicker}</small></a>`).join('') +
+    `<a href="#transformer" class="mega-item hl"><b>Transformer Visualizer</b><small>13 etapas interactivas</small></a>`;
+  document.getElementById('drawer-topics').innerHTML = AREAS.map(a => `<a href="#${a.id}">${a.t}</a>`).join('');
+  const tb = document.getElementById('topics-btn');
+  tb.onclick = e => { e.stopPropagation(); const m = document.getElementById('mega'); m.hidden = !m.hidden; tb.setAttribute('aria-expanded', String(!m.hidden)); };
+  document.addEventListener('click', e => { if (!e.target.closest('#mega') && !e.target.closest('#topics-btn')) { document.getElementById('mega').hidden = true; tb.setAttribute('aria-expanded', 'false'); } });
+  const mb = document.getElementById('menu-btn');
+  mb.onclick = () => { const o = document.body.classList.toggle('drawer-open'); mb.setAttribute('aria-expanded', String(o)); };
+  document.querySelectorAll('[data-open-search]').forEach(b => b.onclick = openSearch);
+  const inp = document.getElementById('search-input');
+  inp.oninput = () => renderResults(inp.value);
+  inp.onkeydown = e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!lastRes.length) return; selIdx = (selIdx + (e.key === 'ArrowDown' ? 1 : -1) + lastRes.length) % lastRes.length;
+      document.querySelectorAll('#search-results li').forEach((li, i) => { li.classList.toggle('on', i === selIdx); li.setAttribute('aria-selected', String(i === selIdx)); if (i === selIdx) li.scrollIntoView({ block:'nearest' }); }); }
+    if (e.key === 'Enter' && lastRes[selIdx]) goResult(lastRes[selIdx]);
+    if (e.key === 'Escape') closeSearch();
+  };
+  document.getElementById('search-results').onclick = e => { const li = e.target.closest('li[data-i]'); if (li) goResult(lastRes[+li.dataset.i]); };
+  document.getElementById('search').onclick = e => { if (e.target.id === 'search') closeSearch(); };
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
+    if (e.key === 'Escape') { closeMenus(); if (!document.getElementById('search').hidden) closeSearch(); }
+  });
+  // tema
+  const saved = U.store.get('mlai.theme', null);
+  if (saved) document.documentElement.dataset.theme = saved;
+  const tbtn = document.getElementById('theme-btn');
+  const isDark = () => document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const label = () => { tbtn.setAttribute('aria-label', isDark() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'); tbtn.textContent = isDark() ? '☀' : '☾'; };
+  tbtn.onclick = () => { const next = isDark() ? 'light' : 'dark'; document.documentElement.dataset.theme = next; U.store.set('mlai.theme', next); label();
+    const fr = document.querySelector('#lab-frame iframe'); try { if (fr) fr.contentDocument.documentElement.dataset.theme = next; } catch (e) { /* sin acceso */ } };
+  label();
+}
+
+window.addEventListener('hashchange', route);
+document.addEventListener('DOMContentLoaded', () => { buildIndex(); initShell(); route(); });
+
+/* =========================================================================
+   TRANSFORMER VISUALIZER
+   Un Transformer decoder de 1 capa, d_model = 8, 2 cabezas, d_ff = 16,
+   implementado en JS puro. Los pesos son aleatorios (semilla fija): no está
+   entrenado, así que la predicción no tiene sentido lingüístico, pero todas
+   las formas, operaciones y números son reales.
+   ========================================================================= */
+const TV = (() => {
+  const VOCAB = ['[PAD]','[UNK]','el','la','un','una','gato','perro','niña','niño','sol','luna',
+    'come','bebe','duerme','corre','lee','sale','brilla','pescado','leche','agua','libro','casa',
+    'jardín','parque','noche','mañana','grande','pequeño','rápido','en','por','de','y','.',','];
+  const D = 8, H = 2, DK = 4, DFF = 16, MAXT = 10;
+
+  // RNG determinista
+  let s = 20240917;
+  const rnd = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const gau = () => { let u = 0, v = 0; while (!u) u = rnd(); while (!v) v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+  const mat = (r, c, sc) => Array.from({ length: r }, () => Array.from({ length: c }, () => gau() * sc));
+
+  const E  = mat(VOCAB.length, D, 0.8);
+  const WQ = [mat(D, DK, 0.6), mat(D, DK, 0.6)];
+  const WK = [mat(D, DK, 0.6), mat(D, DK, 0.6)];
+  const WV = [mat(D, DK, 0.6), mat(D, DK, 0.6)];
+  const WO = mat(D, D, 0.4);
+  const W1 = mat(D, DFF, 0.5), B1 = Array(DFF).fill(0).map(() => gau() * 0.1);
+  const W2 = mat(DFF, D, 0.35), B2 = Array(D).fill(0).map(() => gau() * 0.1);
+
+  const mm = (A, B) => A.map(r => B[0].map((_, j) => r.reduce((acc, v, k) => acc + v * B[k][j], 0)));
+  const T  = A => A[0].map((_, j) => A.map(r => r[j]));
+  const add = (A, B) => A.map((r, i) => r.map((v, j) => v + B[i][j]));
+  const softmaxRow = r => { const m = Math.max(...r.filter(v => v !== -Infinity)); const e = r.map(v => v === -Infinity ? 0 : Math.exp(v - m)); const z = e.reduce((a, b) => a + b, 0); return e.map(v => v / z); };
+  const layerNorm = X => X.map(r => { const mu = r.reduce((a, b) => a + b, 0) / r.length; const va = r.reduce((a, b) => a + (b - mu) ** 2, 0) / r.length; return r.map(v => (v - mu) / Math.sqrt(va + 1e-5)); });
+
+  function tokenize(text) {
+    const clean = String(text).toLowerCase().normalize('NFC').replace(/[^a-záéíóúüñ.,\s]/g, ' ').replace(/([.,])/g, ' $1 ');
+    let toks = clean.split(/\s+/).filter(Boolean);
+    const truncated = toks.length > MAXT;
+    toks = toks.slice(0, MAXT);
+    return { toks, ids: toks.map(t => { const i = VOCAB.indexOf(t); return i < 0 ? 1 : i; }), truncated };
+  }
+  function posEnc(Tn) {
+    return Array.from({ length: Tn }, (_, p) => Array.from({ length: D }, (_, i) => {
+      const k = i - (i % 2); const ang = p / Math.pow(10000, k / D); return i % 2 === 0 ? Math.sin(ang) : Math.cos(ang);
+    }));
+  }
+  function run(text, temp = 1) {
+    const tk = tokenize(text);
+    if (!tk.toks.length) return null;
+    const n = tk.ids.length;
+    const X = tk.ids.map(id => E[id].slice());
+    const PE = posEnc(n);
+    const X0 = add(X, PE);
+    const heads = [0, 1].map(h => {
+      const Q = mm(X0, WQ[h]), K = mm(X0, WK[h]), V = mm(X0, WV[h]);
+      const S = Q.map((q, i) => K.map((k, j) => j > i ? -Infinity : q.reduce((a, v, d) => a + v * k[d], 0) / Math.sqrt(DK)));
+      const A = S.map(softmaxRow);
+      const O = mm(A, V);
+      return { Q, K, V, S, A, O };
+    });
+    const concat = heads[0].O.map((r, i) => r.concat(heads[1].O[i]));
+    const MH = mm(concat, WO);
+    const R1 = layerNorm(add(X0, MH));
+    const Hid = mm(R1, W1).map(r => r.map((v, j) => Math.max(0, v + B1[j])));
+    const F = mm(Hid, W2).map(r => r.map((v, j) => v + B2[j]));
+    const R2 = layerNorm(add(R1, F));
+    const last = R2[n - 1];
+    const logits = E.map(e => e.reduce((a, v, d) => a + v * last[d], 0)); // pesos atados: logits = h · Eᵀ
+    const probs = softmaxRow(logits.map(v => v / temp));
+    let best = 2; probs.forEach((p, i) => { if (i > 1 && p > probs[best]) best = i; }); // nunca [PAD]/[UNK]
+    return { ...tk, n, X, PE, X0, heads, concat, MH, R1, Hid, F, R2, logits, probs, next: best, temp };
+  }
+  return { VOCAB, D, H, DK, DFF, MAXT, run, tokenize };
+})();
+
+/* ---------- UI del visualizador ---------- */
+const TVUI = (() => {
+  const STAGES = [
+    { id:'text', t:'Texto', short:'Texto' },
+    { id:'tok', t:'Tokenización', short:'Tokens' },
+    { id:'ids', t:'Token IDs', short:'IDs' },
+    { id:'emb', t:'Embeddings', short:'Embeddings' },
+    { id:'pe', t:'Positional Encoding', short:'Posición' },
+    { id:'qkv', t:'Q, K y V', short:'Q/K/V' },
+    { id:'scores', t:'Attention scores', short:'Scores' },
+    { id:'softmax', t:'Softmax', short:'Softmax' },
+    { id:'mha', t:'Multi-Head Attention', short:'Multi-head' },
+    { id:'ffn', t:'Feed Forward Network', short:'FFN' },
+    { id:'logits', t:'Logits', short:'Logits' },
+    { id:'probs', t:'Probabilidades', short:'Probabilidades' },
+    { id:'gen', t:'Token generado', short:'Token' },
+  ];
+  let text = 'el gato come pescado en la', stage = 0, head = 0, temp = 1, R = null, msg = '';
+
+  const f2 = v => v === -Infinity ? '−∞' : (v < 0 ? '−' : '') + Math.abs(v).toFixed(2);
+  function cellStyle(v, max) {
+    if (v === -Infinity) return 'background:var(--soft);color:var(--muted)';
+    const a = Math.min(1, Math.abs(v) / (max || 1));
+    const c = v >= 0 ? 'var(--pos)' : 'var(--neg)';
+    return `background:color-mix(in srgb, ${c} ${Math.round(a * 70)}%, var(--surface));${a > 0.6 ? 'color:#fff' : ''}`;
+  }
+  function matrix(M, rows, cols, { title = '', max = null, shape = '' } = {}) {
+    const fin = M.flat().filter(v => v !== -Infinity);
+    const mx = max ?? Math.max(1e-9, ...fin.map(Math.abs));
+    return `<figure class="mx"><figcaption><b>${title}</b>${shape ? ` <span class="shape">${shape}</span>` : ''}</figcaption>
+      <div class="mx-scroll"><table class="mxt"><thead><tr><th></th>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+      <tbody>${M.map((r, i) => `<tr><th>${rows[i]}</th>${r.map(v => `<td style="${cellStyle(v, mx)}">${f2(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></figure>`;
+  }
+  function barsTop(vals, k, fmt, title) {
+    const idx = vals.map((v, i) => [v, i]).filter(([, i]) => i > 1).sort((a, b) => b[0] - a[0]).slice(0, k);
+    const mx = Math.max(...idx.map(([v]) => Math.abs(v)), 1e-9);
+    return `<figure class="mx"><figcaption><b>${title}</b></figcaption><div class="topbars">${idx.map(([v, i]) =>
+      `<div class="tb"><span class="tbw">${U.esc(TV.VOCAB[i])}</span><span class="tbt"><i style="width:${Math.max(1, Math.abs(v) / mx * 100)}%;background:${v >= 0 ? 'var(--pos)' : 'var(--neg)'}"></i></span><span class="tbn">${fmt(v)}</span></div>`).join('')}</div></figure>`;
+  }
+  const dims = n => Array.from({ length: n }, (_, i) => 'd' + i);
+  const tokLabels = () => R.toks.map((t, i) => `${i}·${U.esc(t)}`);
+
+  function stageContent(id) {
+    const n = R.n, tl = tokLabels(), hd = R.heads[head];
+    switch (id) {
+      case 'text': return {
+        shape: 'cadena de texto',
+        tex: '\\text{texto} \\;\\rightarrow\\; \\text{siguiente token}',
+        why: 'El modelo recibe un texto y su única tarea es predecir cuál es el siguiente token. Generar un párrafo entero es repetir ese paso una y otra vez, añadiendo cada token elegido al final.',
+        viz: `<div class="chips big">${R.toks.map(t => `<span class="chip">${U.esc(t)}</span>`).join('')}<span class="chip ghost">?</span></div>`,
+        code: `texto = "${text}"\n# objetivo: P(siguiente token | texto)` };
+      case 'tok': return {
+        shape: `${n} tokens`,
+        tex: '\\text{"el gato come"} \\rightarrow [\\,\\text{el},\\ \\text{gato},\\ \\text{come}\\,]',
+        why: 'El texto se parte en unidades llamadas tokens. Aquí se usa una palabra por token para que se lea fácil; los LLM reales usan subpalabras (BPE), de forma que «jardinería» podría ser «jardin» + «ería», y cualquier palabra, aunque sea nueva, se puede representar.',
+        viz: `<div class="chips big">${R.toks.map(t => `<span class="chip">${U.esc(t)}</span>`).join('')}</div>`,
+        code: `from transformers import AutoTokenizer\ntok = AutoTokenizer.from_pretrained("gpt2")\ntok.tokenize("${text}")   # subpalabras BPE` };
+      case 'ids': return {
+        shape: `ids: [${n}]  ·  vocabulario: ${TV.VOCAB.length}`,
+        tex: '\\text{token} \\mapsto \\text{id} \\in \\{0, \\dots, |V|-1\\}',
+        why: 'Cada token se sustituye por su posición en el vocabulario. Las palabras que no están en él se convierten en [UNK]. Este vocabulario de juguete tiene ' + TV.VOCAB.length + ' entradas; el de un LLM real, entre 30.000 y más de 200.000.',
+        viz: `<div class="chips big">${R.toks.map((t, i) => `<span class="chip id"><small>${U.esc(t)}</small>${R.ids[i]}${R.ids[i] === 1 ? ' <em>[UNK]</em>' : ''}</span>`).join('')}</div>
+          <details class="vocab"><summary>Ver vocabulario completo</summary><div class="chips">${TV.VOCAB.map((w, i) => `<span class="chip sm">${i} · ${U.esc(w)}</span>`).join('')}</div></details>`,
+        code: `ids = tok("${text}", return_tensors="pt").input_ids   # tensor de forma [1, T]` };
+      case 'emb': return {
+        shape: `X: [${n}, ${TV.D}]`,
+        tex: 'X = E[\\text{ids}], \\qquad E \\in \\mathbb{R}^{|V| \\times d_{model}}',
+        why: 'Cada id selecciona una fila de la matriz de embeddings E: un vector de ' + TV.D + ' números que representa el token. Durante el entrenamiento estos vectores se ajustan para que tokens con usos parecidos queden cerca. En GPT-3 cada vector tiene 12.288 dimensiones.',
+        viz: matrix(R.X, tl, dims(TV.D), { title: 'Embeddings de cada token', shape: `[${n}, ${TV.D}]` }),
+        code: `emb = nn.Embedding(num_embeddings=${TV.VOCAB.length}, embedding_dim=${TV.D})\nX = emb(ids)            # [1, ${n}, ${TV.D}]` };
+      case 'pe': return {
+        shape: `PE: [${n}, ${TV.D}]  ·  X + PE: [${n}, ${TV.D}]`,
+        tex: 'PE_{(p,2i)} = \\sin\\!\\left(\\frac{p}{10000^{2i/d}}\\right),\\quad PE_{(p,2i+1)} = \\cos\\!\\left(\\frac{p}{10000^{2i/d}}\\right)',
+        why: 'La atención trata la secuencia como un conjunto: sin más información, «el gato come» y «come el gato» serían iguales. Por eso se suma a cada embedding un vector que depende de su posición. Esta es la codificación sinusoidal del Transformer original; muchos modelos actuales usan RoPE, que rota Q y K según la posición.',
+        viz: matrix(R.PE, tl, dims(TV.D), { title: 'Codificación posicional', shape: `[${n}, ${TV.D}]`, max: 1 }) + matrix(R.X0, tl, dims(TV.D), { title: 'Entrada al bloque: X + PE', shape: `[${n}, ${TV.D}]` }),
+        code: `pos = torch.arange(T).unsqueeze(1)\ndiv = 10000 ** (torch.arange(0, d, 2) / d)\npe = torch.zeros(T, d)\npe[:, 0::2] = torch.sin(pos / div)\npe[:, 1::2] = torch.cos(pos / div)\nx = X + pe` };
+      case 'qkv': return {
+        shape: `Q, K, V: [${n}, ${TV.DK}] por cabeza  ·  W: [${TV.D}, ${TV.DK}]`,
+        tex: 'Q = XW_Q,\\quad K = XW_K,\\quad V = XW_V',
+        why: 'Tres proyecciones lineales de cada token. La Query es lo que el token busca, la Key es lo que ofrece a los demás y el Value es la información que transmitirá si alguien le presta atención. Cada cabeza tiene sus propias matrices.',
+        viz: headPicker() + `<div class="mx-row">${matrix(hd.Q, tl, dims(TV.DK), { title: 'Q', shape: `[${n}, ${TV.DK}]` })}${matrix(hd.K, tl, dims(TV.DK), { title: 'K', shape: `[${n}, ${TV.DK}]` })}${matrix(hd.V, tl, dims(TV.DK), { title: 'V', shape: `[${n}, ${TV.DK}]` })}</div>`,
+        code: `W_q = nn.Linear(${TV.D}, ${TV.DK}, bias=False)   # una por cabeza\nq, k, v = W_q(x), W_k(x), W_v(x)          # [1, ${n}, ${TV.DK}]` };
+      case 'scores': return {
+        shape: `S: [${n}, ${n}] por cabeza`,
+        tex: 'S = \\frac{QK^{\\top}}{\\sqrt{d_k}} + M, \\qquad M_{ij} = \\begin{cases} 0 & j \\le i \\\\ -\\infty & j > i \\end{cases}',
+        why: 'Cada Query se compara con todas las Keys mediante un producto escalar: cuanto más alineados, mayor la puntuación. Se divide por √d_k para que los valores no crezcan con la dimensión. La máscara causal pone −∞ en el futuro: al generar texto, un token solo puede mirar a los anteriores.',
+        viz: headPicker() + matrix(hd.S, tl, R.toks.map(U.esc), { title: 'Puntuaciones (fila = token que pregunta)', shape: `[${n}, ${n}]` }),
+        code: `scores = q @ k.transpose(-2, -1) / math.sqrt(${TV.DK})\nmask = torch.triu(torch.ones(T, T, dtype=torch.bool), 1)\nscores = scores.masked_fill(mask, float("-inf"))` };
+      case 'softmax': return {
+        shape: `A: [${n}, ${n}]  ·  cada fila suma 1`,
+        tex: 'A_{ij} = \\frac{e^{S_{ij}}}{\\sum_{k} e^{S_{ik}}}, \\qquad O = AV',
+        why: 'El softmax convierte cada fila de puntuaciones en pesos positivos que suman 1. Las posiciones enmascaradas (−∞) reciben exactamente 0. Después, cada token calcula una media ponderada de los Values: O = A·V.',
+        viz: headPicker() + `<div class="mx-row">${matrix(hd.A, tl, R.toks.map(U.esc), { title: 'Pesos de atención A', shape: `[${n}, ${n}]`, max: 1 })}${matrix(hd.O, tl, dims(TV.DK), { title: 'Salida de la cabeza O = A·V', shape: `[${n}, ${TV.DK}]` })}</div>`,
+        code: `attn = scores.softmax(dim=-1)   # [1, ${n}, ${n}]\nout = attn @ v                    # [1, ${n}, ${TV.DK}]\n# equivalente: F.scaled_dot_product_attention(q, k, v, is_causal=True)` };
+      case 'mha': return {
+        shape: `concat: [${n}, ${TV.H}·${TV.DK}=${TV.D}]  ·  W_O: [${TV.D}, ${TV.D}]  ·  salida: [${n}, ${TV.D}]`,
+        tex: '\\text{MHA}(X) = \\text{Concat}(O_1, \\dots, O_h)\\,W_O, \\qquad X_1 = \\text{LayerNorm}(X + \\text{MHA}(X))',
+        why: 'Cada cabeza atiende a patrones distintos en su propio subespacio. Sus salidas se concatenan y se mezclan con W_O. El resultado se suma a la entrada (conexión residual, la idea de ResNet) y se normaliza con LayerNorm, lo que estabiliza el entrenamiento de redes profundas.',
+        viz: `<div class="mx-row">${matrix(R.concat, tl, [...dims(TV.DK).map(d => 'h1·' + d), ...dims(TV.DK).map(d => 'h2·' + d)], { title: 'Concat(O₁, O₂)', shape: `[${n}, ${TV.D}]` })}${matrix(R.R1, tl, dims(TV.D), { title: 'LayerNorm(X + MHA)', shape: `[${n}, ${TV.D}]` })}</div>`,
+        code: `mha = nn.MultiheadAttention(embed_dim=${TV.D}, num_heads=${TV.H}, batch_first=True)\na, _ = mha(x, x, x, attn_mask=mask)\nx = nn.LayerNorm(${TV.D})(x + a)` };
+      case 'ffn': return {
+        shape: `oculta: [${n}, ${TV.DFF}]  ·  salida: [${n}, ${TV.D}]`,
+        tex: '\\text{FFN}(x) = \\max(0,\\, xW_1 + b_1)\\,W_2 + b_2, \\qquad X_2 = \\text{LayerNorm}(X_1 + \\text{FFN}(X_1))',
+        why: 'Después de mezclar información entre tokens, cada token pasa por su cuenta por una pequeña red de dos capas que se expande (normalmente a 4·d_model) y vuelve a comprimir. Se cree que buena parte del «conocimiento» de un LLM vive en estas capas. De nuevo, conexión residual y LayerNorm.',
+        viz: `<div class="mx-row">${matrix(R.Hid, tl, dims(TV.DFF), { title: 'Capa oculta (ReLU)', shape: `[${n}, ${TV.DFF}]` })}${matrix(R.R2, tl, dims(TV.D), { title: 'Salida del bloque', shape: `[${n}, ${TV.D}]` })}</div>`,
+        code: `ffn = nn.Sequential(nn.Linear(${TV.D}, ${TV.DFF}), nn.ReLU(), nn.Linear(${TV.DFF}, ${TV.D}))\nx = nn.LayerNorm(${TV.D})(x + ffn(x))\n# un LLM real apila decenas de estos bloques` };
+      case 'logits': return {
+        shape: `h último: [${TV.D}]  ·  logits: [${TV.VOCAB.length}]`,
+        tex: '\\text{logits} = h_{T}\\, E^{\\top} \\in \\mathbb{R}^{|V|}',
+        why: 'Solo importa el vector del último token, que ha acumulado el contexto de todos los anteriores. Se compara con el embedding de cada palabra del vocabulario (aquí se reutiliza la matriz E, lo que se llama weight tying), y sale una puntuación por palabra.',
+        viz: barsTop(R.logits, 12, v => f2(v), `Los 12 logits más altos (de ${TV.VOCAB.length})`),
+        code: `lm_head = nn.Linear(${TV.D}, ${TV.VOCAB.length}, bias=False)\nlm_head.weight = emb.weight          # weight tying\nlogits = lm_head(x[:, -1, :])      # [1, ${TV.VOCAB.length}]` };
+      case 'probs': return {
+        shape: `p: [${TV.VOCAB.length}]  ·  Σ p = 1`,
+        tex: 'p_i = \\frac{e^{z_i / \\tau}}{\\sum_j e^{z_j / \\tau}}',
+        why: 'El softmax convierte los logits en una distribución de probabilidad. La temperatura τ la controla: con τ < 1 se concentra en las opciones más probables (respuestas más predecibles); con τ > 1 se aplana (más variedad y más errores).',
+        viz: `<label class="temp" for="tv-temp">Temperatura τ <output>${temp.toFixed(2)}</output><input type="range" id="tv-temp" min="0.2" max="2.5" step="0.05" value="${temp}"></label>` + barsTop(R.probs, 10, v => (v * 100).toFixed(1) + ' %', 'Las 10 palabras más probables'),
+        code: `probs = (logits / temperatura).softmax(dim=-1)\nsiguiente = torch.multinomial(probs, 1)   # muestreo\n# o voraz: probs.argmax(-1)` };
+      case 'gen': return {
+        shape: `nuevo id: ${R.next}`,
+        tex: '\\hat{y} = \\arg\\max_i\\, p_i',
+        why: 'Se elige el token más probable (decodificación voraz) o se muestrea de la distribución. Se añade al texto y todo el proceso empieza de nuevo para el siguiente. Como estos pesos no están entrenados, la palabra elegida es arbitraria: un modelo real habría aprendido de miles de millones de frases qué suele venir después.',
+        viz: `<div class="chips big">${R.toks.map(t => `<span class="chip">${U.esc(t)}</span>`).join('')}<span class="chip new">${U.esc(TV.VOCAB[R.next])}</span></div>
+          <p class="note">Probabilidad: ${(R.probs[R.next] * 100).toFixed(1)} %</p>
+          <button class="btn primary" id="tv-append" type="button">Añadir «${U.esc(TV.VOCAB[R.next])}» y volver a empezar</button>`,
+        code: `for _ in range(20):\n    logits = modelo(ids)[:, -1, :]\n    nuevo = logits.argmax(-1, keepdim=True)\n    ids = torch.cat([ids, nuevo], dim=1)` };
+    }
+  }
+  function headPicker() {
+    return `<div class="seg sm" role="group" aria-label="Cabeza de atención">${[0, 1].map(h => `<button type="button" data-head="${h}" class="${h === head ? 'on' : ''}">Cabeza ${h + 1}</button>`).join('')}</div>`;
+  }
+  function render(root) {
+    R = TV.run(text, temp);
+    if (!R) { text = 'el gato come'; R = TV.run(text, temp); }
+    const st = STAGES[stage], c = stageContent(st.id);
+    root.innerHTML = `
+      <div class="tv-input">
+        <label for="tv-text">Texto de entrada</label>
+        <div class="tv-row"><input id="tv-text" type="text" maxlength="80" value="${U.esc(text)}" autocomplete="off" spellcheck="false">
+        <button class="btn" id="tv-run" type="button">Procesar</button></div>
+        <p class="note">${msg ? `<b>${U.esc(msg)}</b> ` : ''}Vocabulario de ${TV.VOCAB.length} palabras (máximo ${TV.MAXT} tokens). Prueba: «la niña lee un libro en el», «el sol sale por la».</p>
+      </div>
+      <ol class="tv-steps" aria-label="Etapas">${STAGES.map((s, i) => `<li><button type="button" data-stage="${i}" class="${i === stage ? 'on' : ''} ${i < stage ? 'done' : ''}" aria-current="${i === stage}"><span>${String(i + 1).padStart(2, '0')}</span>${s.short}</button></li>`).join('')}</ol>
+      <div class="tv-panel">
+        <div class="tv-head">
+          <div><span class="eyebrow">Etapa ${stage + 1} de ${STAGES.length}</span><h2>${st.t}</h2></div>
+          <span class="shape big">${c.shape}</span>
+        </div>
+        <div class="tv-grid">
+          <div class="tv-explain">
+            <div class="math-block">${U.tex(c.tex)}</div>
+            <p>${c.why}</p>
+            <div class="code"><div class="lab">PyTorch equivalente<button type="button" data-copy>Copiar</button></div><pre><code>${U.hlPy(c.code)}</code></pre></div>
+          </div>
+          <div class="tv-viz">${c.viz}</div>
+        </div>
+        <div class="tv-nav"><button class="btn" id="tv-prev" type="button" ${stage === 0 ? 'disabled' : ''}>← Anterior</button><button class="btn primary" id="tv-next" type="button" ${stage === STAGES.length - 1 ? 'disabled' : ''}>Siguiente →</button></div>
+      </div>`;
+    const inp = root.querySelector('#tv-text');
+    const submit = () => { const v = inp.value.trim(); if (!v) { msg = 'Escribe al menos una palabra.'; render(root); return; }
+      const tk = TV.tokenize(v); if (!tk.toks.length) { msg = 'No se ha reconocido ningún token.'; render(root); return; }
+      text = tk.toks.join(' ').replace(/ ([.,])/g, '$1'); msg = tk.truncated ? `Se han usado solo los primeros ${TV.MAXT} tokens.` : (tk.ids.includes(1) ? 'Hay palabras fuera del vocabulario: se tratan como [UNK].' : ''); render(root); };
+    root.querySelector('#tv-run').onclick = submit;
+    inp.onkeydown = e => { if (e.key === 'Enter') submit(); };
+    root.querySelectorAll('[data-stage]').forEach(b => b.onclick = () => { stage = +b.dataset.stage; render(root); });
+    root.querySelectorAll('[data-head]').forEach(b => b.onclick = () => { head = +b.dataset.head; render(root); });
+    const pv = root.querySelector('#tv-prev'), nx = root.querySelector('#tv-next');
+    pv.onclick = () => { stage = Math.max(0, stage - 1); render(root); };
+    nx.onclick = () => { stage = Math.min(STAGES.length - 1, stage + 1); render(root); };
+    const tr = root.querySelector('#tv-temp'); if (tr) tr.oninput = e => { temp = +e.target.value; render(root); root.querySelector('#tv-temp').focus(); };
+    const ap = root.querySelector('#tv-append'); if (ap) ap.onclick = () => {
+      const tk = TV.tokenize(text + ' ' + TV.VOCAB[R.next]);
+      if (tk.truncated) { msg = `El texto ya tiene ${TV.MAXT} tokens: bórralo o acórtalo para seguir generando.`; }
+      else { text = tk.toks.join(' ').replace(/ ([.,])/g, '$1'); msg = ''; stage = 0; }
+      render(root); };
+    const ol = root.querySelector('.tv-steps'), on = ol && ol.querySelector('button.on');
+    if (ol && on) ol.scrollLeft = on.parentElement.offsetLeft - ol.clientWidth / 2 + on.offsetWidth / 2;
+    U.wireCopy(root);
+  }
+  return { render };
+})();
+
+/* =========================================================================
+   ARTÍCULO: RANDOM FOREST (plantilla de 20 secciones)
+   Todas las cifras proceden de ejecutar el código de esta página con
+   scikit-learn 1.8.0 y NumPy 2.4 (random_state = 42).
+   ========================================================================= */
+const RF_SCRATCH = `import numpy as np
+
+class Nodo:
+    def __init__(self, feature=None, umbral=None, izq=None, der=None, valor=None):
+        self.feature, self.umbral, self.izq, self.der, self.valor = feature, umbral, izq, der, valor
+
+def gini(y):
+    _, cuentas = np.unique(y, return_counts=True)
+    p = cuentas / len(y)
+    return 1.0 - np.sum(p ** 2)
+
+class ArbolDecision:
+    def __init__(self, max_depth=None, min_samples_split=2, max_features=None, rng=None):
+        self.max_depth, self.min_samples_split = max_depth, min_samples_split
+        self.max_features, self.rng = max_features, rng or np.random.default_rng()
+
+    def fit(self, X, y):
+        self.raiz = self._crecer(X, y, profundidad=0)
+        return self
+
+    def _crecer(self, X, y, profundidad):
+        if (len(np.unique(y)) == 1 or len(y) < self.min_samples_split
+                or (self.max_depth is not None and profundidad >= self.max_depth)):
+            return Nodo(valor=np.bincount(y).argmax())
+        n_feat = X.shape[1]
+        k = self.max_features or n_feat
+        candidatas = self.rng.choice(n_feat, k, replace=False)   # aleatoriedad por nodo
+        mejor = (None, None, gini(y))
+        for f in candidatas:
+            for t in np.unique(X[:, f])[:-1]:
+                izq = X[:, f] <= t
+                g = (izq.sum() * gini(y[izq]) + (~izq).sum() * gini(y[~izq])) / len(y)
+                if g < mejor[2]:
+                    mejor = (f, t, g)
+        f, t, _ = mejor
+        if f is None:
+            return Nodo(valor=np.bincount(y).argmax())
+        izq = X[:, f] <= t
+        return Nodo(f, t, self._crecer(X[izq], y[izq], profundidad + 1),
+                    self._crecer(X[~izq], y[~izq], profundidad + 1))
+
+    def _predecir_uno(self, x, nodo):
+        while nodo.valor is None:
+            nodo = nodo.izq if x[nodo.feature] <= nodo.umbral else nodo.der
+        return nodo.valor
+
+    def predict(self, X):
+        return np.array([self._predecir_uno(x, self.raiz) for x in X])
+
+class RandomForest:
+    def __init__(self, n_estimators=100, max_depth=None, max_features="sqrt", seed=0):
+        self.n_estimators, self.max_depth = n_estimators, max_depth
+        self.max_features, self.rng = max_features, np.random.default_rng(seed)
+
+    def fit(self, X, y):
+        n, d = X.shape
+        k = int(np.sqrt(d)) if self.max_features == "sqrt" else d
+        self.arboles = []
+        for _ in range(self.n_estimators):
+            idx = self.rng.integers(0, n, n)                       # muestra bootstrap
+            arbol = ArbolDecision(self.max_depth, max_features=k, rng=self.rng)
+            self.arboles.append(arbol.fit(X[idx], y[idx]))
+        return self
+
+    def predict(self, X):
+        votos = np.array([a.predict(X) for a in self.arboles])   # (n_arboles, n_muestras)
+        return np.apply_along_axis(lambda v: np.bincount(v).argmax(), 0, votos)`;
+
+const RF_DATA = `from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+
+datos = load_breast_cancer()
+X, y = datos.data, datos.target          # y: 0 = maligno, 1 = benigno
+X_tr, X_te, y_tr, y_te = train_test_split(
+    X, y, test_size=0.25, stratify=y, random_state=42)
+print(X_tr.shape, X_te.shape)            # (426, 30) (143, 30)`;
+
+const RF_TRAIN = `from sklearn.ensemble import RandomForestClassifier
+
+modelo = RandomForestClassifier(
+    n_estimators=300,
+    oob_score=True,        # error out-of-bag gratis
+    random_state=42,
+    n_jobs=-1,
+)
+modelo.fit(X_tr, y_tr)
+print(f"OOB: {modelo.oob_score_:.3f}")   # 0.962`;
+
+const RF_EVAL = `from sklearn.model_selection import cross_val_score
+from sklearn.metrics import (accuracy_score, precision_score, recall_score,
+                             f1_score, roc_auc_score, confusion_matrix)
+
+pred = modelo.predict(X_te)
+prob = modelo.predict_proba(X_te)[:, 1]
+print(accuracy_score(y_te, pred))        # 0.958
+print(roc_auc_score(y_te, prob))         # 0.995
+print(confusion_matrix(y_te, pred))      # [[49  4]
+                                         #  [ 2 88]]
+cv = cross_val_score(RandomForestClassifier(n_estimators=300, random_state=42), X, y, cv=5)
+print(cv.mean(), cv.std())               # 0.961  0.025`;
+
+const RF_SKLEARN = `from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+
+clf = RandomForestClassifier(n_estimators=300, max_features="sqrt", random_state=42)
+clf.fit(X_tr, y_tr)
+clf.predict(X_te)            # clases
+clf.predict_proba(X_te)      # media de las probabilidades de los árboles
+clf.feature_importances_     # importancia por reducción media de impureza
+
+reg = RandomForestRegressor(n_estimators=300, max_features=1.0)   # para regresión`;
+
+const RF_SCRATCH_USE = `from sklearn.metrics import accuracy_score
+
+rf = RandomForest(n_estimators=25, max_depth=8, seed=0).fit(X_tr, y_tr)
+print(accuracy_score(y_te, rf.predict(X_te)))   # 0.965 (unos 7 s: bucles en Python puro)`;
+
+const RF_EXERCISE = `# Ejercicio: completa la función para calcular el error out-of-bag
+# con la clase RandomForest implementada desde cero.
+# Pista: guarda los índices bootstrap de cada árbol en fit().
+
+def error_oob(bosque, X, y):
+    votos = [[] for _ in range(len(X))]
+    for arbol, idx in zip(bosque.arboles, bosque.indices):
+        fuera = np.setdiff1d(np.arange(len(X)), idx)
+        # ... predice con 'arbol' solo las muestras 'fuera' y guarda el voto
+    # ... devuelve la proporción de aciertos con el voto mayoritario
+    pass`;
+
+const IMP = [['worst perimeter', 0.1457], ['worst area', 0.1441], ['worst concave points', 0.1146], ['mean concave points', 0.0983], ['worst radius', 0.0724], ['mean radius', 0.0607], ['mean perimeter', 0.0560], ['mean concavity', 0.0452]];
+const NEST = [[1, 0.923], [5, 0.937], [10, 0.951], [25, 0.951], [50, 0.951], [100, 0.958], [200, 0.958], [300, 0.958]];
+
+function nestChart() {
+  const W = 560, H = 220, pl = 46, pr = 16, pt = 16, pb = 34, lo = 0.90, hi = 0.97;
+  const X = i => pl + i / (NEST.length - 1) * (W - pl - pr), Y = v => pt + (hi - v) / (hi - lo) * (H - pt - pb);
+  let g = '';
+  [0.90, 0.92, 0.94, 0.96].forEach(v => { g += `<line x1="${pl}" x2="${W - pr}" y1="${Y(v)}" y2="${Y(v)}" class="gl"/><text x="${pl - 6}" y="${Y(v) + 4}" text-anchor="end" class="ax">${(v * 100).toFixed(0)} %</text>`; });
+  NEST.forEach(([n], i) => { g += `<text x="${X(i)}" y="${H - pb + 16}" text-anchor="middle" class="ax">${n}</text>`; });
+  g += `<text x="${(pl + W - pr) / 2}" y="${H - 4}" text-anchor="middle" class="ax">número de árboles (escala por posición)</text>`;
+  g += `<polyline points="${NEST.map(([, v], i) => `${X(i)},${Y(v)}`).join(' ')}" class="ln"/>`;
+  NEST.forEach(([n, v], i) => { g += `<circle cx="${X(i)}" cy="${Y(v)}" r="4" class="pt"/>`; });
+  g += `<text x="${X(0) + 8}" y="${Y(0.923) + 16}" class="lbl">1 árbol: 92,3 %</text><text x="${X(7)}" y="${Y(0.958) - 10}" text-anchor="end" class="lbl">300 árboles: 95,8 %</text>`;
+  return `<figure class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Acierto en test según el número de árboles">${g}</svg><figcaption>Acierto en test según el número de árboles (misma partición, random_state = 42). Más árboles nunca empeoran el modelo; a partir de ~100 se estabiliza.</figcaption></figure>`;
+}
+function impChart() {
+  const mx = IMP[0][1];
+  return `<figure class="chart"><div class="hbars">${IMP.map(([n, v]) => `<div class="hb"><span class="hbl">${n}</span><span class="hbt"><i style="width:${v / mx * 100}%"></i></span><span class="hbn">${v.toFixed(3)}</span></div>`).join('')}</div>
+    <figcaption>Las 8 variables más importantes según la reducción media de impureza (<code>feature_importances_</code>). Las medidas «worst» (el peor valor de los núcleos de cada imagen) dominan. Esta importancia tiende a favorecer variables continuas o con muchos valores; <code>permutation_importance</code> es una alternativa más fiable.</figcaption></figure>`;
+}
+
+const RF_SECTIONS = [
+  { id:'que-es', t:'Qué es', plain:'ensemble bagging árboles votación breiman 2001', html:() => `
+    <p><b>Random Forest</b> es un método de <i>ensemble</i> para clasificación y regresión. Entrena muchos árboles de decisión, cada uno con una muestra aleatoria de los datos y con un subconjunto aleatorio de variables en cada división, y combina sus predicciones: por votación en clasificación y por media en regresión. Lo propuso Leo Breiman en 2001, a partir de su trabajo anterior sobre <i>bagging</i> (1996).</p>
+    <p>Es uno de los algoritmos más usados con datos tabulares: funciona bien sin apenas ajustes, no necesita escalar las variables y da una estimación de su propio error sin reservar datos.</p>` },
+  { id:'intuicion', t:'Intuición', plain:'sabiduría de la multitud varianza sesgo decorrelación', html:() => `
+    <p>Un árbol de decisión profundo se aprende los datos casi de memoria: tiene poco sesgo pero mucha varianza, porque cambiar unos pocos puntos cambia el árbol entero. La idea del bosque es la de la «sabiduría de la multitud»: si muchos estimadores ruidosos cometen errores <b>distintos</b>, al promediarlos los errores se compensan.</p>
+    <p>La clave está en que los errores sean distintos. Si todos los árboles vieran los mismos datos y las mismas variables serían casi idénticos y promediarlos no serviría de nada. Por eso se introduce aleatoriedad por dos vías: cada árbol ve una muestra bootstrap distinta, y en cada nodo solo puede elegir entre unas pocas variables al azar.</p>
+    <p class="callout">Pruébalo en el <a href="#lab-tree">laboratorio del árbol de decisión</a>: con el dataset «Ruido», compara un árbol profundo con el botón «Ver Random Forest».</p>` },
+  { id:'matematicas', t:'Fundamento matemático', plain:'bootstrap out of bag varianza correlación gini ganancia', html:() => `
+    <h4>Por qué promediar reduce el error</h4>
+    <p>Si promediamos B variables idénticamente distribuidas, cada una con varianza σ² y correlación ρ entre pares, la varianza de la media es:</p>
+    <div class="math-block">${U.tex('\\operatorname{Var}\\!\\left(\\frac{1}{B}\\sum_{b=1}^{B} T_b(x)\\right) = \\rho\\,\\sigma^2 + \\frac{1-\\rho}{B}\\,\\sigma^2')}</div>
+    <p>El segundo término desaparece al añadir árboles, pero el primero no: la única forma de bajarlo es reducir la correlación ρ entre árboles. Eso es exactamente lo que hace la selección aleatoria de variables.</p>
+    <h4>Bootstrap y datos out-of-bag</h4>
+    <p>Cada árbol se entrena con n muestras tomadas con reemplazo. La probabilidad de que una muestra concreta no salga nunca es:</p>
+    <div class="math-block">${U.tex('\\left(1 - \\frac{1}{n}\\right)^{n} \\xrightarrow{\\,n\\to\\infty\\,} e^{-1} \\approx 0.368')}</div>
+    <p>Así, cada árbol deja fuera en torno al 36,8 % de los datos. Evaluar cada punto solo con los árboles que no lo vieron da el <b>error out-of-bag</b>, una estimación del error de generalización sin necesidad de un conjunto de validación.</p>
+    <h4>Criterio de división</h4>
+    <p>Cada nodo busca, entre las m variables candidatas, el umbral que más reduce la impureza de Gini:</p>
+    <div class="math-block">${U.tex('G(S) = 1 - \\sum_{k} p_k^2, \\qquad \\Delta G = G(S) - \\frac{|S_L|}{|S|}G(S_L) - \\frac{|S_R|}{|S|}G(S_R)')}</div>
+    <h4>Predicción</h4>
+    <div class="math-block">${U.tex('\\hat{y}_{\\text{clas}}(x) = \\operatorname{moda}\\{T_b(x)\\}_{b=1}^{B}, \\qquad \\hat{y}_{\\text{reg}}(x) = \\frac{1}{B}\\sum_{b=1}^{B} T_b(x)')}</div>
+    <p>El valor habitual de m es ${U.tex('\\lfloor\\sqrt{p}\\rfloor', false)} en clasificación, con p el número de variables. scikit-learn, en lugar de contar votos, promedia las probabilidades de clase de los árboles.</p>` },
+  { id:'paso-a-paso', t:'Algoritmo paso a paso', plain:'pasos bootstrap entrenar árbol votar', html:() => `
+    <ol class="steps-ol">
+      <li>Elige el número de árboles B y el número de variables candidatas por nodo m.</li>
+      <li>Para cada árbol b = 1…B, toma una muestra bootstrap: n filas elegidas al azar con reemplazo.</li>
+      <li>Haz crecer un árbol con esa muestra. En cada nodo, escoge m variables al azar y busca el mejor corte solo entre ellas.</li>
+      <li>Deja crecer el árbol sin podar, hasta que las hojas sean puras o tengan el mínimo de muestras.</li>
+      <li>Para predecir, pasa el nuevo punto por los B árboles y combina las respuestas: voto mayoritario o media.</li>
+    </ol>` },
+  { id:'pseudocodigo', t:'Pseudocódigo', plain:'pseudocódigo', html:() => `
+    <pre class="pseudo"><code>función RANDOM_FOREST(D, B, m):
+    bosque ← []
+    para b ← 1 hasta B:
+        D_b ← muestra_con_reemplazo(D, |D|)
+        T_b ← CRECER_ÁRBOL(D_b, m)
+        añadir T_b a bosque
+    devolver bosque
+
+función CRECER_ÁRBOL(D, m):
+    si D es puro o demasiado pequeño:
+        devolver HOJA(clase mayoritaria de D)
+    F ← m variables elegidas al azar
+    (f, t) ← argmax sobre f ∈ F y umbrales t de ΔGini(D, f, t)
+    devolver NODO(f, t, CRECER_ÁRBOL(D[f ≤ t], m), CRECER_ÁRBOL(D[f > t], m))
+
+función PREDECIR(bosque, x):
+    devolver moda{ T(x) para T en bosque }</code></pre>` },
+  { id:'desde-cero', t:'Implementación desde cero en Python', plain:'numpy implementación clase nodo árbol gini', html:() => `
+    <p>Una implementación completa y funcional en NumPy, pensada para leerse, no para ser rápida. Sigue el algoritmo tal cual: bootstrap, selección aleatoria de variables en cada nodo y voto mayoritario.</p>
+    ${U.code(RF_SCRATCH, 'rf_desde_cero.py')}
+    ${U.code(RF_SCRATCH_USE, 'Uso')}
+    <p>Con 25 árboles de profundidad máxima 8 alcanza un 96,5 % de acierto en el mismo conjunto de test que el modelo de scikit-learn, aunque tarda unos 7 segundos por los bucles de Python frente a menos de uno en scikit-learn.</p>` },
+  { id:'sklearn', t:'Implementación con Scikit-learn', plain:'sklearn randomforestclassifier regressor predict_proba', html:() => U.code(RF_SKLEARN, 'Python') },
+  { id:'dataset', t:'Dataset de ejemplo', plain:'breast cancer wisconsin 569 30 variables', html:() => `
+    <p>Se usa <a href="#datasets">Breast Cancer Wisconsin (Diagnostic)</a>, incluido en scikit-learn: 569 muestras de biopsias con 30 variables numéricas calculadas sobre imágenes de núcleos celulares (10 medidas, como el radio, la textura o la concavidad, cada una en tres versiones: media, error estándar y peor valor). Hay 212 casos malignos y 357 benignos.</p>
+    ${U.code(RF_DATA, 'Python')}
+    <p>La partición estratificada mantiene la proporción de clases en entrenamiento (426 muestras) y test (143).</p>` },
+  { id:'entrenamiento', t:'Entrenamiento', plain:'fit oob_score n_estimators', html:() => `${U.code(RF_TRAIN, 'Python')}<p>El error out-of-bag da un 96,2 % de acierto sin haber tocado el conjunto de test, muy cerca de lo que luego se mide en test.</p>` },
+  { id:'evaluacion', t:'Evaluación', plain:'validación cruzada test matriz confusión', html:() => `
+    ${U.code(RF_EVAL, 'Python')}
+    <div class="tbl"><table><thead><tr><th>Modelo</th><th>Acierto en test</th><th>Validación cruzada (5 particiones)</th></tr></thead><tbody>
+      <tr><td>Un árbol de decisión</td><td>92,3 %</td><td>—</td></tr>
+      <tr><td>Random Forest desde cero (25 árboles)</td><td>96,5 %</td><td>—</td></tr>
+      <tr><td>Random Forest scikit-learn (300 árboles)</td><td><b>95,8 %</b></td><td>96,1 % ± 2,5</td></tr></tbody></table></div>
+    <p>La desviación de la validación cruzada (±2,5 puntos) es mayor que la diferencia entre los dos bosques: con 143 muestras de test, esa diferencia no es significativa.</p>` },
+  { id:'metricas', t:'Métricas', plain:'precision recall f1 roc auc accuracy', html:() => `
+    <div class="math-block">${U.tex('\\text{Precisión} = \\frac{TP}{TP+FP}, \\quad \\text{Recall} = \\frac{TP}{TP+FN}, \\quad F_1 = \\frac{2\\cdot P\\cdot R}{P+R}')}</div>
+    <div class="grid g2 tight">
+      <div class="tbl"><table><thead><tr><th>Métrica (clase positiva: benigno)</th><th>Valor</th></tr></thead><tbody>
+        <tr><td>Acierto</td><td>0,958</td></tr><tr><td>Precisión</td><td>0,957</td></tr><tr><td>Recall</td><td>0,978</td></tr><tr><td>F1</td><td>0,967</td></tr><tr><td>ROC-AUC</td><td>0,995</td></tr></tbody></table></div>
+      <div class="tbl"><table class="cm"><thead><tr><th>Real \\ Predicho</th><th>Maligno</th><th>Benigno</th></tr></thead><tbody>
+        <tr><th>Maligno</th><td class="ok">49</td><td class="bad">4</td></tr><tr><th>Benigno</th><td class="bad">2</td><td class="ok">88</td></tr></tbody></table></div>
+    </div>
+    <p>En diagnóstico, el error grave es no detectar un tumor maligno. El recall de la clase maligna es 49 / 53 = 92,5 %: 4 casos malignos se clasificaron como benignos. En un sistema real se bajaría el umbral de decisión para la clase maligna, aceptando más falsas alarmas a cambio de perder menos casos.</p>` },
+  { id:'visualizacion', t:'Visualización', plain:'importancia variables gráfico número árboles', html:() => `${impChart()}${nestChart()}<p class="callout">Para ver cómo un árbol divide el espacio y cómo el bosque suaviza la frontera, abre el <a href="#lab-tree">laboratorio del árbol de decisión</a>.</p>` },
+  { id:'ventajas', t:'Ventajas', plain:'ventajas', html:() => `<ul>
+    <li>Muy buen rendimiento sin apenas ajustar hiperparámetros.</li>
+    <li>No necesita escalar ni normalizar las variables, y maneja relaciones no lineales e interacciones.</li>
+    <li>Robusto frente al sobreajuste al añadir árboles: más árboles nunca empeoran el error esperado.</li>
+    <li>Error out-of-bag gratis y medidas de importancia de variables.</li>
+    <li>Entrenamiento trivialmente paralelizable: cada árbol es independiente.</li></ul>` },
+  { id:'limitaciones', t:'Limitaciones', plain:'limitaciones', html:() => `<ul>
+    <li>Menos interpretable que un solo árbol: 300 árboles no se pueden leer.</li>
+    <li>No extrapola: en regresión nunca predice fuera del rango visto en entrenamiento.</li>
+    <li>Modelos grandes en memoria y predicción más lenta que un modelo lineal.</li>
+    <li>La importancia por impureza está sesgada hacia variables continuas o con muchas categorías.</li>
+    <li>En datos tabulares, el gradient boosting bien ajustado suele superarlo.</li></ul>` },
+  { id:'hiperparametros', t:'Hiperparámetros', plain:'n_estimators max_depth max_features min_samples_leaf class_weight', html:() => `
+    <div class="tbl"><table><thead><tr><th>Parámetro (scikit-learn)</th><th>Por defecto</th><th>Efecto</th></tr></thead><tbody>
+      <tr><td><code>n_estimators</code></td><td>100</td><td>Número de árboles. Más es mejor hasta que se estabiliza; solo cuesta tiempo.</td></tr>
+      <tr><td><code>max_features</code></td><td>"sqrt"</td><td>Variables candidatas por nodo (m). Menos variables, árboles menos correlacionados.</td></tr>
+      <tr><td><code>max_depth</code></td><td>None</td><td>Profundidad máxima. Sin límite, los árboles crecen hasta hojas puras.</td></tr>
+      <tr><td><code>min_samples_leaf</code></td><td>1</td><td>Mínimo de muestras por hoja. Subirlo suaviza el modelo.</td></tr>
+      <tr><td><code>min_samples_split</code></td><td>2</td><td>Mínimo de muestras para dividir un nodo.</td></tr>
+      <tr><td><code>bootstrap</code></td><td>True</td><td>Usar muestras bootstrap. Con False, cada árbol ve todos los datos.</td></tr>
+      <tr><td><code>max_samples</code></td><td>None</td><td>Tamaño de cada muestra bootstrap; útil con datasets grandes.</td></tr>
+      <tr><td><code>class_weight</code></td><td>None</td><td>"balanced" compensa clases desbalanceadas.</td></tr>
+      <tr><td><code>oob_score</code></td><td>False</td><td>Calcula el acierto out-of-bag al entrenar.</td></tr>
+      <tr><td><code>criterion</code></td><td>"gini"</td><td>También "entropy" o "log_loss".</td></tr></tbody></table></div>` },
+  { id:'casos-de-uso', t:'Casos de uso', plain:'casos de uso', html:() => `<ul>
+    <li>Línea base sólida para cualquier problema tabular antes de probar modelos más complejos.</li>
+    <li>Scoring de riesgo de crédito y detección de fraude.</li>
+    <li>Diagnóstico médico a partir de mediciones clínicas.</li>
+    <li>Selección de variables mediante su importancia.</li>
+    <li>Imputación de valores faltantes (MissForest).</li></ul>` },
+  { id:'industria', t:'Aplicaciones industriales', plain:'industria mantenimiento predictivo telecomunicaciones energía', html:() => `<ul>
+    <li><b>Mantenimiento predictivo:</b> predecir fallos de máquina a partir de sensores de temperatura, par y desgaste. Ver el <a href="#project-mantenimiento">proyecto de mantenimiento predictivo</a>.</li>
+    <li><b>Telecomunicaciones:</b> predicción de bajas de clientes y detección de anomalías en red.</li>
+    <li><b>Energía:</b> previsión de demanda y detección de fallos en aerogeneradores.</li>
+    <li><b>Control de calidad:</b> clasificar piezas defectuosas a partir de mediciones de proceso.</li></ul>` },
+  { id:'ejercicio', t:'Ejercicio práctico', plain:'ejercicio oob', html:() => `<p>Amplía la implementación desde cero para que calcule el error out-of-bag. Debes guardar los índices bootstrap de cada árbol y, para cada muestra, votar solo con los árboles que no la vieron. Comprueba que el resultado se acerca al 96,2 % que da scikit-learn.</p>${U.code(RF_EXERCISE, 'Plantilla')}` },
+  { id:'codigo', t:'Código completo', plain:'código descargable script', html:() => `<p>El script completo, listo para ejecutar, se obtiene uniendo los bloques de las secciones anteriores. En la versión del portal con repositorio se publicará como notebook en <code>/notebooks/random-forest.ipynb</code>. Aquí puedes copiarlo directamente:</p>${U.code(RF_SCRATCH + '\n\n' + RF_DATA + '\n\n' + RF_SCRATCH_USE + '\n\n' + RF_TRAIN + '\n\n' + RF_EVAL, 'random_forest_completo.py')}` },
+  { id:'referencias', t:'Referencias y papers', plain:'referencias breiman ho hastie', html:() => `<ol class="refs">
+    <li>L. Breiman (2001). «Random Forests». <i>Machine Learning</i>, 45(1), 5–32.</li>
+    <li>L. Breiman (1996). «Bagging Predictors». <i>Machine Learning</i>, 24(2), 123–140.</li>
+    <li>T. K. Ho (1995). «Random Decision Forests». <i>Proceedings of the 3rd International Conference on Document Analysis and Recognition</i>, 278–282.</li>
+    <li>T. Hastie, R. Tibshirani, J. Friedman (2009). <i>The Elements of Statistical Learning</i>, 2.ª ed., capítulo 15. Springer.</li>
+    <li>F. Pedregosa et al. (2011). «Scikit-learn: Machine Learning in Python». <i>JMLR</i>, 12, 2825–2830.</li></ol>` },
+];
+
+function articleLayout(crumbs, head, sections, prefix) {
+  return crumbs + `<div class="article">
+    <nav class="toc" aria-label="Contenido del artículo"><span class="toc-t">Contenido</span><ol>${sections.map((s, i) => `<li><a href="#${location.hash.slice(1)}" data-target="${prefix}${s.id}"><span>${String(i + 1).padStart(2, '0')}</span>${s.t}</a></li>`).join('')}</ol></nav>
+    <article class="prose">${head}${sections.map((s, i) => `<section id="${prefix}${s.id}" class="sec"><h2><span class="n">${String(i + 1).padStart(2, '0')}</span>${s.t}</h2>${s.html()}</section>`).join('')}</article></div>`;
+}
+function RF_PAGE() {
+  return articleLayout(C.crumbs([['Inicio', 'home'], ['Machine Learning', 'ml'], ['Random Forest']]),
+    `<header class="page-head in-article"><span class="kicker">Machine Learning · Ensembles · Artículo completo</span><h1>Random Forest</h1>
+     <p class="lede">Cómo muchos árboles mediocres forman un modelo excelente: intuición, matemáticas, implementación desde cero, scikit-learn y resultados reales.</p>
+     <p class="meta">Resultados obtenidos con scikit-learn 1.8.0 y NumPy 2.4 · random_state = 42 · <a href="#lab-tree">Laboratorio relacionado</a></p></header>`,
+    RF_SECTIONS, 'rf-');
+}
+
+/* =========================================================================
+   PROYECTO: MANTENIMIENTO PREDICTIVO (plantilla de 10 etapas)
+   ========================================================================= */
+const PM_STAGES = [
+  { t:'Problema', plain:'fallos máquina fresadora coste parada', html:() => `<p>Una parada no planificada de una máquina herramienta cuesta mucho más que una intervención programada. El objetivo es predecir si una operación de fresado terminará en fallo a partir de variables de proceso, para intervenir antes.</p>
+    <p><b>Tipo de problema:</b> clasificación binaria muy desbalanceada. <b>Métrica principal:</b> recall de la clase «fallo» con una precisión mínima aceptable, y área bajo la curva precisión-recall (PR-AUC), más informativa que el acierto cuando los positivos son pocos.</p>` },
+  { t:'Datos', plain:'ai4i 2020 uci 10000 sintético', html:() => `<p>Dataset <a href="#datasets">AI4I 2020 Predictive Maintenance</a> del UCI Machine Learning Repository: 10.000 registros sintéticos que reproducen datos industriales reales. Variables: tipo de producto (L, M, H según calidad), temperatura del aire y del proceso (K), velocidad de giro (rpm), par (Nm) y desgaste de la herramienta (min). La etiqueta <code>Machine failure</code> vale 1 cuando se produce alguno de los cinco modos de fallo (desgaste de herramienta, disipación de calor, potencia, sobreesfuerzo y aleatorio).</p>` },
+  { t:'Exploración', plain:'desbalance distribuciones correlaciones', html:() => `<p>Qué mirar primero: la proporción de fallos (en torno al 3 %, así que un modelo que diga siempre «no falla» acertaría el 97 % y no serviría de nada), las distribuciones de cada variable por clase y las correlaciones. Temperatura del aire y del proceso están muy correlacionadas, y velocidad y par tienen una relación inversa.</p>
+    ${U.code(`import pandas as pd\n\ndf = pd.read_csv("data/ai4i2020.csv")\nprint(df["Machine failure"].mean())            # proporción de fallos\nprint(df.groupby("Machine failure").mean(numeric_only=True))\ndf.hist(figsize=(12, 8))`, 'notebooks/01_exploracion.py')}` },
+  { t:'Preprocesado', plain:'fuga de datos one-hot variables derivadas potencia', html:() => `<p><b>Evitar la fuga de información:</b> las columnas de los cinco modos de fallo (TWF, HDF, PWF, OSF, RNF) describen el propio fallo, así que se eliminan de las entradas, igual que los identificadores. El tipo de producto se codifica con one-hot. Se añaden variables con significado físico: potencia mecánica, diferencia de temperaturas y desgaste por par.</p>
+    ${U.code(`import numpy as np\n\nX = df.drop(columns=["UDI", "Product ID", "Machine failure", "TWF", "HDF", "PWF", "OSF", "RNF"])\nX = pd.get_dummies(X, columns=["Type"])\nX["potencia_W"] = X["Torque [Nm]"] * X["Rotational speed [rpm]"] * 2 * np.pi / 60\nX["delta_T"] = X["Process temperature [K]"] - X["Air temperature [K]"]\nX["desgaste_par"] = X["Tool wear [min]"] * X["Torque [Nm]"]\ny = df["Machine failure"]`, 'src/features.py')}` },
+  { t:'Modelo', plain:'random forest gradient boosting class weight', html:() => `<p>Línea base con regresión logística y, como modelo principal, un <a href="#random-forest">Random Forest</a> con <code>class_weight="balanced"</code> para compensar el desbalance. Como alternativa, gradient boosting (XGBoost o LightGBM), que suele rendir mejor en datos tabulares.</p>` },
+  { t:'Entrenamiento', plain:'estratificado validación cruzada', html:() => `${U.code(`from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score\nfrom sklearn.ensemble import RandomForestClassifier\n\nX_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)\nmodelo = RandomForestClassifier(n_estimators=400, class_weight="balanced", random_state=42, n_jobs=-1)\ncv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\nprint(cross_val_score(modelo, X_tr, y_tr, cv=cv, scoring="average_precision"))\nmodelo.fit(X_tr, y_tr)`, 'src/train.py')}` },
+  { t:'Evaluación', plain:'pr auc matriz confusión recall', html:() => `<p>Se evalúa en el conjunto de test reservado con PR-AUC, recall y precisión de la clase «fallo» y la matriz de confusión. Además se compara con la línea base para comprobar que el modelo aporta algo.</p>
+    ${U.code(`from sklearn.metrics import average_precision_score, classification_report\n\nprob = modelo.predict_proba(X_te)[:, 1]\nprint(average_precision_score(y_te, prob))\nprint(classification_report(y_te, prob > 0.5))`, 'src/evaluate.py')}` },
+  { t:'Optimización', plain:'umbral coste búsqueda hiperparámetros', html:() => `<p>Dos palancas. La primera, los hiperparámetros, con búsqueda aleatoria y validación cruzada estratificada. La segunda, y la que más importa en negocio, el <b>umbral de decisión</b>: se elige el que minimiza el coste esperado, dado lo que cuesta una parada no detectada frente a una revisión innecesaria.</p>
+    ${U.code(`coste_fn, coste_fp = 5000, 300          # € por fallo no detectado / por revisión innecesaria\numbrales = np.linspace(0.05, 0.95, 91)\ncoste = [coste_fn * ((prob < u) & (y_te == 1)).sum() + coste_fp * ((prob >= u) & (y_te == 0)).sum() for u in umbrales]\numbral = umbrales[int(np.argmin(coste))]`, 'src/threshold.py')}` },
+  { t:'Despliegue', plain:'fastapi docker api validación', html:() => `<p>El modelo se sirve con una API FastAPI dentro de Docker. Pydantic valida cada entrada con rangos físicos plausibles, de modo que una lectura imposible devuelve un error 422 en lugar de una predicción sin sentido.</p>
+    ${U.code(`from fastapi import FastAPI\nfrom pydantic import BaseModel, Field\nimport joblib\n\napp = FastAPI(title="Mantenimiento predictivo")\nmodelo = joblib.load("models/rf_ai4i.joblib")\n\nclass Lectura(BaseModel):\n    tipo: str = Field(pattern="^[LMH]$")\n    temp_aire_K: float = Field(ge=250, le=350)\n    temp_proceso_K: float = Field(ge=250, le=380)\n    rpm: float = Field(gt=0, le=5000)\n    par_Nm: float = Field(ge=0, le=150)\n    desgaste_min: float = Field(ge=0, le=400)\n\n@app.post("/predict")\ndef predecir(l: Lectura):\n    x = construir_features(l)          # mismas transformaciones que en entrenamiento\n    p = float(modelo.predict_proba(x)[0, 1])\n    return {"prob_fallo": p, "alerta": p >= UMBRAL}`, 'backend/app/main.py')}` },
+  { t:'Resultados', plain:'resultados pendiente', html:() => `<div class="callout warn"><b>Pendiente de ejecución.</b> Este proyecto está documentado como plan técnico con su código, pero todavía no se ha ejecutado sobre el dataset. Cuando se ejecute, aquí aparecerán las métricas reales, la curva precisión-recall, el umbral elegido y el notebook completo. No se publican cifras que no se hayan obtenido.</div>` },
+];
+function PM_PAGE() {
+  const secs = PM_STAGES.map(s => ({ ...s, id: U.slug(s.t) }));
+  return articleLayout(C.crumbs([['Inicio', 'home'], ['Proyectos', 'projects'], ['Mantenimiento predictivo']]),
+    `<header class="page-head in-article"><span class="kicker">Proyecto · Industria 4.0 · Plan detallado</span><h1>Mantenimiento predictivo en fresadoras</h1>
+     <p class="lede">Predecir fallos de máquina con variables de proceso para programar el mantenimiento antes de la avería.</p>
+     <ol class="pipeline">${secs.map((s, i) => `<li>${s.t}</li>`).join('')}</ol></header>`,
+    secs, 'pm-');
+}
+
+/* =========================================================================
+   ARQUITECTURA (página «Sobre el portal»)
+   ========================================================================= */
+const ARCH = `
+<section class="prose wide">
+  <h2>Qué es este prototipo</h2>
+  <p>Una aplicación de una sola página, autocontenida, sin servidor: todo el contenido vive como datos estructurados y se renderiza en el navegador. Está organizada igual que la plataforma final (contenido separado de la presentación, un esquema de documento común para el buscador y laboratorios como módulos independientes), para que migrar sea mover piezas y no reescribirlas.</p>
+  <h2>Stack de producción previsto</h2>
+  <div class="tbl"><table><thead><tr><th>Capa</th><th>Tecnología</th><th>En este prototipo</th></tr></thead><tbody>
+    <tr><td>Frontend</td><td>Next.js (App Router), React, TypeScript estricto, Tailwind CSS</td><td>HTML, CSS y JavaScript sin dependencias</td></tr>
+    <tr><td>Contenido</td><td>MDX en <code>/content</code> con frontmatter tipado</td><td>Objetos JS en un único módulo de datos</td></tr>
+    <tr><td>Matemáticas</td><td>KaTeX renderizado en servidor</td><td>KaTeX en el navegador, salida MathML</td></tr>
+    <tr><td>Visualización</td><td>D3, Plotly y Recharts</td><td>Canvas y SVG a mano</td></tr>
+    <tr><td>Backend</td><td>Python + FastAPI</td><td>—</td></tr>
+    <tr><td>Datos</td><td>PostgreSQL + pgvector</td><td>—</td></tr>
+    <tr><td>Búsqueda</td><td>Híbrida: texto completo + similitud de embeddings, preparada para RAG</td><td>Índice en memoria con el mismo esquema de documento</td></tr>
+    <tr><td>Despliegue</td><td>Docker Compose (frontend, backend, db), CI con GitHub Actions</td><td>—</td></tr></tbody></table></div>
+  <h2>Estructura del repositorio</h2>
+  <pre class="tree"><code>/frontend        Next.js: app/, components/, lib/, labs/ (un módulo por laboratorio)
+/backend         FastAPI: app/api, app/services, app/models, app/search (pgvector)
+/content         MDX: machine-learning/, deep-learning/, mathematics/, llm/, papers/, projects/
+/data            datasets de ejemplo y scripts de descarga
+/notebooks       un notebook por artículo y por proyecto
+/models          modelos entrenados versionados
+/public          imágenes y recursos estáticos
+/docs            arquitectura, decisiones (ADR), guía de contenido
+/tests           unitarios (Vitest, pytest) y end-to-end (Playwright)
+/docker          Dockerfiles y docker-compose.yml</code></pre>
+  <h2>URLs semánticas</h2>
+  <div class="tbl"><table><thead><tr><th>Prototipo</th><th>Producción</th></tr></thead><tbody>
+    <tr><td><code>#random-forest</code></td><td><code>/machine-learning/random-forest</code></td></tr>
+    <tr><td><code>#transformer</code></td><td><code>/llm/transformer-visualizer</code></td></tr>
+    <tr><td><code>#lab-gd</code></td><td><code>/lab/gradient-descent</code></td></tr>
+    <tr><td><code>#project-mantenimiento</code></td><td><code>/projects/predictive-maintenance</code></td></tr>
+    <tr><td><code>#papers</code></td><td><code>/papers/attention-is-all-you-need</code> (una página por paper)</td></tr></tbody></table></div>
+  <h2>Modelo de datos</h2>
+  <p>Una entidad común <code>Document</code> (id, tipo, slug, título, resumen, cuerpo, área, nivel, etiquetas, fechas) de la que heredan Artículo, Algoritmo, Proyecto, Paper, Dataset y Laboratorio. Cada documento se trocea en fragmentos (<code>Chunk</code>) con su embedding en una columna <code>vector</code> de pgvector: esa misma tabla sirve para la búsqueda semántica y para el RAG. El buscador de este prototipo ya indexa documentos con los campos id, tipo, título, texto y ruta.</p>
+  <h2>SEO, seguridad y calidad</h2>
+  <ul>
+    <li><b>SEO:</b> en producción, cada página con title, meta description, Open Graph, canonical, JSON-LD (Article, Dataset, ScholarlyArticle), sitemap.xml y robots.txt generados en el build.</li>
+    <li><b>Seguridad:</b> validación con Pydantic en la API, rate limiting, cabeceras CSP y HSTS, secretos solo en variables de entorno del servidor y nunca claves de API en el frontend. En este prototipo, todo texto introducido por el usuario se escapa antes de mostrarse.</li>
+    <li><b>Accesibilidad:</b> navegación completa por teclado, foco visible, modo claro y oscuro, respeto a <code>prefers-reduced-motion</code>.</li>
+  </ul>
+  <h2>Fases</h2>
+  <ol>
+    <li>Prototipo navegable con el contenido núcleo (esta versión).</li>
+    <li>Migración a Next.js con el contenido en MDX y tests.</li>
+    <li>Backend FastAPI, PostgreSQL y Docker Compose.</li>
+    <li>Búsqueda semántica con pgvector y asistente RAG sobre el contenido del portal.</li>
+    <li>Ampliación del contenido: un artículo completo por algoritmo y un laboratorio por concepto clave.</li>
+  </ol>
+</section>`;
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow">
+<style>html,body{margin:0}</style>
+<title>La curva sigmoide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --ink:#16202B; --muted:#5B6877; --line:#D3DAE2; --soft:#E4E8ED;
+  --pos:#2563C9; --grad:#D97B12; --alt1:#7A4FC4; --alt2:#23845A; --sat:#C8453A;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743; --soft:#1E2A35;
+    --pos:#629AF2; --grad:#F2A444; --alt1:#A987EE; --alt2:#4CC08A; --sat:#EE7266;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743; --soft:#1E2A35;
+  --pos:#629AF2; --grad:#F2A444; --alt1:#A987EE; --alt2:#4CC08A; --sat:#EE7266;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding:24px 16px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header h1{font:700 clamp(28px,4.4vw,44px)/1.05 var(--display);margin:0 0 8px;letter-spacing:-.01em;text-wrap:balance}
+header p{margin:0;color:var(--muted);max-width:68ch}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+@media (max-width:900px){.main{grid-template-columns:1fr}}
+.stage,.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.stage{padding:12px;display:flex;flex-direction:column;gap:12px}
+#cv{width:100%;display:block;touch-action:none;cursor:ew-resize}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:18px;height:4px;border-radius:2px;display:inline-block}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 20px;align-items:center}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.ctl .row{display:flex;justify-content:space-between}
+.ctl output{font-family:var(--mono);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--pos)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 14px/1 var(--body);padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--pos);outline-offset:2px}
+.panel{padding:18px;display:flex;flex-direction:column;gap:12px}
+.eyebrow{font:600 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.panel h2{font:700 22px/1.15 var(--display);margin:0}
+.eq{font-family:var(--mono);font-size:13px;line-height:1.6;background:var(--bg);border-radius:6px;padding:10px 12px;overflow-wrap:anywhere}
+.eq sup{font-size:.75em}
+.big{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big div{background:var(--bg);border-radius:8px;padding:10px 12px}
+.big b{display:block;font:600 24px/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.big small{font-size:12px;color:var(--muted)}
+.big .g b{color:var(--grad)} .big .s b{color:var(--pos)}
+.note{font-size:13px;color:var(--muted);margin:0}
+.zone{font:600 12px/1 var(--body);padding:6px 9px;border-radius:999px;align-self:flex-start}
+.zone.lin{background:color-mix(in srgb,var(--pos) 15%,transparent);color:var(--pos)}
+.zone.sat{background:color-mix(in srgb,var(--sat) 15%,transparent);color:var(--sat)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.fact h3{font:700 16px/1.2 var(--display);margin:0 0 6px}
+.fact p{margin:0;font-size:14px;color:var(--muted)}
+.fact .eq{margin-top:10px}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <h1>La curva sigmoide</h1>
+    <p>σ(z) = 1 / (1 + e<sup>−z</sup>) convierte cualquier número real en un valor entre 0 y 1. El punto recorre la curva y muestra en cada momento el valor de salida, la pendiente (su derivada) y dónde se «satura». Arrastra sobre la gráfica para moverlo tú, o cambia el peso y el sesgo para deformar la curva.</p>
+  </header>
+
+  <div class="main">
+    <section class="stage">
+      <div class="legend">
+        <span><i class="sw" style="background:var(--pos)"></i>σ(w·z + b)</span>
+        <span><i class="sw" style="background:var(--grad)"></i>derivada σ′</span>
+        <span><i class="sw" style="background:var(--sat);opacity:.4"></i>zona saturada (σ′ &lt; 10 % del máximo)</span>
+        <span id="lg-tanh" hidden><i class="sw" style="background:var(--alt1)"></i>tanh</span>
+        <span id="lg-relu" hidden><i class="sw" style="background:var(--alt2)"></i>ReLU</span>
+      </div>
+      <canvas id="cv" aria-label="Gráfica animada de la función sigmoide y su derivada"></canvas>
+      <div class="controls">
+        <label class="ctl" for="w"><span class="row">Peso w (pendiente)<output id="wv">1.00</output></span>
+          <input type="range" id="w" min="-4" max="4" step="0.05" value="1"></label>
+        <label class="ctl" for="b"><span class="row">Sesgo b (desplazamiento)<output id="bv">0.00</output></span>
+          <input type="range" id="b" min="-6" max="6" step="0.1" value="0"></label>
+      </div>
+      <div class="bar">
+        <button class="btn primary" id="play">❚❚ Pausa</button>
+        <button class="btn" id="reset">Restablecer w y b</button>
+        <label class="chk" for="tg"><input type="checkbox" id="tg"> Comparar con tanh</label>
+        <label class="chk" for="rl"><input type="checkbox" id="rl"> Comparar con ReLU</label>
+        <label class="chk" for="tn"><input type="checkbox" id="tn" checked> Tangente</label>
+      </div>
+    </section>
+
+    <aside class="panel" aria-live="off">
+      <span class="eyebrow">Cálculo en el punto</span>
+      <h2 id="ztitle">z = 0.00</h2>
+      <div class="eq" id="e1"></div>
+      <div class="eq" id="e2"></div>
+      <div class="eq" id="e3"></div>
+      <div class="big">
+        <div class="s"><small>salida σ</small><b id="sv">0.500</b></div>
+        <div class="g"><small>pendiente σ′</small><b id="dv">0.250</b></div>
+      </div>
+      <span class="zone lin" id="zone">Zona lineal: el gradiente fluye</span>
+      <p class="note" id="znote"></p>
+    </aside>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><h3>La derivada sale gratis</h3>
+      <p>La pendiente se calcula con la propia salida, sin volver a exponenciar. Por eso es tan barata en backpropagation.</p>
+      <div class="eq">σ′(u) = σ(u) · (1 − σ(u))</div></div>
+    <div class="fact"><h3>Máximo de 0.25</h3>
+      <p>La pendiente nunca pasa de 0.25 (en u = 0). En una red de 10 capas el gradiente puede quedar multiplicado por 0.25¹⁰ ≈ 0.000001: es el desvanecimiento del gradiente.</p></div>
+    <div class="fact"><h3>Probabilidades</h3>
+      <p>Como su salida está entre 0 y 1, se usa en la última capa para clasificación binaria. Softmax es su generalización a varias clases.</p>
+      <div class="eq">σ(u) = softmax([u, 0])₀</div></div>
+  </div>
+</div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const cv = $('cv'), ctx = cv.getContext('2d');
+const sig = u => 1/(1+Math.exp(-u));
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W=0,H=0,dpr=1, w=1, b=0, z=0, playing=!reduce, t0=performance.now(), tOff=0, dragging=false;
+const ZMIN=-8, ZMAX=8;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+function size(){ dpr=devicePixelRatio||1; W=cv.clientWidth; H=Math.max(300,Math.min(480,W*0.56));
+  cv.style.height=H+'px'; cv.width=W*dpr; cv.height=H*dpr; }
+new ResizeObserver(size).observe(cv.parentElement);
+
+function draw(now){
+  if(playing && !dragging){ const s=(now-t0)/1000+tOff; z = 7*Math.sin(s*0.45); }
+  const showT=$('tg').checked, showR=$('rl').checked, showTan=$('tn').checked;
+  const YMIN = showT ? -1.15 : -0.12, YMAX = 1.15;
+  const pl=44, pr=16, pt=16, pb=34;
+  const X = v => pl + (v-ZMIN)/(ZMAX-ZMIN)*(W-pl-pr);
+  const Y = v => pt + (1-(v-YMIN)/(YMAX-YMIN))*(H-pt-pb);
+  const C={ink:css('--ink'),muted:css('--muted'),line:css('--line'),soft:css('--soft'),pos:css('--pos'),grad:css('--grad'),sat:css('--sat'),a1:css('--alt1'),a2:css('--alt2'),surf:css('--surface')};
+  const mono=css('--mono');
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+
+  // saturation shading
+  const thr = 0.1*0.25*Math.abs(w);
+  if(Math.abs(w)>0.01){
+    ctx.fillStyle=C.sat; ctx.globalAlpha=0.08;
+    const step=(ZMAX-ZMIN)/(W-pl-pr);
+    let start=null;
+    for(let v=ZMIN; v<=ZMAX+step; v+=step){
+      const s=sig(w*v+b), d=Math.abs(w)*s*(1-s), sat=d<thr;
+      if(sat && start===null) start=v;
+      if((!sat || v>ZMAX) && start!==null){ ctx.fillRect(X(start),pt,X(Math.min(v,ZMAX))-X(start),H-pt-pb); start=null; }
+    }
+    ctx.globalAlpha=1;
+  }
+
+  // grid + axes
+  ctx.strokeStyle=C.line; ctx.lineWidth=1; ctx.font=`11px ${mono}`; ctx.fillStyle=C.muted;
+  ctx.textAlign='right'; ctx.textBaseline='middle';
+  const yt = showT ? [-1,-0.5,0,0.5,1] : [0,0.25,0.5,0.75,1];
+  yt.forEach(v=>{ ctx.beginPath(); ctx.moveTo(pl,Y(v)); ctx.lineTo(W-pr,Y(v)); ctx.setLineDash(v===0.5?[4,4]:[]); ctx.stroke(); ctx.fillText(v,pl-6,Y(v)); });
+  ctx.setLineDash([]);
+  ctx.textAlign='center'; ctx.textBaseline='top';
+  for(let v=ZMIN; v<=ZMAX; v+=2){ ctx.beginPath(); ctx.moveTo(X(v),pt); ctx.lineTo(X(v),H-pb); ctx.globalAlpha=v===0?1:0.5; ctx.stroke(); ctx.globalAlpha=1; ctx.fillText(v,X(v),H-pb+6); }
+  ctx.textAlign='right'; ctx.fillText('z',W-pr,H-pb+18);
+
+  const plot=(f,col,wid,dash)=>{ ctx.save(); ctx.beginPath(); ctx.rect(pl,pt,W-pl-pr,H-pt-pb); ctx.clip();
+    ctx.strokeStyle=col; ctx.lineWidth=wid; ctx.setLineDash(dash||[]); ctx.beginPath();
+    for(let px=0; px<=W-pl-pr; px+=2){ const v=ZMIN+px/(W-pl-pr)*(ZMAX-ZMIN); const y=Y(f(v)); px?ctx.lineTo(pl+px,y):ctx.moveTo(pl+px,y); }
+    ctx.stroke(); ctx.restore(); };
+
+  if(showT) plot(v=>Math.tanh(w*v+b),C.a1,2,[6,4]);
+  if(showR) plot(v=>Math.max(0,w*v+b),C.a2,2,[6,4]);
+  plot(v=>{const s=sig(w*v+b);return Math.abs(w)*s*(1-s)},C.grad,2.5);
+  plot(v=>sig(w*v+b),C.pos,3.5);
+
+  // point
+  const u=w*z+b, s=sig(u), d=w*s*(1-s), px=X(z), py=Y(s), pdy=Y(Math.abs(d));
+  ctx.strokeStyle=C.muted; ctx.setLineDash([3,3]); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(px,H-pb); ctx.lineTo(px,py); ctx.lineTo(pl,py); ctx.stroke(); ctx.setLineDash([]);
+  if(showTan){ ctx.save(); ctx.beginPath(); ctx.rect(pl,pt,W-pl-pr,H-pt-pb); ctx.clip();
+    const dz=1.6; ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(X(z-dz),Y(s-d*dz)); ctx.lineTo(X(z+dz),Y(s+d*dz)); ctx.stroke(); ctx.restore(); }
+  ctx.fillStyle=C.grad; ctx.beginPath(); ctx.arc(px,pdy,5,0,7); ctx.fill();
+  ctx.fillStyle=C.surf; ctx.strokeStyle=C.pos; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(px,py,7,0,7); ctx.fill(); ctx.stroke();
+  // label near point
+  const lab=`σ = ${s.toFixed(3)}`; ctx.font=`600 12px ${mono}`; const tw=ctx.measureText(lab).width+14;
+  let lx=px+12, ly=py-30; if(lx+tw>W-pr) lx=px-12-tw; if(ly<pt) ly=py+12;
+  ctx.fillStyle=C.surf; ctx.strokeStyle=C.pos; ctx.lineWidth=1.2; ctx.beginPath(); ctx.roundRect(lx,ly,tw,22,5); ctx.fill(); ctx.stroke();
+  ctx.fillStyle=C.ink; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(lab,lx+7,ly+11.5);
+
+  panel(u,s,d,thr);
+  requestAnimationFrame(draw);
+}
+
+const f = (v,n=3) => (v<0?'−':'')+Math.abs(v).toFixed(n);
+let lastKey='';
+function panel(u,s,d,thr){
+  const key=[z.toFixed(2),w,b].join();
+  if(key===lastKey) return; lastKey=key;
+  $('ztitle').textContent=`z = ${f(z,2)}`;
+  $('e1').innerHTML=`u = w·z + b = ${f(w,2)}·${f(z,2)} + ${f(b,2)} = <b>${f(u)}</b>`;
+  const e=Math.exp(-u);
+  $('e2').innerHTML=`σ(u) = 1 / (1 + e<sup>${u<=0?'':'−'}${Math.abs(u).toFixed(2)}</sup>) = 1 / (1 + ${e<1e4?e.toFixed(3):e.toExponential(2)}) = <b>${s.toFixed(3)}</b>`;
+  $('e3').innerHTML=`σ′ = w · σ(1 − σ) = ${f(w,2)} · ${s.toFixed(3)} · ${(1-s).toFixed(3)} = <b>${f(d,4)}</b>`;
+  $('sv').textContent=s.toFixed(3); $('dv').textContent=f(d,3);
+  const sat=Math.abs(d)<thr || Math.abs(w)<=0.01, zone=$('zone');
+  zone.className='zone '+(sat?'sat':'lin');
+  zone.textContent=sat?'Saturación: gradiente casi nulo':'Zona lineal: el gradiente fluye';
+  $('znote').textContent = sat
+    ? `La salida está pegada a ${s>0.5?'1':'0'}. Un cambio en z apenas mueve σ, así que al retropropagar el error la neurona casi no aprende.`
+    : `Aquí σ responde a los cambios de z. La pendiente es ${(Math.abs(d)/Math.max(1e-9,0.25*Math.abs(w))*100).toFixed(0)} % de su máximo posible (0.25·|w|).`;
+}
+
+// controls
+const setW=v=>{w=+v;$('wv').textContent=w.toFixed(2)}, setB=v=>{b=+v;$('bv').textContent=b.toFixed(2)};
+$('w').oninput=e=>setW(e.target.value); $('b').oninput=e=>setB(e.target.value);
+$('reset').onclick=()=>{$('w').value=1;$('b').value=0;setW(1);setB(0)};
+const syncPlay=()=>$('play').textContent=playing?'❚❚ Pausa':'▶ Reproducir';
+$('play').onclick=()=>{ playing=!playing; if(playing){ tOff=Math.asin(Math.max(-1,Math.min(1,z/7)))/0.45; t0=performance.now(); } syncPlay(); };
+$('tg').onchange=e=>$('lg-tanh').hidden=!e.target.checked;
+$('rl').onchange=e=>$('lg-relu').hidden=!e.target.checked;
+const toZ=e=>{const r=cv.getBoundingClientRect(); const pl=44,pr=16; z=Math.max(ZMIN,Math.min(ZMAX,ZMIN+(e.clientX-r.left-pl)/(r.width-pl-pr)*(ZMAX-ZMIN)));};
+cv.addEventListener('pointerdown',e=>{dragging=true;playing=false;syncPlay();cv.setPointerCapture(e.pointerId);toZ(e)});
+cv.addEventListener('pointermove',e=>{if(dragging)toZ(e)});
+cv.addEventListener('pointerup',()=>dragging=false);
+cv.addEventListener('pointercancel',()=>dragging=false);
+syncPlay(); size(); requestAnimationFrame(draw);
+})();
+</script>
+
+<a href="../index.html#lab" style="position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9;font:600 13px system-ui,sans-serif;background:#0E1621;color:#fff;padding:9px 12px;border-radius:8px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.25)">← MLE·AI</a><script>if(window.self!==window.top){document.currentScript.previousElementSibling.remove()}</script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow">
+<style>html,body{margin:0}</style>
+<title>Laboratorio de sobreajuste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --ink:#16202B; --muted:#5B6877; --line:#D3DAE2;
+  --fit:#2563C9; --train:#16202B; --val:#D97B12; --truth:#8A96A4;
+  --ok:#1F8A5B; --warn:#B7791F; --bad:#C8453A;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743;
+    --fit:#629AF2; --train:#E6ECF2; --val:#F2A444; --truth:#6F7E8E;
+    --ok:#4CC08A; --warn:#E5B05A; --bad:#EE7266;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743;
+  --fit:#629AF2; --train:#E6ECF2; --val:#F2A444; --truth:#6F7E8E;
+  --ok:#4CC08A; --warn:#E5B05A; --bad:#EE7266;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding:24px 16px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header h1{font:700 clamp(28px,4.4vw,44px)/1.05 var(--display);margin:0 0 8px;letter-spacing:-.01em;text-wrap:balance}
+header p{margin:0;color:var(--muted);max-width:70ch}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+@media (max-width:920px){.main{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+canvas{width:100%;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:18px;height:3px;border-radius:2px;display:inline-block}
+.pt{width:9px;height:9px;border-radius:50%;display:inline-block}
+.degree{display:flex;flex-direction:column;gap:6px}
+.degree .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.degree label{font-weight:600}
+.degree output{font:600 22px/1 var(--mono)}
+input[type=range]{width:100%;accent-color:var(--fit)}
+.sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px 20px}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.ctl .row{display:flex;justify-content:space-between}
+.ctl output{font-family:var(--mono);color:var(--ink)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 14px/1 var(--body);padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--fit);outline-offset:2px}
+.eyebrow{font:600 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h2{font:700 20px/1.2 var(--display);margin:0}
+.state{font:700 26px/1.1 var(--display);margin:0}
+.state.ok{color:var(--ok)} .state.warn{color:var(--warn)} .state.bad{color:var(--bad)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats div{background:var(--bg);border-radius:8px;padding:10px 12px}
+.stats small{display:block;font-size:12px;color:var(--muted)}
+.stats b{font:600 20px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+.stats .tr b{color:var(--train)} .stats .va b{color:var(--val)}
+.note{margin:0;font-size:14px;color:var(--muted)}
+.coefs{display:flex;align-items:flex-end;gap:3px;height:70px;padding-top:4px;border-bottom:1px solid var(--line)}
+.coefs i{flex:1;background:var(--fit);border-radius:2px 2px 0 0;min-height:1px}
+.coefcap{display:flex;justify-content:space-between;font:12px var(--mono);color:var(--muted)}
+.lower{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+@media (max-width:920px){.lower{grid-template-columns:1fr}}
+.lessons{display:flex;flex-direction:column;gap:12px}
+.lessons div{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+.lessons b.k{font:600 12px/1 var(--mono);background:var(--bg);border-radius:6px;padding:6px 7px;color:var(--muted)}
+.lessons p{margin:0;font-size:14px}
+.lessons p span{color:var(--muted)}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <h1>Laboratorio de sobreajuste</h1>
+    <p>Los puntos negros son datos de entrenamiento: una curva real (gris, discontinua) más ruido. Un polinomio intenta aprenderla. Los puntos naranjas son datos nuevos que el modelo nunca ve al entrenar y sirven para medir si ha aprendido la tendencia o solo ha memorizado el ruido. Sube el grado y observa qué pasa con los dos errores.</p>
+  </header>
+
+  <div class="main">
+    <section class="card">
+      <div class="legend">
+        <span><i class="sw" style="background:var(--truth)"></i>función real</span>
+        <span><i class="sw" style="background:var(--fit)"></i>modelo aprendido</span>
+        <span><i class="pt" style="background:var(--train)"></i>entrenamiento</span>
+        <span id="lgv"><i class="pt" style="border:2px solid var(--val)"></i>validación</span>
+      </div>
+      <canvas id="fitc" aria-label="Datos y polinomio ajustado"></canvas>
+      <div class="degree">
+        <div class="row"><label for="deg">Grado del polinomio (complejidad)</label><output id="degv">3</output></div>
+        <input type="range" id="deg" min="0" max="15" step="1" value="3">
+      </div>
+      <div class="sliders">
+        <label class="ctl" for="n"><span class="row">Puntos de entrenamiento<output id="nv">15</output></span>
+          <input type="range" id="n" min="5" max="80" step="1" value="15"></label>
+        <label class="ctl" for="noise"><span class="row">Ruido en los datos<output id="noisev">0.25</output></span>
+          <input type="range" id="noise" min="0" max="0.8" step="0.01" value="0.25"></label>
+        <label class="ctl" for="lam"><span class="row">Regularización L2 (λ)<output id="lamv">0</output></span>
+          <input type="range" id="lam" min="-9" max="1" step="0.1" value="-9"></label>
+      </div>
+      <div class="bar">
+        <button class="btn primary" id="sweep">▶ Recorrer grados 0 → 15</button>
+        <button class="btn" id="resample">Nuevos datos</button>
+        <label class="chk" for="showval"><input type="checkbox" id="showval" checked> Ver validación</label>
+        <label class="chk" for="resid"><input type="checkbox" id="resid"> Ver residuos</label>
+      </div>
+    </section>
+
+    <aside class="card" aria-live="polite">
+      <span class="eyebrow">Diagnóstico</span>
+      <p class="state" id="state">Buen ajuste</p>
+      <p class="note" id="stnote"></p>
+      <div class="stats">
+        <div class="tr"><small>Error entrenamiento (RMSE)</small><b id="etr">—</b></div>
+        <div class="va"><small>Error validación (RMSE)</small><b id="eva">—</b></div>
+        <div><small>Parámetros / datos</small><b id="ratio">—</b></div>
+        <div><small>Grado óptimo (validación)</small><b id="best">—</b></div>
+      </div>
+      <span class="eyebrow">Tamaño de los coeficientes</span>
+      <div class="coefs" id="coefs"></div>
+      <div class="coefcap"><span>w₀</span><span id="cmax"></span><span id="clast"></span></div>
+      <p class="note">Cuando el modelo sobreajusta, los coeficientes se disparan para poder doblar la curva hasta tocar cada punto. La regularización L2 los penaliza y los mantiene pequeños.</p>
+    </aside>
+  </div>
+
+  <div class="lower">
+    <section class="card">
+      <h2>Error según la complejidad</h2>
+      <p class="note">RMSE en escala logarítmica para cada grado, con los datos y la λ actuales. La curva de validación con forma de U es la firma del compromiso sesgo-varianza.</p>
+      <canvas id="errc" aria-label="Curva de error de entrenamiento y validación por grado"></canvas>
+    </section>
+    <section class="card">
+      <h2>Qué probar</h2>
+      <div class="lessons">
+        <div><b class="k">1</b><p>Grado 0–1 con la curva en forma de onda. <span>El modelo es demasiado simple: falla en entrenamiento y en validación por igual. Eso es subajuste, o sesgo alto.</span></p></div>
+        <div><b class="k">2</b><p>Grado 12–15 con 15 puntos. <span>El error de entrenamiento se acerca a cero pero la curva se vuelve loca entre los puntos: memoriza el ruido. Varianza alta.</span></p></div>
+        <div><b class="k">3</b><p>Deja el grado en 15 y sube los puntos a 80. <span>Con más datos, el mismo modelo complejo ya no puede memorizar y vuelve a generalizar.</span></p></div>
+        <div><b class="k">4</b><p>Grado 15 y sube λ. <span>La regularización recorta los coeficientes y suaviza la curva sin reducir el grado.</span></p></div>
+        <div><b class="k">5</b><p>Pulsa «Nuevos datos» varias veces con grado alto. <span>La curva cambia mucho de una muestra a otra: eso es literalmente la varianza del modelo.</span></p></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const truth = x => Math.sin(2*Math.PI*x) * 0.9 + 0.3*(x-0.5);
+const MAXD = 15, NVAL = 60, GRID = 240;
+
+let deg=3, n=15, noise=0.25, lam=0, seed=7, train=[], val=[], fits=[], shown=null, anim=null;
+
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function makeData(){
+  const r=rng(seed), g=()=>{let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+  // draw a fixed pool so changing n or noise keeps the same underlying points
+  const pool=[...Array(80)].map(()=>({x:0.02+0.96*r(), e:g()}));
+  train=pool.slice(0,n).map(p=>({x:p.x,y:truth(p.x)+noise*p.e})).sort((a,b)=>a.x-b.x);
+  const r2=rng(seed*31+5), g2=()=>{let u=0,v=0;while(!u)u=r2();while(!v)v=r2();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+  val=[...Array(NVAL)].map(()=>{const x=0.02+0.96*r2();return {x,y:truth(x)+noise*g2()}});
+}
+function legendre(x,d){ const t=2*x-1, P=[1,t]; for(let k=1;k<d;k++)P.push(((2*k+1)*t*P[k]-k*P[k-1])/(k+1)); return P.slice(0,d+1); }
+function solve(A,b){ const m=b.length; A=A.map(r=>r.slice()); b=b.slice();
+  for(let i=0;i<m;i++){ let p=i; for(let r=i+1;r<m;r++) if(Math.abs(A[r][i])>Math.abs(A[p][i])) p=r;
+    [A[i],A[p]]=[A[p],A[i]]; [b[i],b[p]]=[b[p],b[i]];
+    for(let r=i+1;r<m;r++){ const f=A[r][i]/A[i][i]; for(let c=i;c<m;c++) A[r][c]-=f*A[i][c]; b[r]-=f*b[i]; } }
+  const x=Array(m).fill(0); for(let i=m-1;i>=0;i--){ let s=b[i]; for(let c=i+1;c<m;c++) s-=A[i][c]*x[c]; x[i]=s/A[i][i]; } return x; }
+function fit(d){
+  const m=d+1, M=[...Array(m)].map(()=>Array(m).fill(0)), v=Array(m).fill(0);
+  for(const p of train){ const P=legendre(p.x,d); for(let i=0;i<m;i++){ v[i]+=P[i]*p.y; for(let j=0;j<m;j++) M[i][j]+=P[i]*P[j]; } }
+  for(let i=0;i<m;i++) M[i][i]+= (i?lam*train.length:0) + 1e-9;
+  const w=solve(M,v);
+  const pred=x=>{const P=legendre(x,d);let s=0;for(let i=0;i<m;i++)s+=w[i]*P[i];return s;};
+  const rmse=set=>Math.sqrt(set.reduce((s,p)=>s+(pred(p.x)-p.y)**2,0)/set.length);
+  const curve=[...Array(GRID+1)].map((_,i)=>pred(i/GRID));
+  return {d,w,pred,curve,tr:rmse(train),va:rmse(val)};
+}
+function recompute(){ fits=[...Array(MAXD+1)].map((_,d)=>fit(d)); }
+
+function update(animate=true){
+  recompute();
+  const target=fits[deg].curve;
+  if(shown && animate && !reduce){ anim={from:shown.slice(),to:target,t0:performance.now()}; }
+  else { shown=target.slice(); anim=null; }
+  panel(); drawErr();
+}
+
+/* ---------- panel ---------- */
+const f3=v=>v>=100?v.toExponential(1):v.toFixed(3);
+function panel(){
+  const F=fits[deg]; let best=0; fits.forEach((f,d)=>{ if(f.va<fits[best].va) best=d; });
+  $('etr').textContent=f3(F.tr); $('eva').textContent=f3(F.va);
+  $('ratio').textContent=`${deg+1} / ${n}`; $('best').textContent=best;
+  const st=$('state'), note=$('stnote');
+  if(deg<best-1 && F.va>fits[best].va*1.15){ st.textContent='Subajuste'; st.className='state warn';
+    note.textContent=`El modelo es demasiado rígido para la forma de los datos. Los dos errores son altos y parecidos: le falta capacidad, no datos.`; }
+  else if(deg>best && F.va>fits[best].va*1.2){ st.textContent='Sobreajuste'; st.className='state bad';
+    note.textContent=`Error de entrenamiento ${f3(F.tr)} frente a ${f3(F.va)} en validación. El modelo ha memorizado el ruido de estos ${n} puntos y no generaliza.${deg+1>=n?' Tiene tantos parámetros como datos: puede pasar exactamente por todos.':''}`; }
+  else { st.textContent='Buen ajuste'; st.className='state ok';
+    note.textContent=`El modelo captura la tendencia sin perseguir el ruido. El error de validación está cerca del mínimo posible, que es el propio ruido de los datos (≈ ${noise.toFixed(2)}).`; }
+  const mags=F.w.map(Math.abs), mx=Math.max(...mags,1e-9), lg=v=>Math.log10(1+v);
+  $('coefs').innerHTML=mags.map(v=>`<i style="height:${Math.max(2,lg(v)/lg(Math.max(mx,1))*100)}%" title="${v.toFixed(3)}"></i>`).join('');
+  $('cmax').textContent=`máx |w| = ${mx>=1000?mx.toExponential(1):mx.toFixed(2)}`; $('clast').textContent=`w${String(deg).replace(/\d/g,c=>'₀₁₂₃₄₅₆₇₈₉'[c])}`;
+}
+
+/* ---------- canvases ---------- */
+function prep(c,h){ const d=devicePixelRatio||1, w=c.clientWidth; c.style.height=h+'px'; c.width=w*d; c.height=h*d; const g=c.getContext('2d'); g.setTransform(d,0,0,d,0,0); return [g,w]; }
+const YMIN=-2, YMAX=2;
+function drawFit(){
+  const c=$('fitc'); const W=c.clientWidth, H=Math.max(300,Math.min(460,W*0.55));
+  const [g]=prep(c,H);
+  const C={ink:css('--ink'),mu:css('--muted'),ln:css('--line'),fit:css('--fit'),tr:css('--train'),va:css('--val'),truth:css('--truth'),surf:css('--surface'),bad:css('--bad')};
+  const pl=36,pr=22,pt=10,pb=26, X=x=>pl+x*(W-pl-pr), Y=y=>pt+(YMAX-y)/(YMAX-YMIN)*(H-pt-pb);
+  g.font=`11px ${css('--mono')}`; g.fillStyle=C.mu; g.strokeStyle=C.ln; g.lineWidth=1;
+  g.textAlign='right'; g.textBaseline='middle';
+  for(let y=-2;y<=2;y++){ g.beginPath(); g.moveTo(pl,Y(y)); g.lineTo(W-pr,Y(y)); g.stroke(); g.fillText(y,pl-6,Y(y)); }
+  g.textAlign='center'; g.textBaseline='top';
+  for(let x=0;x<=1.001;x+=0.25){ g.fillText(x.toFixed(2),X(x),H-pb+6); }
+  g.save(); g.beginPath(); g.rect(pl,pt,W-pl-pr,H-pt-pb); g.clip();
+  // truth
+  g.strokeStyle=C.truth; g.lineWidth=2; g.setLineDash([6,5]); g.beginPath();
+  for(let i=0;i<=200;i++){const x=i/200; i?g.lineTo(X(x),Y(truth(x))):g.moveTo(X(x),Y(truth(x)));} g.stroke(); g.setLineDash([]);
+  // residuals
+  const F=fits[deg];
+  if($('resid').checked){ g.strokeStyle=C.bad; g.lineWidth=1.2; g.globalAlpha=0.7;
+    for(const p of train){ g.beginPath(); g.moveTo(X(p.x),Y(p.y)); g.lineTo(X(p.x),Y(Math.max(YMIN-1,Math.min(YMAX+1,F.pred(p.x))))); g.stroke(); }
+    if($('showval').checked) for(const p of val){ g.beginPath(); g.moveTo(X(p.x),Y(p.y)); g.lineTo(X(p.x),Y(Math.max(YMIN-1,Math.min(YMAX+1,F.pred(p.x))))); g.stroke(); }
+    g.globalAlpha=1; }
+  // fitted curve
+  g.strokeStyle=C.fit; g.lineWidth=3; g.lineJoin='round'; g.beginPath();
+  shown.forEach((y,i)=>{const yy=Math.max(YMIN-3,Math.min(YMAX+3,y)); i?g.lineTo(X(i/GRID),Y(yy)):g.moveTo(X(0),Y(yy));}); g.stroke();
+  // val points
+  if($('showval').checked){ g.strokeStyle=C.va; g.lineWidth=2; g.fillStyle=C.surf;
+    for(const p of val){ g.beginPath(); g.arc(X(p.x),Y(p.y),3.6,0,7); g.fill(); g.stroke(); } }
+  // train points
+  g.fillStyle=C.tr; g.strokeStyle=C.surf; g.lineWidth=1.5;
+  for(const p of train){ g.beginPath(); g.arc(X(p.x),Y(p.y),5,0,7); g.fill(); g.stroke(); }
+  g.restore();
+}
+function drawErr(){
+  const c=$('errc'); const W=c.clientWidth, H=230; const [g]=prep(c,H);
+  const C={mu:css('--muted'),ln:css('--line'),tr:css('--train'),va:css('--val'),fit:css('--fit'),ink:css('--ink'),surf:css('--surface')};
+  const pl=44,pr=14,pt=14,pb=38;
+  const lo=Math.floor(Math.log10(Math.max(1e-3,Math.min(...fits.map(f=>f.tr)))*1)), hi=Math.min(3,Math.max(0,Math.ceil(Math.log10(Math.max(...fits.map(f=>f.va))))));
+  const L=Math.max(lo,-3);
+  const X=d=>pl+d/MAXD*(W-pl-pr), Y=v=>{const l=Math.log10(Math.max(v,10**L)); return pt+(hi-Math.min(l,hi))/(hi-L)*(H-pt-pb);};
+  g.font=`11px ${css('--mono')}`; g.fillStyle=C.mu; g.strokeStyle=C.ln; g.lineWidth=1; g.textAlign='right'; g.textBaseline='middle';
+  for(let e=L;e<=hi;e++){ g.beginPath(); g.moveTo(pl,Y(10**e)); g.lineTo(W-pr,Y(10**e)); g.stroke(); g.fillText(e>=0?String(10**e):(10**e).toString(),pl-6,Y(10**e)); }
+  g.textAlign='center'; g.textBaseline='top';
+  for(let d=0;d<=MAXD;d++){ if(W<500&&d%3)continue; g.fillText(d,X(d),H-pb+6); }
+  g.fillText('grado del polinomio →',(pl+W-pr)/2,H-pb+21);
+  // current degree marker
+  g.fillStyle=C.fit; g.globalAlpha=0.12; g.fillRect(X(deg)-10,pt,20,H-pt-pb); g.globalAlpha=1;
+  const line=(key,col,dash)=>{ g.strokeStyle=col; g.lineWidth=2.5; g.setLineDash(dash||[]); g.beginPath(); fits.forEach((f,d)=>d?g.lineTo(X(d),Y(f[key])):g.moveTo(X(d),Y(f[key]))); g.stroke(); g.setLineDash([]);
+    fits.forEach((f,d)=>{ g.fillStyle=d===deg?col:C.surf; g.strokeStyle=col; g.lineWidth=2; g.beginPath(); g.arc(X(d),Y(f[key]),d===deg?5.5:3.5,0,7); g.fill(); g.stroke(); }); };
+  line('tr',C.tr); line('va',C.va);
+  let best=0; fits.forEach((f,d)=>{ if(f.va<fits[best].va) best=d; });
+  g.fillStyle=C.ink; g.font=`600 11px ${css('--body')}`; g.textAlign='center'; g.textBaseline='bottom';
+  g.fillText('mejor', X(best), Y(fits[best].va)-9);
+  // legend
+  g.textAlign='left'; g.textBaseline='middle'; g.font=`12px ${css('--body')}`;
+  const lx=pl+8; g.fillStyle=C.tr; g.fillRect(lx,pt+4,16,3); g.fillStyle=C.mu; g.fillText('entrenamiento',lx+22,pt+6);
+  const lx2=lx+32+g.measureText('entrenamiento').width; g.fillStyle=C.va; g.fillRect(lx2,pt+4,16,3); g.fillStyle=C.mu; g.fillText('validación',lx2+22,pt+6);
+}
+
+function frame(now){
+  if(anim){ const k=Math.min(1,(now-anim.t0)/380), e=1-(1-k)**3; shown=anim.from.map((v,i)=>v+(anim.to[i]-v)*e); if(k>=1) anim=null; }
+  drawFit(); requestAnimationFrame(frame);
+}
+
+/* ---------- controls ---------- */
+const setDeg=d=>{deg=d;$('deg').value=d;$('degv').textContent=d;update();};
+$('deg').oninput=e=>setDeg(+e.target.value);
+$('n').oninput=e=>{n=+e.target.value;$('nv').textContent=n;makeData();update();};
+$('noise').oninput=e=>{noise=+e.target.value;$('noisev').textContent=noise.toFixed(2);makeData();update();};
+$('lam').oninput=e=>{const v=+e.target.value; lam=v<=-8.95?0:10**v; $('lamv').textContent=lam===0?'0':lam.toExponential(0); update();};
+$('resample').onclick=()=>{seed=(seed*48271)%2147483647;makeData();update();};
+$('showval').onchange=e=>$('lgv').hidden=!e.target.checked;
+let sweepT=null;
+$('sweep').onclick=()=>{
+  if(sweepT){clearInterval(sweepT);sweepT=null;$('sweep').textContent='▶ Recorrer grados 0 → 15';return;}
+  $('sweep').textContent='❚❚ Detener'; setDeg(0);
+  sweepT=setInterval(()=>{ if(deg>=MAXD){clearInterval(sweepT);sweepT=null;$('sweep').textContent='▶ Recorrer grados 0 → 15';return;} setDeg(deg+1); },900);
+};
+new ResizeObserver(()=>drawErr()).observe($('errc').parentElement);
+
+makeData(); update(false); requestAnimationFrame(frame);
+})();
+</script>
+
+<a href="../index.html#lab" style="position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9;font:600 13px system-ui,sans-serif;background:#0E1621;color:#fff;padding:9px 12px;border-radius:8px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.25)">← MLE·AI</a><script>if(window.self!==window.top){document.currentScript.previousElementSibling.remove()}</script>
+</body>
+</html>
