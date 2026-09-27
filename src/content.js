@@ -265,7 +265,7 @@ función PREDECIR(bosque, x):
     <li><b>Energía:</b> previsión de demanda y detección de fallos en aerogeneradores.</li>
     <li><b>Control de calidad:</b> clasificar piezas defectuosas a partir de mediciones de proceso.</li></ul>` },
   { id:'ejercicio', t:'Ejercicio práctico', plain:'ejercicio oob', html:() => `<p>Amplía la implementación desde cero para que calcule el error out-of-bag. Debes guardar los índices bootstrap de cada árbol y, para cada muestra, votar solo con los árboles que no la vieron. Comprueba que el resultado se acerca al 96,2 % que da scikit-learn.</p>${U.code(RF_EXERCISE, 'Plantilla')}` },
-  { id:'codigo', t:'Código completo', plain:'código descargable script', html:() => `<p>El script completo, listo para ejecutar, se obtiene uniendo los bloques de las secciones anteriores. En la versión del portal con repositorio se publicará como notebook en <code>/notebooks/random-forest.ipynb</code>. Aquí puedes copiarlo directamente:</p>${U.code(RF_SCRATCH + '\n\n' + RF_DATA + '\n\n' + RF_SCRATCH_USE + '\n\n' + RF_TRAIN + '\n\n' + RF_EVAL, 'random_forest_completo.py')}` },
+  { id:'codigo', t:'Código completo', plain:'código descargable script colab github', html:() => `<p>El script completo con todos los experimentos de esta página está en el repositorio y se puede ejecutar en Google Colab sin instalar nada:</p>${CH.repo('random_forest.py')}<p>O cópialo desde aquí:</p>${U.code(RF_SCRATCH + '\n\n' + RF_DATA + '\n\n' + RF_SCRATCH_USE + '\n\n' + RF_TRAIN + '\n\n' + RF_EVAL, 'random_forest_completo.py')}` },
   { id:'referencias', t:'Referencias y papers', plain:'referencias breiman ho hastie', html:() => `<ol class="refs">
     <li>L. Breiman (2001). «Random Forests». <i>Machine Learning</i>, 45(1), 5–32.</li>
     <li>L. Breiman (1996). «Bagging Predictors». <i>Machine Learning</i>, 24(2), 123–140.</li>
@@ -276,15 +276,24 @@ función PREDECIR(bosque, x):
 
 function articleLayout(crumbs, head, sections, prefix) {
   return crumbs + `<div class="article">
-    <nav class="toc" aria-label="Contenido del artículo"><span class="toc-t">Contenido</span><ol>${sections.map((s, i) => `<li><a href="#${location.hash.slice(1)}" data-target="${prefix}${s.id}"><span>${String(i + 1).padStart(2, '0')}</span>${s.t}</a></li>`).join('')}</ol></nav>
+    <nav class="toc" aria-label="Contenido del artículo"><span class="toc-t">Contenido</span><ol>${sections.map((s, i) => `<li><a href="#${prefix}${s.id}" data-target="${prefix}${s.id}"><span>${String(i + 1).padStart(2, '0')}</span>${s.t}</a></li>`).join('')}</ol></nav>
     <article class="prose">${head}${sections.map((s, i) => `<section id="${prefix}${s.id}" class="sec"><h2><span class="n">${String(i + 1).padStart(2, '0')}</span>${s.t}</h2>${s.html()}</section>`).join('')}</article></div>`;
 }
-function RF_PAGE() {
-  return articleLayout(C.crumbs([['Inicio', 'home'], ['Machine Learning', 'ml'], ['Random Forest']]),
-    `<header class="page-head in-article"><span class="kicker">Machine Learning · Ensembles · Artículo completo</span><h1>Random Forest</h1>
-     <p class="lede">Cómo muchos árboles mediocres forman un modelo excelente: intuición, matemáticas, implementación desde cero, scikit-learn y resultados reales.</p>
-     <p class="meta">Resultados obtenidos con scikit-learn 1.8.0 y NumPy 2.4 · random_state = 42 · <a href="#lab-tree">Laboratorio relacionado</a></p></header>`,
-    RF_SECTIONS, 'rf-');
+/* Registro de artículos: cada uno con la plantilla homogénea de secciones. */
+const ARTICLES = [
+  { id:'random-forest', area:'ml', areaName:'Machine Learning', title:'Random Forest', lab:'tree', prefix:'rf-', sections: RF_SECTIONS,
+    kicker:'Machine Learning · Ensembles · Artículo completo',
+    lede:'Cómo muchos árboles mediocres forman un modelo excelente: intuición, matemáticas, implementación desde cero, scikit-learn y resultados reales.',
+    teaser:'De la intuición a la implementación desde cero en NumPy, con resultados reales sobre el dataset Breast Cancer Wisconsin: 95,8 % de acierto en test y 0,995 de ROC-AUC.',
+    meta:'Resultados obtenidos con scikit-learn 1.8.0 y NumPy 2.4 · random_state = 42' },
+];
+function ARTICLE_PAGE(id) {
+  const ar = ARTICLES.find(a => a.id === id);
+  return articleLayout(C.crumbs([['Inicio', 'home'], [ar.areaName, ar.area], [ar.title]]),
+    `<header class="page-head in-article"><span class="kicker">${ar.kicker}</span><h1>${ar.title}</h1>
+     <p class="lede">${ar.lede}</p>
+     <p class="meta">${ar.meta}${ar.lab ? ` · <a href="#lab-${ar.lab}">Laboratorio relacionado</a>` : ''}</p></header>`,
+    ar.sections, ar.prefix);
 }
 
 /* =========================================================================

@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Random Forest · MLE·AI</title>
+<meta name="description" content="Cómo muchos árboles mediocres forman un modelo excelente: intuición, matemáticas, implementación desde cero, scikit-learn y resultados reales.">
+<link rel="canonical" href="https://mle-ai.vercel.app/machine-learning/random-forest">
+<meta name="theme-color" content="#0E1621">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MLE·AI">
+<meta property="og:title" content="Random Forest">
+<meta property="og:description" content="Cómo muchos árboles mediocres forman un modelo excelente: intuición, matemáticas, implementación desde cero, scikit-learn y resultados reales.">
+<meta property="og:url" content="https://mle-ai.vercel.app/machine-learning/random-forest">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="https://mle-ai.vercel.app/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mle-ai.vercel.app/img/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1621'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='11' font-weight='700' fill='%236E9BFF' text-anchor='middle'%3EML%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/assets/style.css?v=6ba0d61068">
+<script>try{var t=JSON.parse(localStorage.getItem('mlai.theme'));if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Random Forest","description":"Cómo muchos árboles mediocres forman un modelo excelente: intuición, matemáticas, implementación desde cero, scikit-learn y resultados reales.","inLanguage":"es","url":"https://mle-ai.vercel.app/machine-learning/random-forest","author":{"@type":"Organization","name":"MLE·AI","url":"https://mle-ai.vercel.app"},"publisher":{"@type":"Organization","name":"MLE·AI","url":"https://mle-ai.vercel.app"},"about":"Machine Learning"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://mle-ai.vercel.app"},{"@type":"ListItem","position":2,"name":"Machine Learning","item":"https://mle-ai.vercel.app/machine-learning"},{"@type":"ListItem","position":3,"name":"Random Forest","item":"https://mle-ai.vercel.app/machine-learning/random-forest"}]}</script>
+</head>
+<body data-page="article">
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="MLE·AI, inicio"><span class="mk">ML/AI</span><span><b>MLE·AI</b><small>Machine Learning Engineering</small></span></a>
+    <nav class="mainnav" aria-label="Principal">
+      <button type="button" id="topics-btn" data-nav="topics" class="on" aria-expanded="false" aria-controls="mega">Temas ▾</button>
+      <a href="/lab" data-nav="lab">Laboratorio</a>
+      <a href="/llm/transformer-visualizer" data-nav="transformer">Transformer</a>
+      <a href="/learning-path" data-nav="path">Ruta</a>
+      <a href="/projects" data-nav="projects">Proyectos</a>
+      <a href="/papers" data-nav="papers">Papers</a>
+      <a href="/datasets" data-nav="datasets">Datasets</a>
+    </nav>
+    <span class="spacer"></span>
+    <button type="button" class="searchbtn" data-open-search aria-label="Buscar">⌕ Buscar en el portal<kbd>/</kbd></button>
+    <button type="button" class="iconbtn" id="theme-btn" aria-label="Cambiar tema">☾</button>
+    <button type="button" class="iconbtn" id="menu-btn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  </div>
+  <div class="mega" id="mega" hidden><div class="wrap" id="mega-inner"><a href="/machine-learning" class="mega-item"><b>Machine Learning</b><small>16 temas · Algoritmos clásicos</small></a><a href="/deep-learning" class="mega-item"><b>Deep Learning</b><small>13 temas · Redes neuronales</small></a><a href="/mathematics" class="mega-item"><b>Matemáticas para IA</b><small>10 temas · Fundamentos</small></a><a href="/programming" class="mega-item"><b>Programación</b><small>8 temas · Herramientas</small></a><a href="/llm" class="mega-item"><b>LLM</b><small>13 temas · Modelos de lenguaje</small></a><a href="/mlops" class="mega-item"><b>MLOps</b><small>12 temas · Producción</small></a><a href="/research" class="mega-item"><b>Investigación</b><small>8 temas · Estado del arte</small></a><a href="/llm/transformer-visualizer" class="mega-item hl"><b>Transformer Visualizer</b><small>13 etapas interactivas</small></a></div></div>
+</header>
+<nav class="drawer" aria-label="Menú móvil">
+  <button type="button" class="searchbtn mobile-search" data-open-search>⌕ Buscar en el portal</button>
+  <span class="dl">Secciones</span>
+  <a href="/">Inicio</a><a href="/lab">Laboratorio</a><a href="/llm/transformer-visualizer">Transformer Visualizer</a><a href="/learning-path">Ruta de aprendizaje</a><a href="/projects">Proyectos</a><a href="/papers">Papers</a><a href="/datasets">Datasets</a>
+  <span class="dl">Temas</span>
+  <div id="drawer-topics" style="display:contents"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas para IA</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a></div>
+</nav>
+
+<main id="app" class="wrap"><nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a><span class="sep">/</span><a href="/machine-learning">Machine Learning</a><span class="sep">/</span><span>Random Forest</span></nav><div class="article">
+    <nav class="toc" aria-label="Contenido del artículo"><span class="toc-t">Contenido</span><ol><li><a href="#rf-que-es" data-target="rf-que-es"><span>01</span>Qué es</a></li><li><a href="#rf-intuicion" data-target="rf-intuicion"><span>02</span>Intuición</a></li><li><a href="#rf-matematicas" data-target="rf-matematicas"><span>03</span>Fundamento matemático</a></li><li><a href="#rf-paso-a-paso" data-target="rf-paso-a-paso"><span>04</span>Algoritmo paso a paso</a></li><li><a href="#rf-pseudocodigo" data-target="rf-pseudocodigo"><span>05</span>Pseudocódigo</a></li><li><a href="#rf-desde-cero" data-target="rf-desde-cero"><span>06</span>Implementación desde cero en Python</a></li><li><a href="#rf-sklearn" data-target="rf-sklearn"><span>07</span>Implementación con Scikit-learn</a></li><li><a href="#rf-dataset" data-target="rf-dataset"><span>08</span>Dataset de ejemplo</a></li><li><a href="#rf-entrenamiento" data-target="rf-entrenamiento"><span>09</span>Entrenamiento</a></li><li><a href="#rf-evaluacion" data-target="rf-evaluacion"><span>10</span>Evaluación</a></li><li><a href="#rf-metricas" data-target="rf-metricas"><span>11</span>Métricas</a></li><li><a href="#rf-visualizacion" data-target="rf-visualizacion"><span>12</span>Visualización</a></li><li><a href="#rf-ventajas" data-target="rf-ventajas"><span>13</span>Ventajas</a></li><li><a href="#rf-limitaciones" data-target="rf-limitaciones"><span>14</span>Limitaciones</a></li><li><a href="#rf-hiperparametros" data-target="rf-hiperparametros"><span>15</span>Hiperparámetros</a></li><li><a href="#rf-casos-de-uso" data-target="rf-casos-de-uso"><span>16</span>Casos de uso</a></li><li><a href="#rf-industria" data-target="rf-industria"><span>17</span>Aplicaciones industriales</a></li><li><a href="#rf-ejercicio" data-target="rf-ejercicio"><span>18</span>Ejercicio práctico</a></li><li><a href="#rf-codigo" data-target="rf-codigo"><span>19</span>Código completo</a></li><li><a href="#rf-referencias" data-target="rf-referencias"><span>20</span>Referencias y papers</a></li></ol></nav>
+    <article class="prose"><header class="page-head in-article"><span class="kicker">Machine Learning · Ensembles · Artículo completo</span><h1>Random Forest</h1>
+     <p class="lede">Cómo muchos árboles mediocres forman un modelo excelente: intuición, matemáticas, implementación desde cero, scikit-learn y resultados reales.</p>
+     <p class="meta">Resultados obtenidos con scikit-learn 1.8.0 y NumPy 2.4 · random_state = 42 · <a href="/lab/decision-tree">Laboratorio relacionado</a></p></header><section id="rf-que-es" class="sec"><h2><span class="n">01</span>Qué es</h2>
+    <p><b>Random Forest</b> es un método de <i>ensemble</i> para clasificación y regresión. Entrena muchos árboles de decisión, cada uno con una muestra aleatoria de los datos y con un subconjunto aleatorio de variables en cada división, y combina sus predicciones: por votación en clasificación y por media en regresión. Lo propuso Leo Breiman en 2001, a partir de su trabajo anterior sobre <i>bagging</i> (1996).</p>
+    <p>Es uno de los algoritmos más usados con datos tabulares: funciona bien sin apenas ajustes, no necesita escalar las variables y da una estimación de su propio error sin reservar datos.</p></section><section id="rf-intuicion" class="sec"><h2><span class="n">02</span>Intuición</h2>
+    <p>Un árbol de decisión profundo se aprende los datos casi de memoria: tiene poco sesgo pero mucha varianza, porque cambiar unos pocos puntos cambia el árbol entero. La idea del bosque es la de la «sabiduría de la multitud»: si muchos estimadores ruidosos cometen errores <b>distintos</b>, al promediarlos los errores se compensan.</p>
+    <p>La clave está en que los errores sean distintos. Si todos los árboles vieran los mismos datos y las mismas variables serían casi idénticos y promediarlos no serviría de nada. Por eso se introduce aleatoriedad por dos vías: cada árbol ve una muestra bootstrap distinta, y en cada nodo solo puede elegir entre unas pocas variables al azar.</p>
+    <p class="callout">Pruébalo en el <a href="/lab/decision-tree">laboratorio del árbol de decisión</a>: con el dataset «Ruido», compara un árbol profundo con el botón «Ver Random Forest».</p></section><section id="rf-matematicas" class="sec"><h2><span class="n">03</span>Fundamento matemático</h2>
+    <h4>Por qué promediar reduce el error</h4>
+    <p>Si promediamos B variables idénticamente distribuidas, cada una con varianza σ² y correlación ρ entre pares, la varianza de la media es:</p>
+    <div class="math-block"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">Var</mi><mo>⁡</mo><mtext> ⁣</mtext><mrow><mo fence="true">(</mo><mfrac><mn>1</mn><mi>B</mi></mfrac><munderover><mo>∑</mo><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><msub><mi>T</mi><mi>b</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo fence="true">)</mo></mrow><mo>=</mo><mi>ρ</mi><mtext> </mtext><msup><mi>σ</mi><mn>2</mn></msup><mo>+</mo><mfrac><mrow><mn>1</mn><mo>−</mo><mi>ρ</mi></mrow><mi>B</mi></mfrac><mtext> </mtext><msup><mi>σ</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\operatorname{Var}\!\left(\frac{1}{B}\sum_{b=1}^{B} T_b(x)\right) = \rho\,\sigma^2 + \frac{1-\rho}{B}\,\sigma^2</annotation></semantics></math></span></div>
+    <p>El segundo término desaparece al añadir árboles, pero el primero no: la única forma de bajarlo es reducir la correlación ρ entre árboles. Eso es exactamente lo que hace la selección aleatoria de variables.</p>
+    <h4>Bootstrap y datos out-of-bag</h4>
+    <p>Cada árbol se entrena con n muestras tomadas con reemplazo. La probabilidad de que una muestra concreta no salga nunca es:</p>
+    <div class="math-block"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mrow><mo fence="true">(</mo><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mo fence="true">)</mo></mrow><mi>n</mi></msup><mover><mo stretchy="true" minsize="3.0em">→</mo><mpadded width="+0.6em" lspace="0.3em"><mrow><mtext> </mtext><mi>n</mi><mo>→</mo><mi mathvariant="normal">∞</mi><mtext> </mtext></mrow></mpadded></mover><msup><mi>e</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>≈</mo><mn>0.368</mn></mrow><annotation encoding="application/x-tex">\left(1 - \frac{1}{n}\right)^{n} \xrightarrow{\,n\to\infty\,} e^{-1} \approx 0.368</annotation></semantics></math></span></div>
+    <p>Así, cada árbol deja fuera en torno al 36,8 % de los datos. Evaluar cada punto solo con los árboles que no lo vieron da el <b>error out-of-bag</b>, una estimación del error de generalización sin necesidad de un conjunto de validación.</p>
+    <h4>Criterio de división</h4>
+    <p>Cada nodo busca, entre las m variables candidatas, el umbral que más reduce la impureza de Gini:</p>
+    <div class="math-block"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><munder><mo>∑</mo><mi>k</mi></munder><msubsup><mi>p</mi><mi>k</mi><mn>2</mn></msubsup><mo separator="true">,</mo><mspace width="2em"/><mi mathvariant="normal">Δ</mi><mi>G</mi><mo>=</mo><mi>G</mi><mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo><mo>−</mo><mfrac><mrow><mi mathvariant="normal">∣</mi><msub><mi>S</mi><mi>L</mi></msub><mi mathvariant="normal">∣</mi></mrow><mrow><mi mathvariant="normal">∣</mi><mi>S</mi><mi mathvariant="normal">∣</mi></mrow></mfrac><mi>G</mi><mo stretchy="false">(</mo><msub><mi>S</mi><mi>L</mi></msub><mo stretchy="false">)</mo><mo>−</mo><mfrac><mrow><mi mathvariant="normal">∣</mi><msub><mi>S</mi><mi>R</mi></msub><mi mathvariant="normal">∣</mi></mrow><mrow><mi mathvariant="normal">∣</mi><mi>S</mi><mi mathvariant="normal">∣</mi></mrow></mfrac><mi>G</mi><mo stretchy="false">(</mo><msub><mi>S</mi><mi>R</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">G(S) = 1 - \sum_{k} p_k^2, \qquad \Delta G = G(S) - \frac{|S_L|}{|S|}G(S_L) - \frac{|S_R|}{|S|}G(S_R)</annotation></semantics></math></span></div>
+    <h4>Predicción</h4>
+    <div class="math-block"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mover accent="true"><mi>y</mi><mo>^</mo></mover><mtext>clas</mtext></msub><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi mathvariant="normal">moda</mi><mo>⁡</mo><mo stretchy="false">{</mo><msub><mi>T</mi><mi>b</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><msubsup><mo stretchy="false">}</mo><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></msubsup><mo separator="true">,</mo><mspace width="2em"/><msub><mover accent="true"><mi>y</mi><mo>^</mo></mover><mtext>reg</mtext></msub><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>B</mi></mfrac><munderover><mo>∑</mo><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><msub><mi>T</mi><mi>b</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\hat{y}_{\text{clas}}(x) = \operatorname{moda}\{T_b(x)\}_{b=1}^{B}, \qquad \hat{y}_{\text{reg}}(x) = \frac{1}{B}\sum_{b=1}^{B} T_b(x)</annotation></semantics></math></span></div>
+    <p>El valor habitual de m es <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">⌊</mo><msqrt><mi>p</mi></msqrt><mo stretchy="false">⌋</mo></mrow><annotation encoding="application/x-tex">\lfloor\sqrt{p}\rfloor</annotation></semantics></math></span> en clasificación, con p el número de variables. scikit-learn, en lugar de contar votos, promedia las probabilidades de clase de los árboles.</p></section><section id="rf-paso-a-paso" class="sec"><h2><span class="n">04</span>Algoritmo paso a paso</h2>
+    <ol class="steps-ol">
+      <li>Elige el número de árboles B y el número de variables candidatas por nodo m.</li>
+      <li>Para cada árbol b = 1…B, toma una muestra bootstrap: n filas elegidas al azar con reemplazo.</li>
+      <li>Haz crecer un árbol con esa muestra. En cada nodo, escoge m variables al azar y busca el mejor corte solo entre ellas.</li>
+      <li>Deja crecer el árbol sin podar, hasta que las hojas sean puras o tengan el mínimo de muestras.</li>
+      <li>Para predecir, pasa el nuevo punto por los B árboles y combina las respuestas: voto mayoritario o media.</li>
+    </ol></section><section id="rf-pseudocodigo" class="sec"><h2><span class="n">05</span>Pseudocódigo</h2>
+    <pre class="pseudo"><code>función RANDOM_FOREST(D, B, m):
+    bosque ← []
+    para b ← 1 hasta B:
+        D_b ← muestra_con_reemplazo(D, |D|)
+        T_b ← CRECER_ÁRBOL(D_b, m)
+        añadir T_b a bosque
+    devolver bosque
+
+función CRECER_ÁRBOL(D, m):
+    si D es puro o demasiado pequeño:
+        devolver HOJA(clase mayoritaria de D)
+    F ← m variables elegidas al azar
+    (f, t) ← argmax sobre f ∈ F y umbrales t de ΔGini(D, f, t)
+    devolver NODO(f, t, CRECER_ÁRBOL(D[f ≤ t], m), CRECER_ÁRBOL(D[f > t], m))
+
+función PREDECIR(bosque, x):
+    devolver moda{ T(x) para T en bosque }</code></pre></section><section id="rf-desde-cero" class="sec"><h2><span class="n">06</span>Implementación desde cero en Python</h2>
+    <p>Una implementación completa y funcional en NumPy, pensada para leerse, no para ser rápida. Sigue el algoritmo tal cual: bootstrap, selección aleatoria de variables en cada nodo y voto mayoritario.</p>
+    <div class="code"><div class="lab">rf_desde_cero.py<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">import</span> numpy <span class="k">as</span> np
+
+<span class="k">class</span> Nodo:
+    <span class="k">def</span> __init__(<span class="k">self</span>, feature=<span class="k">None</span>, umbral=<span class="k">None</span>, izq=<span class="k">None</span>, der=<span class="k">None</span>, valor=<span class="k">None</span>):
+        <span class="k">self</span>.feature, <span class="k">self</span>.umbral, <span class="k">self</span>.izq, <span class="k">self</span>.der, <span class="k">self</span>.valor = feature, umbral, izq, der, valor
+
+<span class="k">def</span> gini(y):
+    _, cuentas = np.unique(y, return_counts=<span class="k">True</span>)
+    p = cuentas / len(y)
+    <span class="k">return</span> <span class="n">1.0</span> - np.sum(p ** <span class="n">2</span>)
+
+<span class="k">class</span> ArbolDecision:
+    <span class="k">def</span> __init__(<span class="k">self</span>, max_depth=<span class="k">None</span>, min_samples_split=<span class="n">2</span>, max_features=<span class="k">None</span>, rng=<span class="k">None</span>):
+        <span class="k">self</span>.max_depth, <span class="k">self</span>.min_samples_split = max_depth, min_samples_split
+        <span class="k">self</span>.max_features, <span class="k">self</span>.rng = max_features, rng <span class="k">or</span> np.random.default_rng()
+
+    <span class="k">def</span> fit(<span class="k">self</span>, X, y):
+        <span class="k">self</span>.raiz = <span class="k">self</span>._crecer(X, y, profundidad=<span class="n">0</span>)
+        <span class="k">return</span> <span class="k">self</span>
+
+    <span class="k">def</span> _crecer(<span class="k">self</span>, X, y, profundidad):
+        <span class="k">if</span> (len(np.unique(y)) == <span class="n">1</span> <span class="k">or</span> len(y) &lt; <span class="k">self</span>.min_samples_split
+                <span class="k">or</span> (<span class="k">self</span>.max_depth is <span class="k">not</span> <span class="k">None</span> <span class="k">and</span> profundidad &gt;= <span class="k">self</span>.max_depth)):
+            <span class="k">return</span> Nodo(valor=np.bincount(y).argmax())
+        n_feat = X.shape[<span class="n">1</span>]
+        k = <span class="k">self</span>.max_features <span class="k">or</span> n_feat
+        candidatas = <span class="k">self</span>.rng.choice(n_feat, k, replace=<span class="k">False</span>)   <span class="c"># aleatoriedad por nodo</span>
+        mejor = (<span class="k">None</span>, <span class="k">None</span>, gini(y))
+        <span class="k">for</span> f <span class="k">in</span> candidatas:
+            <span class="k">for</span> t <span class="k">in</span> np.unique(X[:, f])[:-<span class="n">1</span>]:
+                izq = X[:, f] &lt;= t
+                g = (izq.sum() * gini(y[izq]) + (~izq).sum() * gini(y[~izq])) / len(y)
+                <span class="k">if</span> g &lt; mejor[<span class="n">2</span>]:
+                    mejor = (f, t, g)
+        f, t, _ = mejor
+        <span class="k">if</span> f is <span class="k">None</span>:
+            <span class="k">return</span> Nodo(valor=np.bincount(y).argmax())
+        izq = X[:, f] &lt;= t
+        <span class="k">return</span> Nodo(f, t, <span class="k">self</span>._crecer(X[izq], y[izq], profundidad + <span class="n">1</span>),
+                    <span class="k">self</span>._crecer(X[~izq], y[~izq], profundidad + <span class="n">1</span>))
+
+    <span class="k">def</span> _predecir_uno(<span class="k">self</span>, x, nodo):
+        <span class="k">while</span> nodo.valor is <span class="k">None</span>:
+            nodo = nodo.izq <span class="k">if</span> x[nodo.feature] &lt;= nodo.umbral <span class="k">else</span> nodo.der
+        <span class="k">return</span> nodo.valor
+
+    <span class="k">def</span> predict(<span class="k">self</span>, X):
+        <span class="k">return</span> np.array([<span class="k">self</span>._predecir_uno(x, <span class="k">self</span>.raiz) <span class="k">for</span> x <span class="k">in</span> X])
+
+<span class="k">class</span> RandomForest:
+    <span class="k">def</span> __init__(<span class="k">self</span>, n_estimators=<span class="n">100</span>, max_depth=<span class="k">None</span>, max_features=<span class="s">&quot;sqrt&quot;</span>, seed=<span class="n">0</span>):
+        <span class="k">self</span>.n_estimators, <span class="k">self</span>.max_depth = n_estimators, max_depth
+        <span class="k">self</span>.max_features, <span class="k">self</span>.rng = max_features, np.random.default_rng(seed)
+
+    <span class="k">def</span> fit(<span class="k">self</span>, X, y):
+        n, d = X.shape
+        k = int(np.sqrt(d)) <span class="k">if</span> <span class="k">self</span>.max_features == <span class="s">&quot;sqrt&quot;</span> <span class="k">else</span> d
+        <span class="k">self</span>.arboles = []
+        <span class="k">for</span> _ <span class="k">in</span> range(<span class="k">self</span>.n_estimators):
+            idx = <span class="k">self</span>.rng.integers(<span class="n">0</span>, n, n)                       <span class="c"># muestra bootstrap</span>
+            arbol = ArbolDecision(<span class="k">self</span>.max_depth, max_features=k, rng=<span class="k">self</span>.rng)
+            <span class="k">self</span>.arboles.append(arbol.fit(X[idx], y[idx]))
+        <span class="k">return</span> <span class="k">self</span>
+
+    <span class="k">def</span> predict(<span class="k">self</span>, X):
+        votos = np.array([a.predict(X) <span class="k">for</span> a <span class="k">in</span> <span class="k">self</span>.arboles])   <span class="c"># (n_arboles, n_muestras)</span>
+        <span class="k">return</span> np.apply_along_axis(<span class="k">lambda</span> v: np.bincount(v).argmax(), <span class="n">0</span>, votos)</code></pre></div>
+    <div class="code"><div class="lab">Uso<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">from</span> sklearn.metrics <span class="k">import</span> accuracy_score
+
+rf = RandomForest(n_estimators=<span class="n">25</span>, max_depth=<span class="n">8</span>, seed=<span class="n">0</span>).fit(X_tr, y_tr)
+print(accuracy_score(y_te, rf.predict(X_te)))   <span class="c"># 0.965 (unos 7 s: bucles en Python puro)</span></code></pre></div>
+    <p>Con 25 árboles de profundidad máxima 8 alcanza un 96,5 % de acierto en el mismo conjunto de test que el modelo de scikit-learn, aunque tarda unos 7 segundos por los bucles de Python frente a menos de uno en scikit-learn.</p></section><section id="rf-sklearn" class="sec"><h2><span class="n">07</span>Implementación con Scikit-learn</h2><div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">from</span> sklearn.ensemble <span class="k">import</span> RandomForestClassifier, RandomForestRegressor
+
+clf = RandomForestClassifier(n_estimators=<span class="n">300</span>, max_features=<span class="s">&quot;sqrt&quot;</span>, random_state=<span class="n">42</span>)
+clf.fit(X_tr, y_tr)
+clf.predict(X_te)            <span class="c"># clases</span>
+clf.predict_proba(X_te)      <span class="c"># media de las probabilidades de los árboles</span>
+clf.feature_importances_     <span class="c"># importancia por reducción media de impureza</span>
+
+reg = RandomForestRegressor(n_estimators=<span class="n">300</span>, max_features=<span class="n">1.0</span>)   <span class="c"># para regresión</span></code></pre></div></section><section id="rf-dataset" class="sec"><h2><span class="n">08</span>Dataset de ejemplo</h2>
+    <p>Se usa <a href="/datasets">Breast Cancer Wisconsin (Diagnostic)</a>, incluido en scikit-learn: 569 muestras de biopsias con 30 variables numéricas calculadas sobre imágenes de núcleos celulares (10 medidas, como el radio, la textura o la concavidad, cada una en tres versiones: media, error estándar y peor valor). Hay 212 casos malignos y 357 benignos.</p>
+    <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">from</span> sklearn.datasets <span class="k">import</span> load_breast_cancer
+<span class="k">from</span> sklearn.model_selection <span class="k">import</span> train_test_split
+
+datos = load_breast_cancer()
+X, y = datos.data, datos.target          <span class="c"># y: 0 = maligno, 1 = benigno</span>
+X_tr, X_te, y_tr, y_te = train_test_split(
+    X, y, test_size=<span class="n">0.25</span>, stratify=y, random_state=<span class="n">42</span>)
+print(X_tr.shape, X_te.shape)            <span class="c"># (426, 30) (143, 30)</span></code></pre></div>
+    <p>La partición estratificada mantiene la proporción de clases en entrenamiento (426 muestras) y test (143).</p></section><section id="rf-entrenamiento" class="sec"><h2><span class="n">09</span>Entrenamiento</h2><div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">from</span> sklearn.ensemble <span class="k">import</span> RandomForestClassifier
+
+modelo = RandomForestClassifier(
+    n_estimators=<span class="n">300</span>,
+    oob_score=<span class="k">True</span>,        <span class="c"># error out-of-bag gratis</span>
+    random_state=<span class="n">42</span>,
+    n_jobs=-<span class="n">1</span>,
+)
+modelo.fit(X_tr, y_tr)
+print(f<span class="s">&quot;OOB: {modelo.oob_score_:.3f}&quot;</span>)   <span class="c"># 0.962</span></code></pre></div><p>El error out-of-bag da un 96,2 % de acierto sin haber tocado el conjunto de test, muy cerca de lo que luego se mide en test.</p></section><section id="rf-evaluacion" class="sec"><h2><span class="n">10</span>Evaluación</h2>
+    <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">from</span> sklearn.model_selection <span class="k">import</span> cross_val_score
+<span class="k">from</span> sklearn.metrics <span class="k">import</span> (accuracy_score, precision_score, recall_score,
+                             f1_score, roc_auc_score, confusion_matrix)
+
+pred = modelo.predict(X_te)
+prob = modelo.predict_proba(X_te)[:, <span class="n">1</span>]
+print(accuracy_score(y_te, pred))        <span class="c"># 0.958</span>
+print(roc_auc_score(y_te, prob))         <span class="c"># 0.995</span>
+print(confusion_matrix(y_te, pred))      <span class="c"># [[49  4]</span>
+                                         <span class="c">#  [ 2 88]]</span>
+cv = cross_val_score(RandomForestClassifier(n_estimators=<span class="n">300</span>, random_state=<span class="n">42</span>), X, y, cv=<span class="n">5</span>)
+print(cv.mean(), cv.std())               <span class="c"># 0.961  0.025</span></code></pre></div>
+    <div class="tbl"><table><thead><tr><th>Modelo</th><th>Acierto en test</th><th>Validación cruzada (5 particiones)</th></tr></thead><tbody>
+      <tr><td>Un árbol de decisión</td><td>92,3 %</td><td>—</td></tr>
+      <tr><td>Random Forest desde cero (25 árboles)</td><td>96,5 %</td><td>—</td></tr>
+      <tr><td>Random Forest scikit-learn (300 árboles)</td><td><b>95,8 %</b></td><td>96,1 % ± 2,5</td></tr></tbody></table></div>
+    <p>La desviación de la validación cruzada (±2,5 puntos) es mayor que la diferencia entre los dos bosques: con 143 muestras de test, esa diferencia no es significativa.</p></section><section id="rf-metricas" class="sec"><h2><span class="n">11</span>Métricas</h2>
+    <div class="math-block"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mtext>Precisi</mtext><mover accent="true"><mtext>o</mtext><mo>ˊ</mo></mover><mtext>n</mtext></mrow><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>P</mi></mrow></mfrac><mo separator="true">,</mo><mspace width="1em"/><mtext>Recall</mtext><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>N</mi></mrow></mfrac><mo separator="true">,</mo><mspace width="1em"/><msub><mi>F</mi><mn>1</mn></msub><mo>=</mo><mfrac><mrow><mn>2</mn><mo>⋅</mo><mi>P</mi><mo>⋅</mo><mi>R</mi></mrow><mrow><mi>P</mi><mo>+</mo><mi>R</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{Precisión} = \frac{TP}{TP+FP}, \quad \text{Recall} = \frac{TP}{TP+FN}, \quad F_1 = \frac{2\cdot P\cdot R}{P+R}</annotation></semantics></math></span></div>
+    <div class="grid g2 tight">
+      <div class="tbl"><table><thead><tr><th>Métrica (clase positiva: benigno)</th><th>Valor</th></tr></thead><tbody>
+        <tr><td>Acierto</td><td>0,958</td></tr><tr><td>Precisión</td><td>0,957</td></tr><tr><td>Recall</td><td>0,978</td></tr><tr><td>F1</td><td>0,967</td></tr><tr><td>ROC-AUC</td><td>0,995</td></tr></tbody></table></div>
+      <div class="tbl"><table class="cm"><thead><tr><th>Real \ Predicho</th><th>Maligno</th><th>Benigno</th></tr></thead><tbody>
+        <tr><th>Maligno</th><td class="ok">49</td><td class="bad">4</td></tr><tr><th>Benigno</th><td class="bad">2</td><td class="ok">88</td></tr></tbody></table></div>
+    </div>
+    <p>En diagnóstico, el error grave es no detectar un tumor maligno. El recall de la clase maligna es 49 / 53 = 92,5 %: 4 casos malignos se clasificaron como benignos. En un sistema real se bajaría el umbral de decisión para la clase maligna, aceptando más falsas alarmas a cambio de perder menos casos.</p></section><section id="rf-visualizacion" class="sec"><h2><span class="n">12</span>Visualización</h2><figure class="chart"><div class="hbars"><div class="hb"><span class="hbl">worst perimeter</span><span class="hbt"><i style="width:100%"></i></span><span class="hbn">0.146</span></div><div class="hb"><span class="hbl">worst area</span><span class="hbt"><i style="width:98.90185312285519%"></i></span><span class="hbn">0.144</span></div><div class="hb"><span class="hbl">worst concave points</span><span class="hbt"><i style="width:78.6547700754976%"></i></span><span class="hbn">0.115</span></div><div class="hb"><span class="hbl">mean concave points</span><span class="hbt"><i style="width:67.46739876458476%"></i></span><span class="hbn">0.098</span></div><div class="hb"><span class="hbl">worst radius</span><span class="hbt"><i style="width:49.691146190803025%"></i></span><span class="hbn">0.072</span></div><div class="hb"><span class="hbl">mean radius</span><span class="hbt"><i style="width:41.66094715168154%"></i></span><span class="hbn">0.061</span></div><div class="hb"><span class="hbl">mean perimeter</span><span class="hbt"><i style="width:38.43514070006864%"></i></span><span class="hbn">0.056</span></div><div class="hb"><span class="hbl">mean concavity</span><span class="hbt"><i style="width:31.02264927934111%"></i></span><span class="hbn">0.045</span></div></div>
+    <figcaption>Las 8 variables más importantes según la reducción media de impureza (<code>feature_importances_</code>). Las medidas «worst» (el peor valor de los núcleos de cada imagen) dominan. Esta importancia tiende a favorecer variables continuas o con muchos valores; <code>permutation_importance</code> es una alternativa más fiable.</figcaption></figure><figure class="chart"><svg viewBox="0 0 560 220" role="img" aria-label="Acierto en test según el número de árboles"><line x1="46" x2="544" y1="186" y2="186" class="gl"/><text x="40" y="190" text-anchor="end" class="ax">90 %</text><line x1="46" x2="544" y1="137.42857142857136" y2="137.42857142857136" class="gl"/><text x="40" y="141.42857142857136" text-anchor="end" class="ax">92 %</text><line x1="46" x2="544" y1="88.85714285714297" y2="88.85714285714297" class="gl"/><text x="40" y="92.85714285714297" text-anchor="end" class="ax">94 %</text><line x1="46" x2="544" y1="40.28571428571432" y2="40.28571428571432" class="gl"/><text x="40" y="44.28571428571432" text-anchor="end" class="ax">96 %</text><text x="46" y="202" text-anchor="middle" class="ax">1</text><text x="117.14285714285714" y="202" text-anchor="middle" class="ax">5</text><text x="188.28571428571428" y="202" text-anchor="middle" class="ax">10</text><text x="259.42857142857144" y="202" text-anchor="middle" class="ax">25</text><text x="330.57142857142856" y="202" text-anchor="middle" class="ax">50</text><text x="401.7142857142857" y="202" text-anchor="middle" class="ax">100</text><text x="472.85714285714283" y="202" text-anchor="middle" class="ax">200</text><text x="544" y="202" text-anchor="middle" class="ax">300</text><text x="295" y="216" text-anchor="middle" class="ax">número de árboles (escala por posición)</text><polyline points="46,130.14285714285705 117.14285714285714,96.142857142857 188.28571428571428,62.14285714285722 259.42857142857144,62.14285714285722 330.57142857142856,62.14285714285722 401.7142857142857,45.14285714285719 472.85714285714283,45.14285714285719 544,45.14285714285719" class="ln"/><circle cx="46" cy="130.14285714285705" r="4" class="pt"/><circle cx="117.14285714285714" cy="96.142857142857" r="4" class="pt"/><circle cx="188.28571428571428" cy="62.14285714285722" r="4" class="pt"/><circle cx="259.42857142857144" cy="62.14285714285722" r="4" class="pt"/><circle cx="330.57142857142856" cy="62.14285714285722" r="4" class="pt"/><circle cx="401.7142857142857" cy="45.14285714285719" r="4" class="pt"/><circle cx="472.85714285714283" cy="45.14285714285719" r="4" class="pt"/><circle cx="544" cy="45.14285714285719" r="4" class="pt"/><text x="54" y="146.14285714285705" class="lbl">1 árbol: 92,3 %</text><text x="544" y="35.14285714285719" text-anchor="end" class="lbl">300 árboles: 95,8 %</text></svg><figcaption>Acierto en test según el número de árboles (misma partición, random_state = 42). Más árboles nunca empeoran el modelo; a partir de ~100 se estabiliza.</figcaption></figure><p class="callout">Para ver cómo un árbol divide el espacio y cómo el bosque suaviza la frontera, abre el <a href="/lab/decision-tree">laboratorio del árbol de decisión</a>.</p></section><section id="rf-ventajas" class="sec"><h2><span class="n">13</span>Ventajas</h2><ul>
+    <li>Muy buen rendimiento sin apenas ajustar hiperparámetros.</li>
+    <li>No necesita escalar ni normalizar las variables, y maneja relaciones no lineales e interacciones.</li>
+    <li>Robusto frente al sobreajuste al añadir árboles: más árboles nunca empeoran el error esperado.</li>
+    <li>Error out-of-bag gratis y medidas de importancia de variables.</li>
+    <li>Entrenamiento trivialmente paralelizable: cada árbol es independiente.</li></ul></section><section id="rf-limitaciones" class="sec"><h2><span class="n">14</span>Limitaciones</h2><ul>
+    <li>Menos interpretable que un solo árbol: 300 árboles no se pueden leer.</li>
+    <li>No extrapola: en regresión nunca predice fuera del rango visto en entrenamiento.</li>
+    <li>Modelos grandes en memoria y predicción más lenta que un modelo lineal.</li>
+    <li>La importancia por impureza está sesgada hacia variables continuas o con muchas categorías.</li>
+    <li>En datos tabulares, el gradient boosting bien ajustado suele superarlo.</li></ul></section><section id="rf-hiperparametros" class="sec"><h2><span class="n">15</span>Hiperparámetros</h2>
+    <div class="tbl"><table><thead><tr><th>Parámetro (scikit-learn)</th><th>Por defecto</th><th>Efecto</th></tr></thead><tbody>
+      <tr><td><code>n_estimators</code></td><td>100</td><td>Número de árboles. Más es mejor hasta que se estabiliza; solo cuesta tiempo.</td></tr>
+      <tr><td><code>max_features</code></td><td>"sqrt"</td><td>Variables candidatas por nodo (m). Menos variables, árboles menos correlacionados.</td></tr>
+      <tr><td><code>max_depth</code></td><td>None</td><td>Profundidad máxima. Sin límite, los árboles crecen hasta hojas puras.</td></tr>
+      <tr><td><code>min_samples_leaf</code></td><td>1</td><td>Mínimo de muestras por hoja. Subirlo suaviza el modelo.</td></tr>
+      <tr><td><code>min_samples_split</code></td><td>2</td><td>Mínimo de muestras para dividir un nodo.</td></tr>
+      <tr><td><code>bootstrap</code></td><td>True</td><td>Usar muestras bootstrap. Con False, cada árbol ve todos los datos.</td></tr>
+      <tr><td><code>max_samples</code></td><td>None</td><td>Tamaño de cada muestra bootstrap; útil con datasets grandes.</td></tr>
+      <tr><td><code>class_weight</code></td><td>None</td><td>"balanced" compensa clases desbalanceadas.</td></tr>
+      <tr><td><code>oob_score</code></td><td>False</td><td>Calcula el acierto out-of-bag al entrenar.</td></tr>
+      <tr><td><code>criterion</code></td><td>"gini"</td><td>También "entropy" o "log_loss".</td></tr></tbody></table></div></section><section id="rf-casos-de-uso" class="sec"><h2><span class="n">16</span>Casos de uso</h2><ul>
+    <li>Línea base sólida para cualquier problema tabular antes de probar modelos más complejos.</li>
+    <li>Scoring de riesgo de crédito y detección de fraude.</li>
+    <li>Diagnóstico médico a partir de mediciones clínicas.</li>
+    <li>Selección de variables mediante su importancia.</li>
+    <li>Imputación de valores faltantes (MissForest).</li></ul></section><section id="rf-industria" class="sec"><h2><span class="n">17</span>Aplicaciones industriales</h2><ul>
+    <li><b>Mantenimiento predictivo:</b> predecir fallos de máquina a partir de sensores de temperatura, par y desgaste. Ver el <a href="/projects/predictive-maintenance">proyecto de mantenimiento predictivo</a>.</li>
+    <li><b>Telecomunicaciones:</b> predicción de bajas de clientes y detección de anomalías en red.</li>
+    <li><b>Energía:</b> previsión de demanda y detección de fallos en aerogeneradores.</li>
+    <li><b>Control de calidad:</b> clasificar piezas defectuosas a partir de mediciones de proceso.</li></ul></section><section id="rf-ejercicio" class="sec"><h2><span class="n">18</span>Ejercicio práctico</h2><p>Amplía la implementación desde cero para que calcule el error out-of-bag. Debes guardar los índices bootstrap de cada árbol y, para cada muestra, votar solo con los árboles que no la vieron. Comprueba que el resultado se acerca al 96,2 % que da scikit-learn.</p><div class="code"><div class="lab">Plantilla<button type="button" data-copy>Copiar</button></div><pre><code><span class="c"># Ejercicio: completa la función para calcular el error out-of-bag</span>
+<span class="c"># con la clase RandomForest implementada desde cero.</span>
+<span class="c"># Pista: guarda los índices bootstrap de cada árbol en fit().</span>
+
+<span class="k">def</span> error_oob(bosque, X, y):
+    votos = [[] <span class="k">for</span> _ <span class="k">in</span> range(len(X))]
+    <span class="k">for</span> arbol, idx <span class="k">in</span> zip(bosque.arboles, bosque.indices):
+        fuera = np.setdiff1d(np.arange(len(X)), idx)
+        <span class="c"># ... predice con &#39;arbol&#39; solo las muestras &#39;fuera&#39; y guarda el voto</span>
+    <span class="c"># ... devuelve la proporción de aciertos con el voto mayoritario</span>
+    pass</code></pre></div></section><section id="rf-codigo" class="sec"><h2><span class="n">19</span>Código completo</h2><p>El script completo con todos los experimentos de esta página está en el repositorio y se puede ejecutar en Google Colab sin instalar nada:</p><div class="repo-links"><a class="btn sm primary" href="https://colab.research.google.com/github/vtarazona/mle-ai/blob/main/notebooks/random_forest.ipynb" target="_blank" rel="noopener">Abrir en Google Colab ↗</a><a class="btn sm" href="https://github.com/vtarazona/mle-ai/blob/main/notebooks/random_forest.py" target="_blank" rel="noopener">Ver random_forest.py en GitHub ↗</a></div><p>O cópialo desde aquí:</p><div class="code"><div class="lab">random_forest_completo.py<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">import</span> numpy <span class="k">as</span> np
+
+<span class="k">class</span> Nodo:
+    <span class="k">def</span> __init__(<span class="k">self</span>, feature=<span class="k">None</span>, umbral=<span class="k">None</span>, izq=<span class="k">None</span>, der=<span class="k">None</span>, valor=<span class="k">None</span>):
+        <span class="k">self</span>.feature, <span class="k">self</span>.umbral, <span class="k">self</span>.izq, <span class="k">self</span>.der, <span class="k">self</span>.valor = feature, umbral, izq, der, valor
+
+<span class="k">def</span> gini(y):
+    _, cuentas = np.unique(y, return_counts=<span class="k">True</span>)
+    p = cuentas / len(y)
+    <span class="k">return</span> <span class="n">1.0</span> - np.sum(p ** <span class="n">2</span>)
+
+<span class="k">class</span> ArbolDecision:
+    <span class="k">def</span> __init__(<span class="k">self</span>, max_depth=<span class="k">None</span>, min_samples_split=<span class="n">2</span>, max_features=<span class="k">None</span>, rng=<span class="k">None</span>):
+        <span class="k">self</span>.max_depth, <span class="k">self</span>.min_samples_split = max_depth, min_samples_split
+        <span class="k">self</span>.max_features, <span class="k">self</span>.rng = max_features, rng <span class="k">or</span> np.random.default_rng()
+
+    <span class="k">def</span> fit(<span class="k">self</span>, X, y):
+        <span class="k">self</span>.raiz = <span class="k">self</span>._crecer(X, y, profundidad=<span class="n">0</span>)
+        <span class="k">return</span> <span class="k">self</span>
+
+    <span class="k">def</span> _crecer(<span class="k">self</span>, X, y, profundidad):
+        <span class="k">if</span> (len(np.unique(y)) == <span class="n">1</span> <span class="k">or</span> len(y) &lt; <span class="k">self</span>.min_samples_split
+                <span class="k">or</span> (<span class="k">self</span>.max_depth is <span class="k">not</span> <span class="k">None</span> <span class="k">and</span> profundidad &gt;= <span class="k">self</span>.max_depth)):
+            <span class="k">return</span> Nodo(valor=np.bincount(y).argmax())
+        n_feat = X.shape[<span class="n">1</span>]
+        k = <span class="k">self</span>.max_features <span class="k">or</span> n_feat
+        candidatas = <span class="k">self</span>.rng.choice(n_feat, k, replace=<span class="k">False</span>)   <span class="c"># aleatoriedad por nodo</span>
+        mejor = (<span class="k">None</span>, <span class="k">None</span>, gini(y))
+        <span class="k">for</span> f <span class="k">in</span> candidatas:
+            <span class="k">for</span> t <span class="k">in</span> np.unique(X[:, f])[:-<span class="n">1</span>]:
+                izq = X[:, f] &lt;= t
+                g = (izq.sum() * gini(y[izq]) + (~izq).sum() * gini(y[~izq])) / len(y)
+                <span class="k">if</span> g &lt; mejor[<span class="n">2</span>]:
+                    mejor = (f, t, g)
+        f, t, _ = mejor
+        <span class="k">if</span> f is <span class="k">None</span>:
+            <span class="k">return</span> Nodo(valor=np.bincount(y).argmax())
+        izq = X[:, f] &lt;= t
+        <span class="k">return</span> Nodo(f, t, <span class="k">self</span>._crecer(X[izq], y[izq], profundidad + <span class="n">1</span>),
+                    <span class="k">self</span>._crecer(X[~izq], y[~izq], profundidad + <span class="n">1</span>))
+
+    <span class="k">def</span> _predecir_uno(<span class="k">self</span>, x, nodo):
+        <span class="k">while</span> nodo.valor is <span class="k">None</span>:
+            nodo = nodo.izq <span class="k">if</span> x[nodo.feature] &lt;= nodo.umbral <span class="k">else</span> nodo.der
+        <span class="k">return</span> nodo.valor
+
+    <span class="k">def</span> predict(<span class="k">self</span>, X):
+        <span class="k">return</span> np.array([<span class="k">self</span>._predecir_uno(x, <span class="k">self</span>.raiz) <span class="k">for</span> x <span class="k">in</span> X])
+
+<span class="k">class</span> RandomForest:
+    <span class="k">def</span> __init__(<span class="k">self</span>, n_estimators=<span class="n">100</span>, max_depth=<span class="k">None</span>, max_features=<span class="s">&quot;sqrt&quot;</span>, seed=<span class="n">0</span>):
+        <span class="k">self</span>.n_estimators, <span class="k">self</span>.max_depth = n_estimators, max_depth
+        <span class="k">self</span>.max_features, <span class="k">self</span>.rng = max_features, np.random.default_rng(seed)
+
+    <span class="k">def</span> fit(<span class="k">self</span>, X, y):
+        n, d = X.shape
+        k = int(np.sqrt(d)) <span class="k">if</span> <span class="k">self</span>.max_features == <span class="s">&quot;sqrt&quot;</span> <span class="k">else</span> d
+        <span class="k">self</span>.arboles = []
+        <span class="k">for</span> _ <span class="k">in</span> range(<span class="k">self</span>.n_estimators):
+            idx = <span class="k">self</span>.rng.integers(<span class="n">0</span>, n, n)                       <span class="c"># muestra bootstrap</span>
+            arbol = ArbolDecision(<span class="k">self</span>.max_depth, max_features=k, rng=<span class="k">self</span>.rng)
+            <span class="k">self</span>.arboles.append(arbol.fit(X[idx], y[idx]))
+        <span class="k">return</span> <span class="k">self</span>
+
+    <span class="k">def</span> predict(<span class="k">self</span>, X):
+        votos = np.array([a.predict(X) <span class="k">for</span> a <span class="k">in</span> <span class="k">self</span>.arboles])   <span class="c"># (n_arboles, n_muestras)</span>
+        <span class="k">return</span> np.apply_along_axis(<span class="k">lambda</span> v: np.bincount(v).argmax(), <span class="n">0</span>, votos)
+
+<span class="k">from</span> sklearn.datasets <span class="k">import</span> load_breast_cancer
+<span class="k">from</span> sklearn.model_selection <span class="k">import</span> train_test_split
+
+datos = load_breast_cancer()
+X, y = datos.data, datos.target          <span class="c"># y: 0 = maligno, 1 = benigno</span>
+X_tr, X_te, y_tr, y_te = train_test_split(
+    X, y, test_size=<span class="n">0.25</span>, stratify=y, random_state=<span class="n">42</span>)
+print(X_tr.shape, X_te.shape)            <span class="c"># (426, 30) (143, 30)</span>
+
+<span class="k">from</span> sklearn.metrics <span class="k">import</span> accuracy_score
+
+rf = RandomForest(n_estimators=<span class="n">25</span>, max_depth=<span class="n">8</span>, seed=<span class="n">0</span>).fit(X_tr, y_tr)
+print(accuracy_score(y_te, rf.predict(X_te)))   <span class="c"># 0.965 (unos 7 s: bucles en Python puro)</span>
+
+<span class="k">from</span> sklearn.ensemble <span class="k">import</span> RandomForestClassifier
+
+modelo = RandomForestClassifier(
+    n_estimators=<span class="n">300</span>,
+    oob_score=<span class="k">True</span>,        <span class="c"># error out-of-bag gratis</span>
+    random_state=<span class="n">42</span>,
+    n_jobs=-<span class="n">1</span>,
+)
+modelo.fit(X_tr, y_tr)
+print(f<span class="s">&quot;OOB: {modelo.oob_score_:.3f}&quot;</span>)   <span class="c"># 0.962</span>
+
+<span class="k">from</span> sklearn.model_selection <span class="k">import</span> cross_val_score
+<span class="k">from</span> sklearn.metrics <span class="k">import</span> (accuracy_score, precision_score, recall_score,
+                             f1_score, roc_auc_score, confusion_matrix)
+
+pred = modelo.predict(X_te)
+prob = modelo.predict_proba(X_te)[:, <span class="n">1</span>]
+print(accuracy_score(y_te, pred))        <span class="c"># 0.958</span>
+print(roc_auc_score(y_te, prob))         <span class="c"># 0.995</span>
+print(confusion_matrix(y_te, pred))      <span class="c"># [[49  4]</span>
+                                         <span class="c">#  [ 2 88]]</span>
+cv = cross_val_score(RandomForestClassifier(n_estimators=<span class="n">300</span>, random_state=<span class="n">42</span>), X, y, cv=<span class="n">5</span>)
+print(cv.mean(), cv.std())               <span class="c"># 0.961  0.025</span></code></pre></div></section><section id="rf-referencias" class="sec"><h2><span class="n">20</span>Referencias y papers</h2><ol class="refs">
+    <li>L. Breiman (2001). «Random Forests». <i>Machine Learning</i>, 45(1), 5–32.</li>
+    <li>L. Breiman (1996). «Bagging Predictors». <i>Machine Learning</i>, 24(2), 123–140.</li>
+    <li>T. K. Ho (1995). «Random Decision Forests». <i>Proceedings of the 3rd International Conference on Document Analysis and Recognition</i>, 278–282.</li>
+    <li>T. Hastie, R. Tibshirani, J. Friedman (2009). <i>The Elements of Statistical Learning</i>, 2.ª ed., capítulo 15. Springer.</li>
+    <li>F. Pedregosa et al. (2011). «Scikit-learn: Machine Learning in Python». <i>JMLR</i>, 12, 2825–2830.</li></ol></section></article></div></main>
+
+<div class="search" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscador">
+  <div class="search-box">
+    <label for="search-input">⌕<input id="search-input" type="search" placeholder="Conceptos, algoritmos, papers, datasets…" autocomplete="off" maxlength="80"><kbd>Esc</kbd></label>
+    <div id="search-results"></div>
+    <div class="search-foot">↑ ↓ para moverte · Enter para abrir · búsqueda por texto sobre todo el contenido</div>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <span>MLE·AI · Machine Learning Engineering &amp; Artificial Intelligence</span>
+    <nav aria-label="Pie"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a><a href="/about">Arquitectura</a></nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js?v=33d8273119" defer></script>
+</body>
+</html>

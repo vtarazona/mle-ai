@@ -1,0 +1,13 @@
+{
+  "name": "mle-ai",
+  "private": true,
+  "description": "Portal de Machine Learning Engineering & AI: generador de sitio estático",
+  "type": "module",
+  "scripts": {
+    "prerender": "node build.mjs",
+    "serve": "python3 scripts/serve.py dist 8000"
+  },
+  "devDependencies": {
+    "katex": "0.16.9"
+  }
+}

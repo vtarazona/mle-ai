@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow">
+<style>html,body{margin:0}</style>
+<title>Lasso contra Ridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --ink:#16202B; --muted:#5B6877; --line:#D3DAE2; --plot:#F7F9FB; --contour:#8A96A4;
+  --l1:#DD7A1C; --l2:#2563C9; --ols:#16202B;
+  --f0:#2563C9; --f1:#DD7A1C; --f2:#1F8A5B; --f3:#C8453A; --f4:#7A4FC4; --f5:#0E8C9A; --f6:#A87B00; --f7:#C2459B;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743; --plot:#121B24; --contour:#5E6C7B;
+    --l1:#F09A45; --l2:#5C95F0; --ols:#E6ECF2;
+    --f0:#5C95F0; --f1:#F09A45; --f2:#4CC08A; --f3:#EE7266; --f4:#AE8CF0; --f5:#3CC3D0; --f6:#E0B640; --f7:#EA7CC8;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743; --plot:#121B24; --contour:#5E6C7B;
+  --l1:#F09A45; --l2:#5C95F0; --ols:#E6ECF2;
+  --f0:#5C95F0; --f1:#F09A45; --f2:#4CC08A; --f3:#EE7266; --f4:#AE8CF0; --f5:#3CC3D0; --f6:#E0B640; --f7:#EA7CC8;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding:24px 16px 48px}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header h1{font:700 clamp(28px,4.4vw,44px)/1.05 var(--display);margin:0 0 8px;letter-spacing:-.01em;text-wrap:balance}
+header p{margin:0;color:var(--muted);max-width:74ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.control{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px 20px}
+.lam{flex:1;min-width:240px;display:flex;flex-direction:column;gap:4px}
+.lam .r{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.lam output{font:600 18px var(--mono);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--ink)}
+.btn{font:600 14px/1 var(--body);padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink);min-width:124px}
+.btn:focus-visible,input:focus-visible,.seg button:focus-visible{outline:2px solid var(--l2);outline-offset:2px}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:600 13px/1 var(--body);padding:9px 12px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.seg button.on[data-m="l1"]{background:var(--l1);color:#fff}
+.seg button.on[data-m="l2"]{background:var(--l2);color:#fff}
+.seg button.on[data-m="both"]{background:var(--ink);color:var(--surface)}
+.top{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:920px){.top{grid-template-columns:1fr}}
+h2{font:700 20px/1.2 var(--display);margin:0}
+.eyebrow{font:600 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.note{margin:0;font-size:13.5px;color:var(--muted)}
+canvas{width:100%;display:block}
+#geo{border-radius:6px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:16px;height:3px;border-radius:2px;display:inline-block}
+.eq{font:13px/1.6 var(--mono);background:var(--bg);border-radius:6px;padding:9px 12px;overflow-wrap:anywhere}
+.eq .a{color:var(--l1)} .eq .b{color:var(--l2)}
+.readout{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.readout div{background:var(--bg);border-radius:8px;padding:8px 10px}
+.readout small{display:block;font-size:11.5px;color:var(--muted)}
+.readout b{font:600 16px/1.3 var(--mono);font-variant-numeric:tabular-nums}
+.readout .a b{color:var(--l1)} .readout .b b{color:var(--l2)}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.paths{grid-template-columns:1fr}}
+.paths h3{font:600 14px var(--body);margin:0 0 4px}
+.paths canvas{height:210px}
+.bars{display:flex;flex-direction:column;gap:7px}
+.brow{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center;font-size:13px}
+@media (max-width:520px){.brow{grid-template-columns:110px 1fr}}
+.brow .lab{display:flex;align-items:center;gap:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brow .lab i{width:9px;height:9px;border-radius:50%;flex:none}
+.track{position:relative;height:22px;background:var(--bg);border-radius:4px}
+.track .zero{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--muted);opacity:.5}
+.track .bar{position:absolute;height:8px;border-radius:2px;transition:left .12s,width .12s}
+.track .bar.a{top:3px;background:var(--l1)} .track .bar.b{top:11px;background:var(--l2)}
+.track .truth{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
+.track .zlab{position:absolute;right:4px;top:2px;font:600 10.5px var(--mono);color:var(--l1)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:640px){.stats{grid-template-columns:1fr 1fr}}
+.stats div{background:var(--bg);border-radius:8px;padding:8px 10px}
+.stats small{display:block;font-size:11.5px;color:var(--muted)}
+.stats b{font:600 18px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+.stats .a b{color:var(--l1)} .stats .b b{color:var(--l2)}
+.bottom{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:920px){.bottom{grid-template-columns:1fr}}
+.lessons{display:flex;flex-direction:column;gap:10px}
+.lessons div{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+.lessons b.k{font:600 12px/1 var(--mono);background:var(--bg);border-radius:6px;padding:6px 7px;color:var(--muted)}
+.lessons p{margin:0;font-size:14px}
+.lessons p span{color:var(--muted)}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <h1>Lasso contra Ridge</h1>
+    <p>Regularizar es añadir a la pérdida un castigo por tener pesos grandes. L2 (Ridge) castiga su cuadrado y los encoge todos poco a poco. L1 (Lasso) castiga su valor absoluto y pone algunos exactamente a cero, así que además elige qué variables usar. Mueve λ y compara los dos.</p>
+  </header>
+
+  <section class="card control">
+    <button class="btn primary" id="play">▶ Barrer λ</button>
+    <div class="lam">
+      <div class="r"><label for="lam">Fuerza de regularización λ</label><output id="lamv">0.30</output></div>
+      <input type="range" id="lam" min="-3" max="1" step="0.01" value="0">
+    </div>
+    <div class="seg" role="group" aria-label="Qué regularización mostrar en la geometría">
+      <button data-m="l1">L1 · Lasso</button><button data-m="l2">L2 · Ridge</button><button data-m="both" class="on">Ambas</button>
+    </div>
+  </section>
+
+  <div class="top">
+    <section class="card">
+      <span class="eyebrow">1 · La geometría con dos pesos</span>
+      <h2>Por qué L1 produce ceros</h2>
+      <canvas id="geo" aria-label="Plano de pesos w1 y w2 con curvas de nivel de la pérdida y las regiones L1 y L2"></canvas>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--contour)"></i>curvas de nivel de la pérdida</span>
+        <span><i class="sw" style="background:var(--l1)"></i>rombo L1 y su camino</span>
+        <span><i class="sw" style="background:var(--l2)"></i>círculo L2 y su camino</span>
+        <span>✕ mínimo sin regularizar</span>
+      </div>
+    </section>
+
+    <aside class="card">
+      <span class="eyebrow">Qué estás viendo</span>
+      <p class="note" style="color:var(--ink)">El ✕ es la solución que minimiza solo el error. La regularización obliga a la solución a quedarse dentro de una región alrededor del origen: un <b style="color:var(--l2)">círculo</b> en L2, un <b style="color:var(--l1)">rombo</b> en L1. La solución es el punto donde la elipse de error más pequeña toca esa región.</p>
+      <p class="note">El rombo tiene esquinas sobre los ejes, y las elipses suelen tocarlo justo ahí: en una esquina, uno de los pesos vale exactamente 0. El círculo no tiene esquinas, así que casi nunca toca un eje.</p>
+      <div class="eq">Lasso: <span class="a">min  Error(w) + λ·(|w₁| + |w₂|)</span><br>Ridge: <span class="b">min  Error(w) + λ·(w₁² + w₂²)</span></div>
+      <div class="readout">
+        <div class="a"><small>Solución L1</small><b id="g1">—</b></div>
+        <div class="b"><small>Solución L2</small><b id="g2">—</b></div>
+      </div>
+      <p class="note" id="geonote"></p>
+    </aside>
+  </div>
+
+  <section class="card">
+    <span class="eyebrow">2 · Un modelo real con 8 variables</span>
+    <h2>Precio de una vivienda</h2>
+    <p class="note">Regresión lineal entrenada con solo 30 viviendas simuladas (y evaluada con 400 nuevas) con variables estandarizadas. Solo 4 influyen de verdad en el precio; «habitaciones» está muy correlacionada con los m², y el portal y la letra de la puerta son ruido puro. La raya negra de cada fila es el coeficiente real.</p>
+    <div class="stats">
+      <div class="a"><small>Coeficientes a 0 (L1)</small><b id="z1">—</b></div>
+      <div class="b"><small>Coeficientes a 0 (L2)</small><b id="z2">—</b></div>
+      <div class="a"><small>Error en test (L1)</small><b id="t1">—</b></div>
+      <div class="b"><small>Error en test (L2)</small><b id="t2">—</b></div>
+    </div>
+    <div class="legend"><span><i class="sw" style="background:var(--l1);height:8px"></i>coeficiente con L1</span><span><i class="sw" style="background:var(--l2);height:8px"></i>coeficiente con L2</span><span><i class="sw" style="background:var(--ink);width:2px;height:12px"></i>valor real</span></div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <div class="bottom">
+    <section class="card">
+      <h2>Camino de regularización</h2>
+      <p class="note">Valor de cada coeficiente según λ (eje horizontal logarítmico). La línea vertical es la λ actual.</p>
+      <div class="paths">
+        <div><h3 style="color:var(--l1)">L1 · Lasso</h3><canvas id="p1"></canvas></div>
+        <div><h3 style="color:var(--l2)">L2 · Ridge</h3><canvas id="p2"></canvas></div>
+      </div>
+      <canvas id="mse" style="height:170px" aria-label="Error en test según lambda"></canvas>
+    </section>
+    <section class="card">
+      <h2>Qué probar</h2>
+      <div class="lessons">
+        <div><b class="k">1</b><p>Pulsa «Barrer λ» y mira la geometría. <span>El camino naranja llega al eje horizontal y se queda pegado a él: w₂ = 0. El azul se acerca al origen en curva sin tocar nunca un eje.</span></p></div>
+        <div><b class="k">2</b><p>Mira los caminos de las 8 variables. <span>En Lasso las líneas van muriendo una a una en cero. En Ridge todas bajan juntas hacia cero pero ninguna llega.</span></p></div>
+        <div><b class="k">3</b><p>Pon λ ≈ 1. <span>Lasso anula justo las cuatro variables que no influyen (habitaciones, planta, portal y letra) y conserva las cuatro buenas: selección de variables automática.</span></p></div>
+        <div><b class="k">4</b><p>Fíjate en m² y habitaciones. <span>Ridge reparte el peso entre las dos variables correlacionadas; Lasso se queda con una y anula la otra.</span></p></div>
+        <div><b class="k">5</b><p>Curva de error en test. <span>Con tan pocos datos, λ = 0 sobreajusta. Lasso baja su error en test cerca de un 20 % hacia λ ≈ 1.5; pasado ese punto, el castigo es tan fuerte que el modelo deja de aprender.</span></p></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let loglam=-0.52, mode='both';
+const lamOf=l=>l<=-2.995?0:10**l;
+
+/* ========== Part 1: 2D geometry ========== */
+const WS=[2.0,0.7], A=[[1.0,0.35],[0.35,0.6]];
+const Aw=v=>[A[0][0]*v[0]+A[0][1]*v[1],A[1][0]*v[0]+A[1][1]*v[1]];
+const loss2=w=>{const d=[w[0]-WS[0],w[1]-WS[1]],a=Aw(d);return d[0]*a[0]+d[1]*a[1];};
+function ridge2(lam){ const M=[[A[0][0]+lam,A[0][1]],[A[1][0],A[1][1]+lam]], b=Aw(WS), det=M[0][0]*M[1][1]-M[0][1]*M[1][0]; return [(b[0]*M[1][1]-M[0][1]*b[1])/det,(M[0][0]*b[1]-M[1][0]*b[0])/det]; }
+const soft=(x,t)=>Math.sign(x)*Math.max(0,Math.abs(x)-t);
+let lassoWarm=[...WS];
+function lasso2(lam,w0){ let w=(w0||WS).slice(); const eta=1/(2*1.3);
+  for(let i=0;i<800;i++){ const d=[w[0]-WS[0],w[1]-WS[1]], g=Aw(d).map(v=>2*v); w=[soft(w[0]-eta*g[0],eta*lam),soft(w[1]-eta*g[1],eta*lam)]; } return w; }
+// eigen of A for ellipses
+const tr=A[0][0]+A[1][1], dt=A[0][0]*A[1][1]-A[0][1]*A[1][0], disc=Math.sqrt(tr*tr/4-dt);
+const ev=[tr/2+disc, tr/2-disc];
+const evec=ev.map(l=>{const v=[A[0][1], l-A[0][0]]; const n=Math.hypot(...v); return [v[0]/n,v[1]/n];});
+// precompute paths
+const GRID=[...Array(161)].map((_,i)=>-3+i*0.025);
+let pathL1=[], pathL2=[]; { let w=[...WS]; for(const l of GRID){ const lam=lamOf(l); w=lasso2(lam,w); pathL1.push(w); pathL2.push(ridge2(lam)); } }
+
+const geo=$('geo'), g=geo.getContext('2d'); let GW=0,GH=0;
+const DOM=[-0.9,2.7,-1.15,1.55];
+function sizeGeo(){ const d=devicePixelRatio||1; GW=geo.clientWidth; GH=Math.round(GW*0.75); geo.style.height=GH+'px'; geo.width=GW*d; geo.height=GH*d; g.setTransform(d,0,0,d,0,0); }
+const gx=x=>(x-DOM[0])/(DOM[1]-DOM[0])*GW, gy=y=>(1-(y-DOM[2])/(DOM[3]-DOM[2]))*GH;
+function ellipse(c){ g.beginPath(); for(let i=0;i<=120;i++){ const t=i/120*2*Math.PI, a=Math.sqrt(c/ev[0])*Math.cos(t), b=Math.sqrt(c/ev[1])*Math.sin(t);
+  const x=WS[0]+a*evec[0][0]+b*evec[1][0], y=WS[1]+a*evec[0][1]+b*evec[1][1]; i?g.lineTo(gx(x),gy(y)):g.moveTo(gx(x),gy(y)); } g.closePath(); }
+function drawGeo(){
+  const C={plot:css('--plot'),ink:css('--ink'),mu:css('--muted'),ln:css('--line'),ct:css('--contour'),l1:css('--l1'),l2:css('--l2'),surf:css('--surface')};
+  g.fillStyle=C.plot; g.fillRect(0,0,GW,GH);
+  // grid & axes
+  g.strokeStyle=C.ln; g.lineWidth=1; g.font=`11px ${css('--mono')}`; g.fillStyle=C.mu;
+  for(let x=-0.5;x<=2.5;x+=0.5){ g.beginPath(); g.moveTo(gx(x),0); g.lineTo(gx(x),GH); g.stroke(); if(x) {g.textAlign='center'; g.textBaseline='top'; g.fillText(x,gx(x),gy(0)+4);} }
+  for(let y=-1;y<=1.5;y+=0.5){ g.beginPath(); g.moveTo(0,gy(y)); g.lineTo(GW,gy(y)); g.stroke(); if(y){g.textAlign='right'; g.textBaseline='middle'; g.fillText(y,gx(0)-5,gy(y));} }
+  g.strokeStyle=C.mu; g.lineWidth=1.5; g.beginPath(); g.moveTo(gx(DOM[0]),gy(0)); g.lineTo(gx(DOM[1]),gy(0)); g.moveTo(gx(0),gy(DOM[2])); g.lineTo(gx(0),gy(DOM[3])); g.stroke();
+  g.fillStyle=C.ink; g.font=`600 12px ${css('--mono')}`; g.textAlign='right'; g.textBaseline='bottom'; g.fillText('w₁',GW-8,gy(0)-4); g.textAlign='left'; g.textBaseline='top'; g.fillText('w₂',gx(0)+6,6);
+  // contours
+  g.strokeStyle=C.ct; g.lineWidth=1; g.globalAlpha=0.7;
+  [0.03,0.15,0.4,0.8,1.4,2.2,3.2,4.5,6].forEach(c=>{ ellipse(c); g.stroke(); }); g.globalAlpha=1;
+  const lam=lamOf(loglam), w1=lassoWarm=lasso2(lam,lassoWarm), w2=ridge2(lam);
+  const show1=mode!=='l2', show2=mode!=='l1';
+  // paths
+  const path=(p,col,on)=>{ g.strokeStyle=col; g.globalAlpha=on?0.9:0.25; g.lineWidth=on?2.5:1.5; g.setLineDash([]); g.beginPath(); p.forEach((w,i)=>i?g.lineTo(gx(w[0]),gy(w[1])):g.moveTo(gx(w[0]),gy(w[1]))); g.stroke(); g.globalAlpha=1; };
+  path(pathL2,C.l2,show2); path(pathL1,C.l1,show1);
+  // regions
+  if(show2){ const r=Math.hypot(...w2); g.fillStyle=C.l2; g.globalAlpha=0.12; g.beginPath(); g.ellipse(gx(0),gy(0),r/(DOM[1]-DOM[0])*GW,r/(DOM[3]-DOM[2])*GH,0,0,7); g.fill(); g.globalAlpha=1; g.strokeStyle=C.l2; g.lineWidth=2; g.stroke();
+    g.setLineDash([5,4]); g.lineWidth=1.8; ellipse(loss2(w2)); g.stroke(); g.setLineDash([]); }
+  if(show1){ const t=Math.abs(w1[0])+Math.abs(w1[1]); g.fillStyle=C.l1; g.globalAlpha=0.12; g.beginPath(); g.moveTo(gx(t),gy(0)); g.lineTo(gx(0),gy(t)); g.lineTo(gx(-t),gy(0)); g.lineTo(gx(0),gy(-t)); g.closePath(); g.fill(); g.globalAlpha=1; g.strokeStyle=C.l1; g.lineWidth=2; g.stroke();
+    if(t>1e-6){ g.strokeStyle=C.l1; g.setLineDash([5,4]); g.lineWidth=1.8; ellipse(loss2(w1)); g.stroke(); g.setLineDash([]); } }
+  // OLS
+  g.strokeStyle=C.ink; g.lineWidth=2.2; const ox=gx(WS[0]), oy=gy(WS[1]); g.beginPath(); g.moveTo(ox-6,oy-6); g.lineTo(ox+6,oy+6); g.moveTo(ox+6,oy-6); g.lineTo(ox-6,oy+6); g.stroke();
+  // solutions
+  const dot=(w,col)=>{ g.fillStyle=col; g.strokeStyle=C.surf; g.lineWidth=2.5; g.beginPath(); g.arc(gx(w[0]),gy(w[1]),7,0,7); g.stroke(); g.fill(); };
+  if(show2) dot(w2,C.l2); if(show1) dot(w1,C.l1);
+  // readouts
+  const f=v=>(v<0?'−':'')+Math.abs(v).toFixed(3);
+  $('g1').textContent=`(${f(w1[0])}, ${f(w1[1])})`; $('g2').textContent=`(${f(w2[0])}, ${f(w2[1])})`;
+  $('geonote').textContent = w1[0]===0&&w1[1]===0 ? 'Con λ tan alto, Lasso ha anulado los dos pesos: el rombo se ha reducido a un punto.'
+    : w1[1]===0 ? `Lasso ha puesto w₂ exactamente a 0 y solo usa w₁. Ridge sigue usando los dos (w₂ = ${f(w2[1])}).`
+    : lam===0 ? 'Con λ = 0 no hay regularización: las dos soluciones coinciden con el ✕.'
+    : 'Por ahora los dos métodos solo encogen los pesos. Sube λ para ver a Lasso tocar la esquina del rombo.';
+}
+
+/* ========== Part 2: 8-feature regression ========== */
+const FEATS=['m² construidos','habitaciones','baños','distancia al centro','antigüedad','planta','número de portal','letra de la puerta'];
+const TRUE=[3.0,0,1.0,-2.0,-0.8,0,0,0];
+let rs=99; const rnd=()=>{rs=(rs*16807)%2147483647;return rs/2147483647}; const gau=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+function sample(n){ const X=[],y=[]; for(let i=0;i<n;i++){ const m2=gau(); const row=[m2, 0.9*m2+0.44*gau(), 0.4*m2+0.9*gau(), gau(), gau(), gau(), gau(), gau()]; X.push(row); y.push(row.reduce((s,v,j)=>s+v*TRUE[j],0)+3*gau()); } return {X,y}; }
+const TR=sample(30), TE=sample(400);
+// standardize using train stats
+const P=8, mu=[...Array(P)].map((_,j)=>TR.X.reduce((s,r)=>s+r[j],0)/TR.X.length), sd=[...Array(P)].map((_,j)=>Math.sqrt(TR.X.reduce((s,r)=>s+(r[j]-mu[j])**2,0)/TR.X.length));
+const ym=TR.y.reduce((a,b)=>a+b,0)/TR.y.length;
+const std=X=>X.map(r=>r.map((v,j)=>(v-mu[j])/sd[j]));
+const Xs=std(TR.X), Xt=std(TE.X), yc=TR.y.map(v=>v-ym), N=Xs.length;
+const XtX=[...Array(P)].map((_,i)=>[...Array(P)].map((_,j)=>Xs.reduce((s,r)=>s+r[i]*r[j],0)/N));
+const Xty=[...Array(P)].map((_,j)=>Xs.reduce((s,r,k)=>s+r[j]*yc[k],0)/N);
+const TRUEs=TRUE.map((v,j)=>v*sd[j]); // true coefs in standardized units
+function solve(M,b){ const m=b.length; M=M.map(r=>r.slice()); b=b.slice(); for(let i=0;i<m;i++){ let p=i; for(let r=i+1;r<m;r++) if(Math.abs(M[r][i])>Math.abs(M[p][i])) p=r; [M[i],M[p]]=[M[p],M[i]]; [b[i],b[p]]=[b[p],b[i]]; for(let r=i+1;r<m;r++){ const f=M[r][i]/M[i][i]; for(let c=i;c<m;c++) M[r][c]-=f*M[i][c]; b[r]-=f*b[i]; } } const x=Array(m).fill(0); for(let i=m-1;i>=0;i--){ let s=b[i]; for(let c=i+1;c<m;c++) s-=M[i][c]*x[c]; x[i]=s/M[i][i]; } return x; }
+const ridgeP=lam=>solve(XtX.map((r,i)=>r.map((v,j)=>v+(i===j?lam:0))),Xty);
+function lassoP(lam,w0){ const w=(w0||Array(P).fill(0)).slice();
+  for(let it=0;it<400;it++){ let dmax=0; for(let j=0;j<P;j++){ let rho=Xty[j]; for(let k=0;k<P;k++) if(k!==j) rho-=XtX[j][k]*w[k]; const nw=soft(rho,lam/2)/XtX[j][j]; dmax=Math.max(dmax,Math.abs(nw-w[j])); w[j]=nw; } if(dmax<1e-9) break; } return w; }
+// objective for lasso: (1/n)||y−Xw||² + λ||w||₁ → soft threshold at λ/2 ; ridge: (1/n)||y−Xw||² + λ||w||² → (XtX+λI)w = Xty
+const mseTest=w=>Xt.reduce((s,r,i)=>{const p=ym+r.reduce((a,v,j)=>a+v*w[j],0);return s+(p-TE.y[i])**2;},0)/Xt.length;
+const PG=[...Array(161)].map((_,i)=>-3+i*0.025);
+const P1=[], P2=[]; { let w=null; for(const l of PG){ const lam=lamOf(l); w=lassoP(lam,w); P1.push(w.slice()); P2.push(ridgeP(lam)); } }
+const M1=P1.map(mseTest), M2=P2.map(mseTest);
+const idxOf=l=>Math.max(0,Math.min(PG.length-1,Math.round((l+3)/0.025)));
+const ymax=Math.max(...P1.flat().map(Math.abs),...TRUEs.map(Math.abs))*1.08;
+
+function buildBars(){ $('bars').innerHTML=FEATS.map((f,j)=>`<div class="brow"><span class="lab"><i style="background:var(--f${j})"></i>${f}</span><div class="track"><span class="zero"></span><span class="bar a" id="ba${j}"></span><span class="bar b" id="bb${j}"></span><span class="truth" style="left:calc(${50+TRUEs[j]/ymax*50}% - 1px)"></span><span class="zlab" id="zl${j}"></span></div></div>`).join(''); }
+function setBar(el,v){ const x=50+v/ymax*50; el.style.left=Math.min(50,x)+'%'; el.style.width=Math.abs(x-50)+'%'; }
+function updateModel(){
+  const i=idxOf(loglam), w1=P1[i], w2=P2[i];
+  w1.forEach((v,j)=>{ setBar($('ba'+j),v); $('zl'+j).textContent=v===0?'L1 = 0':''; }); w2.forEach((v,j)=>setBar($('bb'+j),v));
+  $('z1').textContent=`${w1.filter(v=>v===0).length} de 8`; $('z2').textContent=`${w2.filter(v=>Math.abs(v)<1e-9).length} de 8`;
+  $('t1').textContent=M1[i].toFixed(2); $('t2').textContent=M2[i].toFixed(2);
+  drawPath($('p1'),P1); drawPath($('p2'),P2); drawMse();
+}
+function prep(c){ const d=devicePixelRatio||1, w=c.clientWidth, h=c.clientHeight; c.width=w*d; c.height=h*d; const x=c.getContext('2d'); x.setTransform(d,0,0,d,0,0); x.clearRect(0,0,w,h); return [x,w,h]; }
+function frameAxes(x,w,h,pl,pr,pt,pb,ylo,yhi,ticks,fmt){
+  const X=l=>pl+(l+3)/4*(w-pl-pr), Y=v=>pt+(yhi-v)/(yhi-ylo)*(h-pt-pb);
+  x.font=`11px ${css('--mono')}`; x.fillStyle=css('--muted'); x.strokeStyle=css('--line'); x.lineWidth=1; x.textAlign='right'; x.textBaseline='middle';
+  ticks.forEach(v=>{ x.beginPath(); x.moveTo(pl,Y(v)); x.lineTo(w-pr,Y(v)); x.stroke(); x.fillText(fmt(v),pl-5,Y(v)); });
+  x.textAlign='center'; x.textBaseline='top'; [-3,-2,-1,0,1].forEach((l,k)=>x.fillText(['0','0.01','0.1','1','10'][k],X(l),h-pb+5));
+  x.strokeStyle=css('--ink'); x.lineWidth=1.5; x.setLineDash([4,3]); x.beginPath(); x.moveTo(X(loglam),pt); x.lineTo(X(loglam),h-pb); x.stroke(); x.setLineDash([]);
+  return [X,Y];
+}
+function drawPath(c,P){
+  const [x,w,h]=prep(c), pl=34,pr=8,pt=8,pb=22;
+  const lim=Math.ceil(ymax); const [X,Y]=frameAxes(x,w,h,pl,pr,pt,pb,-lim,lim,[-lim,-lim/2,0,lim/2,lim].map(v=>+v.toFixed(1)),v=>v);
+  for(let j=0;j<P[0].length;j++){ x.strokeStyle=css('--f'+j); x.lineWidth=2; x.beginPath(); P.forEach((wv,i)=>{ const px=X(PG[i]), py=Y(wv[j]); i?x.lineTo(px,py):x.moveTo(px,py); }); x.stroke();
+    const cur=P[idxOf(loglam)][j]; x.fillStyle=css('--f'+j); x.beginPath(); x.arc(X(loglam),Y(cur),3.5,0,7); x.fill(); }
+}
+function drawMse(){
+  const c=$('mse'), [x,w,h]=prep(c), pl=34,pr=8,pt=22,pb=22;
+  const mn=Math.min(...M1,...M2), lo=Math.floor(mn*0.9), hi=Math.ceil(Math.min(Math.max(...M1,...M2),mn*2));
+  const t=[lo,(lo+hi)/2,hi]; const [X,Y]=frameAxes(x,w,h,pl,pr,pt,pb,lo,hi,t,v=>v.toFixed(1));
+  const line=(M,col)=>{ x.strokeStyle=col; x.lineWidth=2.2; x.beginPath(); M.forEach((v,i)=>{ const py=Y(Math.min(v,hi)); i?x.lineTo(X(PG[i]),py):x.moveTo(X(PG[i]),py); }); x.stroke();
+    const i=idxOf(loglam); x.fillStyle=col; x.beginPath(); x.arc(X(loglam),Y(Math.min(M[i],hi)),4,0,7); x.fill(); };
+  line(M2,css('--l2')); line(M1,css('--l1'));
+  x.fillStyle=css('--ink'); x.font=`600 12px ${css('--body')}`; x.textAlign='left'; x.textBaseline='top'; x.fillText('Error en test (MSE) según λ',pl,2);
+}
+
+/* ========== controls ========== */
+function setLam(l){ loglam=l; $('lam').value=l; const lam=lamOf(l); $('lamv').textContent=lam===0?'0':lam<0.01?lam.toFixed(4):lam<1?lam.toFixed(3):lam.toFixed(2); updateModel(); }
+$('lam').oninput=e=>{ stopPlay(); setLam(+e.target.value); };
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{ mode=b.dataset.m; document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===b)); });
+let playing=false, dir=1, lastT=0;
+function stopPlay(){ playing=false; $('play').textContent='▶ Barrer λ'; }
+$('play').onclick=()=>{ if(playing){stopPlay();return;} playing=true; lastT=performance.now(); $('play').textContent='❚❚ Pausa'; };
+function frame(now){
+  if(playing){ const dt=(now-lastT)/1000; let l=loglam+dir*dt*0.5; if(l>=1){l=1;dir=-1;} if(l<=-3){l=-3;dir=1;} setLam(l); }
+  lastT=now; drawGeo(); requestAnimationFrame(frame);
+}
+new ResizeObserver(()=>{ sizeGeo(); updateModel(); }).observe(document.body);
+buildBars(); sizeGeo(); setLam(0); requestAnimationFrame(frame);
+if(!reduce) setTimeout(()=>{ if(!playing) $('play').click(); },800);
+})();
+</script>
+
+<a href="/lab" style="position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9;font:600 13px system-ui,sans-serif;background:#0E1621;color:#fff;padding:9px 12px;border-radius:8px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.25)">← MLE·AI</a><script>if(window.self!==window.top){document.currentScript.previousElementSibling.remove()}</script>
+</body>
+</html>

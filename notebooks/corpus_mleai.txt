@@ -1,0 +1,187 @@
+SGD, Momentum, RMSProp y Adam compiten sobre cuatro superficies de pérdida. Cambia la tasa de aprendizaje, el punto inicial y el ruido.
+Sube el grado del polinomio y observa cómo el error de validación forma una U. Regularización L2 incluida.
+La geometría del rombo L1 y el círculo L2, y los caminos de regularización de un modelo de 8 variables.
+El árbol crece corte a corte buscando la menor impureza de Gini. Compáralo con un bosque de 25 árboles.
+Asignar y actualizar hasta converger. Inicialización aleatoria contra k-means++ y método del codo.
+La activación, su derivada y la saturación. Comparación con tanh y ReLU.
+Entrena un MLP en directo sobre círculos, XOR o espirales y mira qué aprende cada neurona.
+Una red 3→4→3 con softmax y entropía cruzada: los 11 pasos de una iteración con números reales.
+Query, Key y Value con las cuentas a la vista, dos cabezas y máscara causal.
+Modelos que aprenden patrones a partir de datos tabulares o vectores de características: la base de todo lo demás.
+Aprender una función a partir de ejemplos en vez de programarla a mano: datos, modelo, pérdida y optimizador.
+Un agente actúa en un entorno y aprende qué acciones maximizan la recompensa acumulada.
+Predecir un valor numérico continuo, como un precio o una temperatura.
+Predecir una categoría. La salida suele ser una probabilidad por clase.
+Agrupar puntos parecidos sin conocer los grupos de antemano: K-means, DBSCAN, jerárquico.
+Comprimir muchas variables en pocas conservando la información: PCA, t-SNE, UMAP.
+Combinar muchos modelos débiles para obtener uno fuerte: bagging, boosting y stacking.
+Muchos árboles entrenados sobre muestras bootstrap y subconjuntos de variables que votan la predicción.
+Árboles en serie donde cada uno corrige el error residual de los anteriores siguiendo el gradiente de la pérdida.
+Implementación de gradient boosting con regularización y optimizaciones de sistema; referente en datos tabulares.
+Busca el hiperplano de máximo margen entre clases; con kernels separa datos no lineales.
+Predice según los k vecinos más cercanos. No entrena nada: guarda los datos y compara distancias.
+Aplica el teorema de Bayes suponiendo variables independientes dada la clase. Rápido y sólido en texto.
+Penalizar los pesos grandes para generalizar mejor; L1 además selecciona variables.
+Modelos formados por capas de neuronas que aprenden representaciones jerárquicas: visión, audio, texto.
+Composición de capas lineales y activaciones no lineales entrenada con descenso de gradiente.
+Perceptrón multicapa: capas ocultas totalmente conectadas capaces de aproximar funciones no lineales.
+Actualizar los pesos un paso en contra del gradiente de la pérdida; variantes SGD, Momentum, Adam.
+RNN con puertas que controlan qué recordar y qué olvidar, para dependencias largas.
+Cada elemento de una secuencia combina información de los demás ponderada por relevancia.
+Arquitectura basada solo en atención y capas feed-forward; base de los LLM actuales.
+Vectores densos que representan palabras, imágenes o usuarios de forma que la cercanía refleja similitud.
+Fine-tuning eficiente: se congelan los pesos y se entrenan matrices de bajo rango; QLoRA además cuantiza a 4 bits.
+Lo mínimo imprescindible para leer un paper y entender qué hace un modelo por dentro.
+Vectores, matrices y productos: todo modelo es, al final, multiplicación de matrices.
+Cómo cambian las funciones: la base para optimizar la pérdida.
+Pendiente de una función en un punto; la regla de la cadena permite derivar composiciones.
+Vector de derivadas parciales: indica la dirección de máxima subida de la pérdida.
+Inferir propiedades de una población a partir de muestras; estimación, contrastes, intervalos.
+La media de muchas variables independientes tiende a una normal, sea cual sea su distribución original.
+Encontrar los parámetros que minimizan una función: convexidad, mínimos locales, puntos de silla.
+Cálculo aproximado con ordenadores: estabilidad, precisión en coma flotante, softmax estable.
+Arrays n-dimensionales y álgebra lineal vectorizada; la base de todas las demás librerías.
+La librería de gráficos de referencia para explorar datos y resultados.
+API uniforme fit/predict para ML clásico, preprocesado, validación y métricas.
+Tensores con autograd y GPU; el framework dominante en investigación y LLM.
+Hub de modelos y datasets y las librerías transformers, datasets y peft.
+Cómo funcionan los modelos de lenguaje grandes, de la tokenización a los agentes.
+Bloques de atención multi-cabeza y feed-forward con conexiones residuales y normalización.
+Cada token id se convierte en un vector aprendido de dimensión d_model.
+Cada token calcula cuánto atender a los demás de la misma secuencia.
+Proyecciones de cada token: qué busca (Query), qué ofrece (Key) y qué transmite (Value).
+Información de posición sumada a los embeddings, porque la atención por sí sola no conoce el orden.
+Recuperar documentos relevantes con búsqueda vectorial e incluirlos en el prompt para responder con datos propios.
+LLM que planifican y usan herramientas (APIs, código, búsqueda) en un bucle para completar tareas.
+Generar tokens uno a uno: KV cache, batching, cuantización y estrategias de muestreo.
+Llevar modelos a producción de forma reproducible, observable y segura.
+Contenedores que empaquetan código, dependencias y modelo para que funcione igual en cualquier sitio.
+Framework Python para APIs con validación por tipos (Pydantic) y documentación automática.
+Base de datos relacional robusta; con pgvector también sirve como base vectorial.
+Índices de búsqueda por similitud sobre embeddings: pgvector, Qdrant, FAISS.
+Control de versiones del código; con DVC o LFS también de datos y modelos.
+Tests y despliegues automáticos en cada cambio: GitHub Actions, GitLab CI.
+Vigilar latencia, errores y deriva de datos para saber cuándo reentrenar.
+Hardware paralelo para multiplicaciones de matrices; la memoria VRAM limita el tamaño del modelo.
+De los papers fundacionales a las líneas abiertas de la IA actual.
+LoRA, RAG, CLIP y otros trabajos que marcan cómo se construyen los sistemas actuales.
+Qué funciona hoy en cada tarea y con qué coste: benchmarks y sus limitaciones.
+Modelos que combinan texto, imagen, audio y vídeo en un mismo espacio de representación.
+Modelos grandes preentrenados de propósito general que se adaptan a muchas tareas.
+Aprendizaje de políticas de control, simulación y transferencia al mundo real.
+ML aplicado a ciencia: plegamiento de proteínas, materiales, clima, matemáticas.
+Cómo entrenar redes con capas ocultas, cuyos pesos no tienen un valor objetivo directo.
+Popularizó la retropropagación del error: la regla de la cadena para calcular el gradiente de todos los pesos.
+Es el algoritmo con el que se entrenan prácticamente todas las redes neuronales actuales.
+Las RNN no aprendían dependencias largas porque el gradiente se desvanecía o explotaba.
+Celda LSTM (en la versión original, puertas de entrada y salida; la puerta de olvido se añadió después).
+Dominó traducción, voz y series temporales hasta la llegada del Transformer.
+Reconocer caracteres manuscritos sin diseñar las características a mano.
+Estableció la receta de las CNN que luego escaló a ImageNet.
+Los árboles de decisión individuales son inestables y sobreajustan.
+Combinar árboles decorrelacionados mediante bootstrap y selección aleatoria de variables en cada nodo; error out-of-bag.
+Conjunto de árboles CART no podados que votan.
+Uno de los algoritmos más usados en datos tabulares por su robustez.
+Clasificar 1,2 millones de imágenes de ImageNet en 1.000 categorías.
+Una CNN profunda entrenada en GPU con ReLU y dropout que redujo drásticamente el error en ILSVRC-2012.
+Marcó el inicio de la era moderna del deep learning.
+Técnica de regularización estándar en redes profundas.
+Elegir una tasa de aprendizaje que funcione para todos los parámetros.
+Pasos adaptativos por parámetro con estimaciones de primer y segundo momento del gradiente y corrección de sesgo.
+El optimizador por defecto en la mayoría de redes profundas.
+Aprender a jugar a partir de los píxeles de la pantalla y la puntuación.
+CNN que estima el valor Q de cada acción.
+Las redes muy profundas eran más difíciles de optimizar que las menos profundas.
+Conexiones residuales: cada bloque aprende una corrección que se suma a su entrada.
+Las conexiones residuales están en casi toda arquitectura moderna, incluido el Transformer.
+Hacer gradient boosting de árboles rápido y escalable.
+Objetivo regularizado, algoritmo consciente de la dispersión de los datos y optimizaciones de sistema.
+El Transformer: solo atención multi-cabeza y capas feed-forward, con codificación posicional.
+La arquitectura de BERT, GPT y prácticamente todos los LLM.
+Los modelos de lenguaje preentrenados solo miraban el contexto en una dirección.
+Encoder bidireccional preentrenado con modelado de lenguaje enmascarado y predicción de la siguiente frase.
+Revolucionó la comprensión del lenguaje y los buscadores.
+GPT-3, de 175.000 millones de parámetros, resuelve tareas nuevas con unos pocos ejemplos en el prompt (in-context learning).
+Demostró el efecto de la escala e inauguró la era de los LLM.
+El conocimiento guardado en los parámetros es difícil de actualizar y de citar.
+Los modelos de visión necesitaban etiquetas fijas y costosas.
+CLIP: entrenar imagen y texto en un espacio común con aprendizaje contrastivo sobre pares imagen–texto de internet.
+Base de muchos modelos multimodales y generadores de imágenes.
+Ajustar todos los parámetros de un modelo enorme es carísimo.
+Congelar los pesos y aprender actualizaciones de bajo rango ΔW = B·A en las capas de atención.
+La forma estándar de hacer fine-tuning de LLM con poco hardware.
+4 numéricas (largo y ancho de sépalo y pétalo, en cm)
+Regresión logística, KNN, árbol de decisión
+30 numéricas calculadas sobre imágenes de núcleos celulares
+8 numéricas (ingresos medios, edad de la vivienda, habitaciones, latitud, longitud…)
+Regresión del valor mediano de la vivienda
+Gradient boosting, Random Forest, regresión lineal
+Clasificación de fallos de máquina (muy desbalanceada)
+70.000 imágenes (60.000 de entrenamiento y 10.000 de test)
+Imágenes de 28×28 píxeles en escala de grises
+11 fisicoquímicas (acidez, azúcar residual, sulfatos, alcohol…)
+Regresión o clasificación de la calidad (0–10)
+Vectores y matrices, derivadas y regla de la cadena, gradientes, probabilidad básica.
+Implementa el descenso de gradiente para minimizar una función de dos variables y dibuja la trayectoria.
+Sabes explicar qué es un gradiente y por qué se resta en cada paso.
+Análisis exploratorio completo del dataset Wine Quality con gráficos.
+Escribes código NumPy sin bucles innecesarios y usas groupby con soltura.
+Distribuciones, media y varianza, correlación, teorema central del límite, contraste de hipótesis, Bayes.
+Simula el teorema central del límite con medias de muestras de una distribución exponencial.
+Distingues correlación de causalidad y sabes interpretar un intervalo de confianza.
+Supervisado y no supervisado, validación, sobreajuste, regularización, árboles y ensembles, métricas.
+Compara un árbol y un Random Forest con validación cruzada de 5 particiones.
+Clasificador de fallos con AI4I 2020, con métricas adecuadas para clases desbalanceadas.
+Eliges la métrica correcta y detectas sobreajuste con curvas de validación.
+Implementa en NumPy una red de una capa oculta y verifica su gradiente numéricamente.
+Tokenización, embeddings, codificación posicional, self-attention, multi-head, bloques residuales.
+Un mini-GPT a nivel de carácter entrenado con un texto en castellano.
+Preentrenamiento, fine-tuning, LoRA, muestreo, cuantización, RAG, evaluación.
+Haz fine-tuning con LoRA de un modelo pequeño de Hugging Face.
+Explicas cuándo conviene RAG y cuándo fine-tuning.
+Docker, APIs con FastAPI, bases de datos, CI/CD, monitorización y deriva de datos.
+Despliegue del modelo de mantenimiento predictivo con monitorización.
+Uso de herramientas, planificación, memoria, evaluación y seguridad de agentes.
+Agente de soporte técnico con RAG y herramientas, con registro de trazas.
+Mides la tasa de éxito del agente con un conjunto de casos de prueba.
+Leer papers, reproducir resultados, diseñar experimentos y ablaciones.
+Reproduce una figura de un paper clásico.
+Replica un paper de la biblioteca con código abierto y documenta las diferencias.
+Puedes defender una hipótesis con experimentos controlados.
+Predecir fallos de máquina con el dataset AI4I 2020 para programar mantenimiento antes de la avería.
+Clasificación de churn con datos de uso y facturación.
+Detección de anomalías en tráfico de red
+Modelos no supervisados sobre flujos de red para detectar comportamientos anómalos.
+Clasificación de imágenes de piezas con CNN y transfer learning.
+Preguntas y respuestas sobre documentación técnica propia con pgvector.
+número de árboles (escala por posición)
+1 árbol: 92,3 % 300 árboles: 95,8 %
+Acierto en test según el número de árboles (misma partición, random_state = 42). Más árboles nunca empeoran el modelo; a partir de ~100 se estabiliza.
+ensemble bagging árboles votación breiman 2001
+Random Forest es un método de ensemble para clasificación y regresión. Entrena muchos árboles de decisión, cada uno con una muestra aleatoria de los datos y con un subconjunto aleatorio de variables en cada división, y combina sus predicciones: por votación en clasificación y por media en regresión. Lo propuso Leo Breiman en 2001, a partir de su trabajo anterior sobre bagging (1996). Es uno de los algoritmos más usados con datos tabulares: funciona bien sin apenas ajustes, no necesita escalar las variables y da una estimación de su propio error sin reservar datos.
+sabiduría de la multitud varianza sesgo decorrelación
+Un árbol de decisión profundo se aprende los datos casi de memoria: tiene poco sesgo pero mucha varianza, porque cambiar unos pocos puntos cambia el árbol entero. La idea del bosque es la de la «sabiduría de la multitud»: si muchos estimadores ruidosos cometen errores distintos , al promediarlos los errores se compensan. La clave está en que los errores sean distintos. Si todos los árboles vieran los mismos datos y las mismas variables serían casi idénticos y promediarlos no serviría de nada. Por eso se introduce aleatoriedad por dos vías: cada árbol ve una muestra bootstrap distinta, y en cada nodo solo puede elegir entre unas pocas variables al azar. Pruébalo en el laboratorio del árbol de decisión : con el dataset «Ruido», compara un árbol profundo con el botón «Ver Random Forest».
+bootstrap out of bag varianza correlación gini ganancia
+Elige el número de árboles B y el número de variables candidatas por nodo m. Para cada árbol b = 1…B, toma una muestra bootstrap: n filas elegidas al azar con reemplazo. Haz crecer un árbol con esa muestra. En cada nodo, escoge m variables al azar y busca el mejor corte solo entre ellas. Deja crecer el árbol sin podar, hasta que las hojas sean puras o tengan el mínimo de muestras. Para predecir, pasa el nuevo punto por los B árboles y combina las respuestas: voto mayoritario o media.
+numpy implementación clase nodo árbol gini
+Una implementación completa y funcional en NumPy, pensada para leerse, no para ser rápida. Sigue el algoritmo tal cual: bootstrap, selección aleatoria de variables en cada nodo y voto mayoritario. Con 25 árboles de profundidad máxima 8 alcanza un 96,5 % de acierto en el mismo conjunto de test que el modelo de scikit-learn, aunque tarda unos 7 segundos por los bucles de Python frente a menos de uno en scikit-learn.
+Se usa Breast Cancer Wisconsin (Diagnostic) , incluido en scikit-learn: 569 muestras de biopsias con 30 variables numéricas calculadas sobre imágenes de núcleos celulares (10 medidas, como el radio, la textura o la concavidad, cada una en tres versiones: media, error estándar y peor valor). Hay 212 casos malignos y 357 benignos. La partición estratificada mantiene la proporción de clases en entrenamiento (426 muestras) y test (143).
+validación cruzada test matriz confusión
+Modelo Acierto en test Validación cruzada (5 particiones) Un árbol de decisión 92,3 % — Random Forest desde cero (25 árboles) 96,5 % — Random Forest scikit-learn (300 árboles) 95,8 % 96,1 % ± 2,5 La desviación de la validación cruzada (±2,5 puntos) es mayor que la diferencia entre los dos bosques: con 143 muestras de test, esa diferencia no es significativa.
+importancia variables gráfico número árboles
+Para ver cómo un árbol divide el espacio y cómo el bosque suaviza la frontera, abre el laboratorio del árbol de decisión .
+Muy buen rendimiento sin apenas ajustar hiperparámetros. No necesita escalar ni normalizar las variables, y maneja relaciones no lineales e interacciones. Robusto frente al sobreajuste al añadir árboles: más árboles nunca empeoran el error esperado. Error out-of-bag gratis y medidas de importancia de variables. Entrenamiento trivialmente paralelizable: cada árbol es independiente.
+Menos interpretable que un solo árbol: 300 árboles no se pueden leer. No extrapola: en regresión nunca predice fuera del rango visto en entrenamiento. Modelos grandes en memoria y predicción más lenta que un modelo lineal. La importancia por impureza está sesgada hacia variables continuas o con muchas categorías. En datos tabulares, el gradient boosting bien ajustado suele superarlo.
+Parámetro (scikit-learn) Por defecto Efecto n_estimators 100 Número de árboles. Más es mejor hasta que se estabiliza; solo cuesta tiempo. max_features "sqrt" Variables candidatas por nodo (m). Menos variables, árboles menos correlacionados. max_depth None Profundidad máxima. Sin límite, los árboles crecen hasta hojas puras. min_samples_leaf 1 Mínimo de muestras por hoja. Subirlo suaviza el modelo. min_samples_split 2 Mínimo de muestras para dividir un nodo. bootstrap True Usar muestras bootstrap. Con False, cada árbol ve todos los datos. max_samples None Tamaño de cada muestra bootstrap; útil con datasets grandes. class_weight None "balanced" compensa clases desbalanceadas. oob_score False Calcula el acierto out-of-bag al entrenar. criterion "gini" También "entropy" o "log_loss".
+Línea base sólida para cualquier problema tabular antes de probar modelos más complejos. Scoring de riesgo de crédito y detección de fraude. Diagnóstico médico a partir de mediciones clínicas. Selección de variables mediante su importancia. Imputación de valores faltantes (MissForest).
+industria mantenimiento predictivo telecomunicaciones energía
+Mantenimiento predictivo: predecir fallos de máquina a partir de sensores de temperatura, par y desgaste. Ver el proyecto de mantenimiento predictivo . Telecomunicaciones: predicción de bajas de clientes y detección de anomalías en red. Energía: previsión de demanda y detección de fallos en aerogeneradores. Control de calidad: clasificar piezas defectuosas a partir de mediciones de proceso.
+Abrir laboratorio Pestaña nueva ↗
+Artículo completo
+· artículo completo Leer artículo →
+· artículo
+Nueve simulaciones que calculan todo en tu navegador. Cambia parámetros y mira el efecto al instante: tasa de aprendizaje, profundidad, regularización, número de grupos, capas de una red o cabezas de atención.
+Transformer Visualizer El recorrido completo de un Transformer, de texto a token generado, con tensores y código PyTorch en cada etapa. Abrir el visualizador
+Conjuntos de datos públicos y conocidos para practicar cada tipo de problema, con su tamaño, variables y los modelos que suelen funcionar mejor.
+Esta versión es un prototipo navegable autocontenido. Así se corresponde con la plataforma de producción prevista.
+Esa dirección no existe. Vuelve al inicio o usa el buscador.

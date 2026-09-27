@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow">
+<style>html,body{margin:0}</style>
+<title>Backprop paso a paso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --ink:#16202B; --muted:#5B6877; --line:#D3DAE2;
+  --pos:#2563C9; --neg:#C8453A; --grad:#D97B12; --ok:#23845A;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743;
+    --pos:#629AF2; --neg:#EE7266; --grad:#F2A444; --ok:#4CC08A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743;
+  --pos:#629AF2; --neg:#EE7266; --grad:#F2A444; --ok:#4CC08A;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding:24px 16px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header h1{font:700 clamp(28px,4.4vw,44px)/1.05 var(--display);margin:0 0 8px;letter-spacing:-.01em;text-wrap:balance}
+header p{margin:0;color:var(--muted);max-width:68ch}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:18px;height:4px;border-radius:2px;display:inline-block}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;align-items:start}
+@media (max-width:900px){.main{grid-template-columns:1fr}}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:12px}
+#net{width:100%;display:block}
+.steps{display:flex;flex-wrap:wrap;gap:6px}
+.steps button{font:500 12px/1 var(--body);border:1px solid var(--line);background:transparent;color:var(--muted);padding:7px 9px;border-radius:999px;cursor:pointer}
+.steps button .n{font-family:var(--mono);margin-right:4px}
+.steps button.fw.on{background:var(--pos);border-color:var(--pos);color:#fff}
+.steps button.bw.on{background:var(--grad);border-color:var(--grad);color:#1a1205}
+.steps button.done{color:var(--ink)}
+.steps .sep{width:1px;background:var(--line);margin:0 4px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 14px/1 var(--body);padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn:focus-visible,.steps button:focus-visible,input:focus-visible,tr:focus-visible{outline:2px solid var(--pos);outline-offset:2px}
+.lr{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:13px;color:var(--muted)}
+.lr output{font-family:var(--mono);color:var(--ink);min-width:3.5ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.eyebrow{font:600 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.eyebrow.fw{color:var(--pos)} .eyebrow.bw{color:var(--grad)}
+.panel h2{font:700 24px/1.15 var(--display);margin:0;text-wrap:balance}
+.panel p{margin:0}
+.eq{font-family:var(--mono);font-size:13.5px;background:var(--bg);border-radius:6px;padding:10px 12px;overflow-x:auto;white-space:nowrap}
+.eq sub,.eq sup{font-size:.75em}
+table.num{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+table.num td,table.num th{padding:5px 6px;border-bottom:1px solid var(--line);text-align:right}
+table.num th{font-weight:500;color:var(--muted);text-align:left}
+table.num td:first-child{text-align:left}
+.mono{font-family:var(--mono)}
+.tag{font:600 11px/1 var(--body);padding:4px 7px;border-radius:999px;background:var(--bg);color:var(--muted)}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:900px){.lower{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{font:700 17px/1.2 var(--display);margin:0}
+.card .sub{font-size:13px;color:var(--muted);margin:0}
+#lossc{width:100%;height:180px;display:block}
+.tablewrap{overflow-x:auto}
+#data tr{cursor:pointer}
+#data tr.sel td{background:color-mix(in srgb,var(--pos) 12%,transparent)}
+.pill{font:600 12px/1 var(--body);padding:3px 7px;border-radius:999px}
+.pill.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.pill.bad{background:color-mix(in srgb,var(--neg) 16%,transparent);color:var(--neg)}
+.sig{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <h1>Backprop paso a paso</h1>
+    <p>Una red pequeña (3 → 4 → 3) aprende a distinguir frutas por su dulzor, acidez y tamaño. Recorre una iteración completa: pasada hacia delante, softmax, pérdida de entropía cruzada, retropropagación del gradiente y actualización de pesos. Todos los números se calculan en vivo.</p>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--pos)"></i>peso positivo</span>
+      <span><i class="sw" style="background:var(--neg)"></i>peso negativo</span>
+      <span><i class="sw" style="background:var(--grad)"></i>gradiente (hacia atrás)</span>
+      <span>grosor = magnitud</span>
+    </div>
+  </header>
+
+  <div class="main">
+    <section class="stage">
+      <canvas id="net" aria-label="Diagrama animado de la red neuronal"></canvas>
+      <div class="steps" id="steps"></div>
+      <div class="controls">
+        <button class="btn" id="prev">← Anterior</button>
+        <button class="btn primary" id="next">Siguiente →</button>
+        <button class="btn" id="play">▶ Reproducir</button>
+        <label class="lr" for="lr">Tasa de aprendizaje η
+          <input type="range" id="lr" min="0.05" max="2" step="0.05" value="0.5">
+          <output id="lrv">0.50</output>
+        </label>
+      </div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+
+  <div class="lower">
+    <section class="card">
+      <h3>Curva de pérdida</h3>
+      <p class="sub">Pérdida media sobre las 6 frutas después de cada actualización de pesos.</p>
+      <canvas id="lossc"></canvas>
+      <div class="controls">
+        <button class="btn" id="ep1">Entrenar 1 época</button>
+        <button class="btn" id="ep30">Entrenar 30 épocas</button>
+        <button class="btn" id="reset">Reiniciar pesos</button>
+      </div>
+    </section>
+    <section class="card">
+      <h3>Datos de entrenamiento</h3>
+      <p class="sub">Toca una fila para usarla como ejemplo en la animación.</p>
+      <div class="tablewrap">
+        <table class="num" id="data"></table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+const FEAT = ['Dulzor','Acidez','Tamaño'];
+const CLS  = ['Manzana','Limón','Sandía'];
+const DATA = [
+  {x:[0.70,0.30,0.40], y:0}, {x:[0.15,0.90,0.25], y:1}, {x:[0.80,0.10,0.95], y:2},
+  {x:[0.60,0.35,0.45], y:0}, {x:[0.20,0.85,0.20], y:1}, {x:[0.75,0.15,0.90], y:2},
+];
+const NH = 4;
+const STEPS = [
+  {t:'Entrada', dir:'fw'},
+  {t:'Suma ponderada', dir:'fw'},
+  {t:'Sigmoide', dir:'fw'},
+  {t:'Logits', dir:'fw'},
+  {t:'Softmax', dir:'fw'},
+  {t:'Pérdida', dir:'fw'},
+  {t:'δ salida', dir:'bw'},
+  {t:'∂L/∂W₂', dir:'bw'},
+  {t:'δ oculta', dir:'bw'},
+  {t:'∂L/∂W₁', dir:'bw'},
+  {t:'Actualizar', dir:'bw'},
+];
+
+let W1,b1,W2,b2, lr = 0.5, sample = 1, step = 0, cur, history = [], stepStart = performance.now();
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function initWeights(){
+  const r = mulberry(11), u = () => (r()*2-1);
+  W1 = [...Array(NH)].map(()=>[u(),u(),u()]); b1 = [...Array(NH)].map(()=>u()*0.2);
+  W2 = [...Array(3)].map(()=>[...Array(NH)].map(()=>u())); b2 = [0,0,0];
+}
+const sig = z => 1/(1+Math.exp(-z));
+const clone = m => m.map(r => Array.isArray(r) ? r.slice() : r);
+function forward(x){
+  const z1 = W1.map((w,j)=>w[0]*x[0]+w[1]*x[1]+w[2]*x[2]+b1[j]);
+  const h = z1.map(sig);
+  const z2 = W2.map((w,k)=>w.reduce((s,v,j)=>s+v*h[j],0)+b2[k]);
+  const m = Math.max(...z2), e = z2.map(v=>Math.exp(v-m)), S = e.reduce((a,b)=>a+b,0);
+  const p = e.map(v=>v/S);
+  return {z1,h,z2,e:z2.map(Math.exp),p};
+}
+function avgLoss(){return DATA.reduce((s,d)=>s-Math.log(forward(d.x).p[d.y]),0)/DATA.length}
+function compute(i){
+  const {x,y} = DATA[i], f = forward(x);
+  const L = -Math.log(f.p[y]);
+  const d2 = f.p.map((v,k)=>v-(k===y?1:0));
+  const dW2 = d2.map(d=>f.h.map(hj=>d*hj));
+  const back = f.h.map((_,j)=>W2.reduce((s,w,k)=>s+w[j]*d2[k],0));
+  const d1 = f.h.map((hj,j)=>back[j]*hj*(1-hj));
+  const dW1 = d1.map(d=>x.map(xi=>d*xi));
+  return {i,x,y,...f,L,d2,dW2,back,d1,dW1,
+    oW1:clone(W1),ob1:b1.slice(),oW2:clone(W2),ob2:b2.slice(),applied:false,newL:null};
+}
+function sgd(c){
+  for(let k=0;k<3;k++){for(let j=0;j<NH;j++)W2[k][j]-=lr*c.dW2[k][j]; b2[k]-=lr*c.d2[k];}
+  for(let j=0;j<NH;j++){for(let i=0;i<3;i++)W1[j][i]-=lr*c.dW1[j][i]; b1[j]-=lr*c.d1[j];}
+}
+function applyCur(){ if(cur.applied) return; sgd(cur); cur.applied=true; cur.nW1=clone(W1); cur.nW2=clone(W2);
+  cur.newL = -Math.log(forward(cur.x).p[cur.y]); history.push(avgLoss()); renderData(); drawLoss(); }
+function revertCur(){ if(!cur.applied) return; W1=clone(cur.oW1); b1=cur.ob1.slice(); W2=clone(cur.oW2); b2=cur.ob2.slice();
+  cur.applied=false; history.pop(); renderData(); drawLoss(); }
+
+/* ---------- formatting ---------- */
+const f2 = v => (v>=0?' ':'−')+Math.abs(v).toFixed(2);
+const f3 = v => (v<0?'−':'')+Math.abs(v).toFixed(3);
+const pct = v => (v*100).toFixed(1)+'%';
+const vec = a => '['+a.map(f2).join(', ')+']';
+
+/* ---------- panel ---------- */
+function sigSVG(c){
+  const w=320,h=110,px=z=>10+(z+6)/12*(w-20),py=s=>h-14-s*(h-28);
+  let d='';for(let z=-6;z<=6.01;z+=0.25)d+=(d?'L':'M')+px(z).toFixed(1)+' '+py(sig(z)).toFixed(1);
+  const dots=c.z1.map(z=>`<circle cx="${px(Math.max(-6,Math.min(6,z)))}" cy="${py(sig(z))}" r="4.5" fill="var(--pos)"/>`).join('');
+  return `<svg class="sig" viewBox="0 0 ${w} ${h}" role="img" aria-label="Curva sigmoide con las 4 neuronas ocultas">
+   <line x1="10" x2="${w-10}" y1="${py(0.5)}" y2="${py(0.5)}" stroke="var(--line)" stroke-dasharray="3 3"/>
+   <line x1="${px(0)}" x2="${px(0)}" y1="8" y2="${h-14}" stroke="var(--line)"/>
+   <path d="${d}" fill="none" stroke="var(--muted)" stroke-width="2"/>${dots}
+   <text x="${w-12}" y="${h-2}" fill="var(--muted)" font-size="10" text-anchor="end" font-family="IBM Plex Mono,monospace">z</text>
+   <text x="${px(0)+4}" y="16" fill="var(--muted)" font-size="10" font-family="IBM Plex Mono,monospace">σ(z)</text></svg>`;
+}
+function rows(labels, cols){ return `<table class="num">`+labels.map((l,r)=>`<tr><th>${l}</th>${cols.map(c=>`<td class="mono">${c[r]}</td>`).join('')}</tr>`).join('')+`</table>`; }
+const H = ['h₁','h₂','h₃','h₄'];
+function panelHTML(){
+  const c = cur, tgt = CLS[c.y];
+  const S = [
+    () => `<p>Tomamos un ejemplo: un <b>${tgt.toLowerCase()}</b>. Cada rasgo está normalizado entre 0 y 1 y entra en un nodo de la primera capa.</p>
+      <div class="eq">x = ${vec(c.x)}</div>
+      ${rows(FEAT,[c.x.map(f2)])}
+      <p class="sub" style="color:var(--muted);font-size:13px">Objetivo codificado one-hot: y = [${CLS.map((_,k)=>k===c.y?1:0).join(', ')}]</p>`,
+    () => `<p>Cada neurona oculta suma sus entradas multiplicadas por los pesos W₁ y añade un sesgo. Los puntos que viajan por las conexiones son esas contribuciones w·x.</p>
+      <div class="eq">z₁ = W₁·x + b₁</div>
+      <div class="eq">z₁ = ${vec(c.z1)}</div>
+      <p style="font-size:13px;color:var(--muted)">Ejemplo h₁: ${c.oW1[0].map((w,i)=>`${f2(w)}·${c.x[i].toFixed(2)}`).join(' + ')} + ${f2(c.ob1[0])} = <b class="mono">${f3(c.z1[0])}</b></p>`,
+    () => `<p>La sigmoide aplasta cada suma al rango (0, 1). Sin esta no-linealidad, apilar capas sería equivalente a una sola capa lineal.</p>
+      <div class="eq">h = σ(z₁) = 1 / (1 + e<sup>−z₁</sup>)</div>
+      ${sigSVG(c)}
+      ${rows(H,[c.z1.map(f3),c.h.map(f3)])}`,
+    () => `<p>La capa de salida vuelve a hacer una suma ponderada, ahora con W₂ sobre las activaciones ocultas. El resultado son los <b>logits</b>: puntuaciones sin normalizar, una por clase.</p>
+      <div class="eq">z₂ = W₂·h + b₂ = ${vec(c.z2)}</div>
+      ${rows(CLS,[c.z2.map(f3)])}`,
+    () => `<p>Softmax convierte los logits en probabilidades: exponencia cada uno y divide por la suma. Todas quedan positivas y suman 1.</p>
+      <div class="eq">p<sub>k</sub> = e<sup>z<sub>k</sub></sup> / Σ<sub>j</sub> e<sup>z<sub>j</sub></sup></div>
+      <table class="num"><tr><th></th><th>z</th><th>e<sup>z</sup></th><th>p</th></tr>
+      ${CLS.map((n,k)=>`<tr><td>${n}</td><td class="mono">${f3(c.z2[k])}</td><td class="mono">${c.e[k].toFixed(3)}</td><td class="mono"><b>${pct(c.p[k])}</b></td></tr>`).join('')}
+      <tr><td>Σ</td><td></td><td class="mono">${c.e.reduce((a,b)=>a+b,0).toFixed(3)}</td><td class="mono">100%</td></tr></table>`,
+    () => `<p>La entropía cruzada mide lo sorprendida que está la red por la respuesta correcta. Solo cuenta la probabilidad asignada a <b>${tgt}</b>.</p>
+      <div class="eq">L = −Σ y<sub>k</sub> log p<sub>k</sub> = −log p<sub>${tgt}</sub></div>
+      <div class="eq">L = −log(${c.p[c.y].toFixed(3)}) = <b>${c.L.toFixed(3)}</b></div>
+      <p style="font-size:13px;color:var(--muted)">Si la red acertara con un 100 % la pérdida sería 0. Con una predicción uniforme (33 %) sería log 3 ≈ 1.099.</p>`,
+    () => `<p>Empieza la vuelta atrás. Softmax y entropía cruzada juntas tienen una derivada muy limpia respecto a los logits: la predicción menos el objetivo.</p>
+      <div class="eq">δ₂ = ∂L/∂z₂ = p − y</div>
+      <table class="num"><tr><th></th><th>p</th><th>y</th><th>δ₂</th></tr>
+      ${CLS.map((n,k)=>`<tr><td>${n}</td><td class="mono">${c.p[k].toFixed(3)}</td><td class="mono">${k===c.y?1:0}</td><td class="mono" style="color:var(--grad)"><b>${f3(c.d2[k])}</b></td></tr>`).join('')}</table>
+      <p style="font-size:13px;color:var(--muted)">δ negativo en la clase correcta significa «sube este logit»; positivo en las demás, «bájalo».</p>`,
+    () => `<p>Cada peso de salida recibe como gradiente el error de su neurona destino por la activación que entró por él. Los pesos que más contribuyeron al error reciben el gradiente más grande.</p>
+      <div class="eq">∂L/∂W₂[k,j] = δ₂<sub>k</sub> · h<sub>j</sub></div>
+      <table class="num"><tr><th></th>${H.map(x=>`<th>${x}</th>`).join('')}</tr>
+      ${CLS.map((n,k)=>`<tr><td>${n}</td>${c.dW2[k].map(v=>`<td class="mono">${f3(v)}</td>`).join('')}</tr>`).join('')}</table>
+      <div class="eq">∂L/∂b₂ = δ₂ = ${vec(c.d2)}</div>`,
+    () => `<p>Regla de la cadena: el error de cada neurona oculta es la suma de los errores de salida ponderados por W₂, multiplicada por la derivada de la sigmoide, σ′ = h(1 − h).</p>
+      <div class="eq">δ₁ = (W₂ᵀ · δ₂) ⊙ h ⊙ (1 − h)</div>
+      <table class="num"><tr><th></th><th>W₂ᵀδ₂</th><th>h(1−h)</th><th>δ₁</th></tr>
+      ${H.map((n,j)=>`<tr><td>${n}</td><td class="mono">${f3(c.back[j])}</td><td class="mono">${(c.h[j]*(1-c.h[j])).toFixed(3)}</td><td class="mono" style="color:var(--grad)"><b>${f3(c.d1[j])}</b></td></tr>`).join('')}</table>
+      <p style="font-size:13px;color:var(--muted)">σ′ nunca pasa de 0.25, por eso en redes profundas con sigmoide el gradiente se desvanece capa a capa.</p>`,
+    () => `<p>Mismo patrón que en la capa de salida: error de la neurona oculta por la entrada que llegó por esa conexión.</p>
+      <div class="eq">∂L/∂W₁[j,i] = δ₁<sub>j</sub> · x<sub>i</sub></div>
+      <table class="num"><tr><th></th>${FEAT.map(x=>`<th>${x}</th>`).join('')}</tr>
+      ${H.map((n,j)=>`<tr><td>${n}</td>${c.dW1[j].map(v=>`<td class="mono">${f3(v)}</td>`).join('')}</tr>`).join('')}</table>`,
+    () => `<p>Descenso de gradiente: cada parámetro se mueve un paso en la dirección opuesta a su gradiente, escalado por la tasa de aprendizaje η = ${lr.toFixed(2)}.</p>
+      <div class="eq">W ← W − η · ∂L/∂W</div>
+      <div class="eq">W₂[${CLS[c.y]},h₁]: ${f3(c.oW2[c.y][0])} − ${lr.toFixed(2)}·(${f3(c.dW2[c.y][0])}) = <b>${f3(c.oW2[c.y][0]-lr*c.dW2[c.y][0])}</b></div>
+      <table class="num"><tr><th></th><th>antes</th><th>después</th></tr>
+      <tr><td>p(${tgt})</td><td class="mono">${pct(c.p[c.y])}</td><td class="mono"><b>${c.newL!=null?pct(Math.exp(-c.newL)):'—'}</b></td></tr>
+      <tr><td>Pérdida de este ejemplo</td><td class="mono">${c.L.toFixed(3)}</td><td class="mono"><b>${c.newL!=null?c.newL.toFixed(3):'—'}</b></td></tr></table>
+      <p style="font-size:13px;color:var(--muted)">Pulsa «Siguiente» para repetir el ciclo con otra fruta usando los pesos nuevos.</p>`,
+  ];
+  const s = STEPS[step];
+  return `<div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
+      <span class="eyebrow ${s.dir}">${s.dir==='fw'?'Hacia delante':'Hacia atrás'} · paso ${step+1} de ${STEPS.length}</span>
+      <span class="tag">Ejemplo: ${tgt}</span></div>
+    <h2>${['Entrada','Suma ponderada en la capa oculta','Activación sigmoide','Logits de salida','Softmax','Pérdida de entropía cruzada','Error en la salida','Gradientes de W₂','Retropropagar a la capa oculta','Gradientes de W₁','Actualizar los pesos'][step]}</h2>
+    ${S[step]()}`;
+}
+
+/* ---------- UI ---------- */
+const $ = id => document.getElementById(id);
+const stepsEl = $('steps');
+function renderSteps(){
+  stepsEl.innerHTML = STEPS.map((s,i)=>(i===6?'<span class="sep"></span>':'')+
+    `<button class="${s.dir}${i===step?' on':''}${i<step?' done':''}" data-i="${i}" aria-current="${i===step}"><span class="n">${i+1}</span>${s.t}</button>`).join('');
+}
+stepsEl.addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(+b.dataset.i)});
+function go(n){
+  if(n<0) n=0;
+  if(n>=STEPS.length){ // new sample
+    sample=(sample+1)%DATA.length; cur=compute(sample); n=0;
+  }
+  if(n===10) applyCur(); else revertCur();
+  step=n; stepStart=performance.now(); renderSteps(); $('panel').innerHTML=panelHTML(); renderData();
+}
+$('next').onclick=()=>go(step+1);
+$('prev').onclick=()=>go(step-1);
+let timer=null;
+$('play').onclick=()=>{
+  if(timer){clearInterval(timer);timer=null;$('play').textContent='▶ Reproducir';return;}
+  $('play').textContent='❚❚ Pausa'; go(step+1); timer=setInterval(()=>go(step+1),3400);
+};
+document.addEventListener('keydown',e=>{ if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight')go(step+1); if(e.key==='ArrowLeft')go(step-1); });
+$('lr').oninput=e=>{lr=+e.target.value;$('lrv').textContent=lr.toFixed(2); if(step===10){revertCur();applyCur();} $('panel').innerHTML=panelHTML();};
+
+function train(epochs){
+  revertCur();
+  let n=0;
+  const run=()=>{ for(let k=0;k<(reduce?epochs:1)&&n<epochs;k++,n++){ for(let i=0;i<DATA.length;i++){sgd(compute(i)); history.push(avgLoss());} }
+    drawLoss(); renderData();
+    if(n<epochs) requestAnimationFrame(run); else { cur=compute(sample); go(0); } };
+  run();
+}
+$('ep1').onclick=()=>train(1);
+$('ep30').onclick=()=>train(30);
+$('reset').onclick=()=>{initWeights();history=[avgLoss()];cur=compute(sample);go(0);drawLoss();};
+
+function renderData(){
+  $('data').innerHTML = `<tr><th>Fruta</th>${FEAT.map(f=>`<th>${f}</th>`).join('')}<th>Predicción</th><th></th></tr>`+
+    DATA.map((d,i)=>{const p=forward(d.x).p, k=p.indexOf(Math.max(...p));
+      return `<tr data-i="${i}" tabindex="0" class="${i===sample?'sel':''}"><td>${CLS[d.y]}</td>${d.x.map(v=>`<td class="mono">${v.toFixed(2)}</td>`).join('')}
+      <td class="mono">${CLS[k]} ${pct(p[k])}</td><td><span class="pill ${k===d.y?'ok':'bad'}">${k===d.y?'bien':'mal'}</span></td></tr>`}).join('');
+}
+$('data').addEventListener('click',e=>{const r=e.target.closest('tr[data-i]');if(!r)return;revertCur();sample=+r.dataset.i;cur=compute(sample);go(0);});
+$('data').addEventListener('keydown',e=>{if(e.key==='Enter'){const r=e.target.closest('tr[data-i]');if(r)r.click();}});
+
+/* ---------- canvas ---------- */
+const cv=$('net'), ctx=cv.getContext('2d');
+let W=0,Hh=0,dpr=1;
+function size(){ dpr=window.devicePixelRatio||1; W=cv.clientWidth; Hh=Math.max(330,Math.min(520,W*0.62));
+  cv.style.height=Hh+'px'; cv.width=W*dpr; cv.height=Hh*dpr; }
+new ResizeObserver(()=>{size();drawLoss();}).observe(cv.parentElement);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function layout(){
+  const r=Math.max(15,Math.min(24,W/26));
+  const cols=[W*0.13, W*0.43, W*0.70];
+  const ys=(n)=>{const top=64,bot=Hh-66;return [...Array(n)].map((_,i)=>n===1?(top+bot)/2:top+i*(bot-top)/(n-1));};
+  return {r, L:[ys(3).map(y=>({x:cols[0],y})), ys(NH).map(y=>({x:cols[1],y})), ys(3).map(y=>({x:cols[2],y}))]};
+}
+const lerp=(a,b,t)=>a+(b-a)*t;
+function draw(now){
+  const t=(now-stepStart)/1000, C={ink:css('--ink'),muted:css('--muted'),line:css('--line'),pos:css('--pos'),neg:css('--neg'),grad:css('--grad'),surf:css('--surface'),ok:css('--ok')};
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,Hh);
+  const {r,L}=layout(), c=cur;
+  // weights to draw (interpolate on update step)
+  let w1=c.oW1, w2=c.oW2;
+  if(step===10&&c.applied){ const k=reduce?1:Math.min(1,t/1.2); w1=c.oW1.map((row,j)=>row.map((v,i)=>lerp(v,c.nW1[j][i],k))); w2=c.oW2.map((row,k2)=>row.map((v,j)=>lerp(v,c.nW2[k2][j],k))); }
+  const flash = step===10 && !reduce ? Math.max(0,1-t/1.6) : 0;
+  // layer headers
+  ctx.font=`600 11px ${css('--body')}`; ctx.fillStyle=C.muted; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  ['ENTRADA  x','OCULTA  σ','SALIDA  softmax'].forEach((s,i)=>ctx.fillText(s,L[i][0].x,24));
+  // edges
+  const layerEdges=(A,B,Wm,G,lay)=>{
+    const hiF = (lay===1&&step===1)||(lay===2&&step===3);
+    const bwG = (lay===2&&(step===7))||(lay===1&&step===9);
+    const bwFlow = (lay===2&&step===8);
+    let gmax=1e-9; if(bwG) G.forEach(r=>r.forEach(v=>gmax=Math.max(gmax,Math.abs(v))));
+    B.forEach((b,bi)=>A.forEach((a,ai)=>{
+      const w=Wm[bi][ai];
+      let col, width, alpha;
+      if(bwG){ col=C.grad; width=1+6*Math.abs(G[bi][ai])/gmax; alpha=0.35+0.65*Math.abs(G[bi][ai])/gmax; }
+      else { col=w>=0?C.pos:C.neg; width=0.6+Math.min(5,Math.abs(w)*2.2); alpha=hiF?0.9:(step===10?0.75:0.28);
+        if(flash) width+=flash*2; }
+      if(bwFlow){ col=C.grad; alpha=0.45; width=1+Math.abs(w)*1.8; }
+      ctx.globalAlpha=alpha; ctx.strokeStyle=col; ctx.lineWidth=width;
+      ctx.beginPath(); ctx.moveTo(a.x+r,a.y); ctx.lineTo(b.x-r,b.y); ctx.stroke();
+      // particles
+      const fwd = hiF, back = bwG||bwFlow;
+      if((fwd||back)&&!reduce){
+        const ph = ((t*0.55 + (ai*0.17+bi*0.29))%1);
+        const q = back?1-ph:ph;
+        const px=lerp(a.x+r,b.x-r,q), py=lerp(a.y,b.y,q);
+        let mag = fwd ? Math.abs(w*(lay===1?c.x[ai]:c.h[ai])) : (bwG?Math.abs(G[bi][ai])/gmax*2:Math.abs(w*c.d2[bi])*2);
+        ctx.globalAlpha=1; ctx.fillStyle=back?C.grad:(w>=0?C.pos:C.neg);
+        ctx.beginPath(); ctx.arc(px,py,2+Math.min(4,mag*3),0,7); ctx.fill();
+      }
+    }));
+    ctx.globalAlpha=1;
+  };
+  layerEdges(L[0],L[1],w1,c.dW1,1);
+  layerEdges(L[1],L[2],w2,c.dW2,2);
+  // nodes
+  const node=(p,label,val,fillAmt,active,ring)=>{
+    ctx.fillStyle=C.surf; ctx.beginPath(); ctx.arc(p.x,p.y,r,0,7); ctx.fill();
+    if(fillAmt>0){ ctx.globalAlpha=0.18+0.55*fillAmt; ctx.fillStyle=C.pos; ctx.beginPath(); ctx.arc(p.x,p.y,r,0,7); ctx.fill(); ctx.globalAlpha=1; }
+    ctx.lineWidth=active?2.5:1.5; ctx.strokeStyle=ring||(active?C.ink:C.muted); ctx.beginPath(); ctx.arc(p.x,p.y,r,0,7); ctx.stroke();
+    if(val!=null){ ctx.fillStyle=C.ink; ctx.font=`500 ${Math.round(r*0.5)}px ${css('--mono')}`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(val,p.x,p.y+1); }
+    if(label){ ctx.fillStyle=C.muted; ctx.font=`500 11px ${css('--body')}`; ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText(label,p.x,p.y+r+5); }
+  };
+  const short=v=>(v<0?'−':'')+Math.abs(v).toFixed(2).replace(/^0/,'');
+  L[0].forEach((p,i)=>node(p,FEAT[i],c.x[i].toFixed(2),c.x[i],step===0,null));
+  L[1].forEach((p,j)=>{
+    const val = step===0?null: step===1?short(c.z1[j]) : c.h[j].toFixed(2);
+    node(p, 'h'+(j+1), val, step>=2?c.h[j]:0, step===1||step===2, step===8?C.grad:null);
+    if(step>=8){ ctx.fillStyle=C.grad; ctx.font=`600 11px ${css('--mono')}`; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText('δ '+short(c.d1[j]), p.x+r+6, p.y-r*0.9); }
+  });
+  L[2].forEach((p,k)=>{
+    const val = step<3?null: step===3?short(c.z2[k]) : Math.round(c.p[k]*100)+'%';
+    node(p, null, val, step>=4?c.p[k]:0, step>=3&&step<=5, step===6?C.grad:(step===5&&k===c.y?C.ok:null));
+    // prob bar + class label
+    const bx=p.x+r+12, bw=Math.max(40,W-bx-14);
+    ctx.fillStyle=k===c.y?C.ink:C.muted; ctx.font=`${k===c.y?600:500} 12px ${css('--body')}`; ctx.textAlign='left'; ctx.textBaseline='bottom';
+    ctx.fillText(CLS[k]+(k===c.y?'  ✓ objetivo':''), bx, p.y-4);
+    ctx.fillStyle=C.line; ctx.fillRect(bx,p.y,bw,7);
+    if(step>=4){ const grow=reduce||step>4?1:Math.min(1,t/0.9); ctx.fillStyle=k===c.y?C.ok:C.pos; ctx.fillRect(bx,p.y,bw*c.p[k]*grow,7); }
+    if(step>=6){ ctx.fillStyle=C.grad; ctx.font=`600 11px ${css('--mono')}`; ctx.textBaseline='top'; ctx.fillText('δ '+short(c.d2[k]), bx, p.y+11); }
+  });
+  // loss badge
+  if(step>=5){
+    const txt = step===10&&c.newL!=null ? `L: ${c.L.toFixed(3)} → ${c.newL.toFixed(3)}` : `L = −log p = ${c.L.toFixed(3)}`;
+    ctx.font=`600 13px ${css('--mono')}`; const tw=ctx.measureText(txt).width+20;
+    const bx=W-tw-10, by=Hh-30;
+    ctx.fillStyle=C.surf; ctx.strokeStyle=step===10?C.ok:C.ink; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.roundRect(bx,by,tw,24,6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=C.ink; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(txt,bx+10,by+12.5);
+  }
+  requestAnimationFrame(draw);
+}
+
+/* ---------- loss chart ---------- */
+function drawLoss(){
+  const c=$('lossc'), g=c.getContext('2d'), w=c.clientWidth, h=c.clientHeight, d=window.devicePixelRatio||1;
+  c.width=w*d; c.height=h*d; g.setTransform(d,0,0,d,0,0); g.clearRect(0,0,w,h);
+  const ink=css('--ink'),mu=css('--muted'),ln=css('--line'),pos=css('--pos');
+  const pl=40,pr=12,pt=10,pb=24, n=history.length;
+  const ymax=Math.max(1,Math.ceil(Math.max(...history)*2)/2), tstep=ymax<=1.5?0.25:0.5;
+  const X=i=>pl+(n<=1?0:i/(n-1))*(w-pl-pr), Y=v=>pt+(1-v/ymax)*(h-pt-pb);
+  g.font=`11px ${css('--mono')}`; g.fillStyle=mu; g.textAlign='right'; g.textBaseline='middle'; g.strokeStyle=ln; g.lineWidth=1;
+  for(let v=0;v<=ymax+1e-9;v+=tstep){ g.beginPath(); g.moveTo(pl,Y(v)); g.lineTo(w-pr,Y(v)); g.stroke(); g.fillText(v.toFixed(2),pl-6,Y(v)); }
+  g.textAlign='left'; g.textBaseline='top'; g.fillText('0',pl,h-pb+6); g.textAlign='right'; g.fillText(`${n-1} actualizaciones`,w-pr,h-pb+6);
+  if(n<1) return;
+  g.beginPath(); history.forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));
+  const path=new Path2D(); history.forEach((v,i)=>i?path.lineTo(X(i),Y(v)):path.moveTo(X(i),Y(v)));
+  const area=new Path2D(path); area.lineTo(X(n-1),Y(0)); area.lineTo(X(0),Y(0)); area.closePath();
+  g.globalAlpha=0.12; g.fillStyle=pos; g.fill(area); g.globalAlpha=1;
+  g.strokeStyle=pos; g.lineWidth=2; g.stroke(path);
+  const last=history[n-1]; g.fillStyle=pos; g.beginPath(); g.arc(X(n-1),Y(last),4,0,7); g.fill();
+  g.fillStyle=ink; g.font=`600 12px ${css('--mono')}`; const lx=X(n-1), ly=Y(last), nearL=lx<pl+60, nearT=ly<pt+18; g.textAlign=nearL?'left':'right'; g.textBaseline=nearT?'top':'bottom'; g.fillText('L = '+last.toFixed(3), lx+(nearL?8:-8), ly+(nearT?6:-6));
+}
+
+/* ---------- boot ---------- */
+initWeights(); history=[avgLoss()]; cur=compute(sample);
+size(); go(0); drawLoss(); requestAnimationFrame(draw);
+})();
+</script>
+
+<a href="/lab" style="position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9;font:600 13px system-ui,sans-serif;background:#0E1621;color:#fff;padding:9px 12px;border-radius:8px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.25)">← MLE·AI</a><script>if(window.self!==window.top){document.currentScript.previousElementSibling.remove()}</script>
+</body>
+</html>

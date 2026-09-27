@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow">
+<style>html,body{margin:0}</style>
+<title>Árbol de decisión en vivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --ink:#16202B; --muted:#5B6877; --line:#D3DAE2; --plot:#F7F9FB;
+  --k0:#2563C9; --k1:#DD7A1C; --k2:#1F8A5B; --hl:#C2459B; --ok:#1F8A5B;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743; --plot:#121B24;
+    --k0:#5C95F0; --k1:#F09A45; --k2:#4CC08A; --hl:#EA7CC8; --ok:#4CC08A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743; --plot:#121B24;
+  --k0:#5C95F0; --k1:#F09A45; --k2:#4CC08A; --hl:#EA7CC8; --ok:#4CC08A;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding:24px 16px 48px}
+.wrap{max-width:1220px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header h1{font:700 clamp(28px,4.4vw,44px)/1.05 var(--display);margin:0 0 8px;letter-spacing:-.01em;text-wrap:balance}
+header p{margin:0;color:var(--muted);max-width:74ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.toolbar{flex-direction:row;flex-wrap:wrap;align-items:flex-end;gap:12px 18px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.pills button{font:500 13px/1 var(--body);border:1px solid var(--line);background:transparent;color:var(--muted);padding:8px 11px;border-radius:999px;cursor:pointer}
+.pills button.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn{font:600 14px/1 var(--body);padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn.on{background:var(--hl);border-color:var(--hl);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:focus-visible,input:focus-visible,select:focus-visible,.pills button:focus-visible{outline:2px solid var(--k0);outline-offset:2px}
+.field{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);min-width:150px}
+.field .r{display:flex;justify-content:space-between;gap:8px}
+.field output{font:600 14px var(--mono);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--ink)}
+select{font:500 14px var(--body);padding:7px 8px;border-radius:7px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
+@media (max-width:920px){.main{grid-template-columns:1fr}}
+canvas{width:100%;display:block}
+#plot{border-radius:6px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.eyebrow{font:600 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h2{font:700 20px/1.2 var(--display);margin:0;text-wrap:balance}
+h3{font:600 13px var(--body);margin:0;color:var(--muted)}
+.note{margin:0;font-size:13.5px;color:var(--muted)}
+.eq{font:13px/1.6 var(--mono);background:var(--bg);border-radius:6px;padding:8px 12px;overflow-wrap:anywhere}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stats div{background:var(--bg);border-radius:8px;padding:8px 10px}
+.stats small{display:block;font-size:11.5px;color:var(--muted)}
+.stats b{font:600 18px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+.imp canvas{height:120px}
+.treewrap{overflow-x:auto}
+#tree{display:block}
+.bottom{display:grid;grid-template-columns:1fr 1.1fr;gap:18px;align-items:start}
+@media (max-width:920px){.bottom{grid-template-columns:1fr}}
+#depthc{height:210px}
+.lessons{display:flex;flex-direction:column;gap:10px}
+.lessons div{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+.lessons b.k{font:600 12px/1 var(--mono);background:var(--bg);border-radius:6px;padding:6px 7px;color:var(--muted)}
+.lessons p{margin:0;font-size:14px}
+.lessons p span{color:var(--muted)}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <h1>Árbol de decisión en vivo</h1>
+    <p>Un árbol de decisión clasifica haciendo preguntas del tipo «¿m² ≤ 92?». En cada paso prueba todos los cortes posibles en cada variable, mide cuánto «desorden» queda en los dos lados (impureza de Gini) y se queda con el corte que más lo reduce. Así va partiendo el plano en rectángulos cada vez más puros.</p>
+  </header>
+
+  <section class="card toolbar">
+    <div class="pills" id="ds" role="tablist"></div>
+    <button class="btn primary" id="play">▶ Construir</button>
+    <button class="btn" id="stepb">Siguiente corte</button>
+    <button class="btn" id="reset">Reiniciar</button>
+    <label class="field" for="depth"><span class="r">Profundidad máxima<output id="depthv">4</output></span><input type="range" id="depth" min="1" max="10" step="1" value="4"></label>
+    <label class="field" for="minleaf"><span class="r">Mínimo por hoja<output id="minleafv">3</output></span><input type="range" id="minleaf" min="1" max="20" step="1" value="3"></label>
+    <label class="field" for="crit">Criterio
+      <select id="crit"><option value="gini">Gini</option><option value="ent">Entropía</option></select></label>
+    <button class="btn" id="forest">Ver Random Forest</button>
+  </section>
+
+  <div class="main">
+    <section class="card">
+      <canvas id="plot" aria-label="Datos y regiones del árbol"></canvas>
+      <div class="legend" id="legend"></div>
+    </section>
+    <aside class="card" aria-live="polite">
+      <span class="eyebrow" id="stEy">Paso 0</span>
+      <h2 id="stT">Nodo raíz</h2>
+      <p class="note" id="stD"></p>
+      <div class="eq" id="stEq">Gini = 1 − Σ p<sub>k</sub>²</div>
+      <div class="imp"><h3 id="h0">Cortes en x</h3><canvas id="i0"></canvas></div>
+      <div class="imp"><h3 id="h1">Cortes en y</h3><canvas id="i1"></canvas></div>
+      <div class="stats">
+        <div><small>Acierto entrenamiento</small><b id="atr">—</b></div>
+        <div><small>Acierto test</small><b id="ate">—</b></div>
+        <div><small>Hojas</small><b id="nl">—</b></div>
+        <div><small>Profundidad</small><b id="nd">—</b></div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="card">
+    <h2>El árbol</h2>
+    <p class="note">Pasa el ratón por un nodo para ver su región en el mapa, o por el mapa para ver qué camino sigue ese punto. Cada nodo muestra la pregunta, cuántos puntos llegan (n), su impureza y la mezcla de clases.</p>
+    <div class="treewrap"><canvas id="tree" aria-label="Diagrama del árbol de decisión"></canvas></div>
+  </section>
+
+  <div class="bottom">
+    <section class="card">
+      <h2>Acierto según la profundidad</h2>
+      <p class="note">Árboles completos de profundidad 1 a 10 con estos datos. Entrenamiento siempre mejora; test llega a un techo y luego empeora: sobreajuste.</p>
+      <canvas id="depthc"></canvas>
+    </section>
+    <section class="card">
+      <h2>Qué probar</h2>
+      <div class="lessons">
+        <div><b class="k">1</b><p>Viviendas, profundidad 3, «Siguiente corte». <span>Mira las curvas de la derecha: el corte elegido es el punto más bajo. El primer corte suele ser la variable que más separa los precios.</span></p></div>
+        <div><b class="k">2</b><p>Diagonal. <span>Los árboles solo cortan en horizontal o vertical, así que una frontera en diagonal la aproximan con una escalera.</span></p></div>
+        <div><b class="k">3</b><p>Ruido, profundidad 10, mínimo por hoja 1. <span>El árbol encierra cada punto suelto en su propio rectángulo: casi 100 % en entrenamiento, bastante peor en test.</span></p></div>
+        <div><b class="k">4</b><p>Sube «Mínimo por hoja» a 10. <span>Es una forma de poda: impide hojas con pocos puntos y el árbol generaliza mejor.</span></p></div>
+        <div><b class="k">5</b><p>Pulsa «Ver Random Forest». <span>25 árboles, cada uno con una muestra distinta de los datos, votan. La frontera sale más suave y el acierto en test suele subir.</span></p></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- datasets ---------- */
+let rs=1; const rnd=()=>{rs=(rs*16807)%2147483647;return rs/2147483647}; const gau=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+const DS={
+  pisos:{name:'Viviendas',ax:['m² construidos','distancia al centro (km)'],rng:[[35,160],[0,15]],cls:['barata','media','cara'],fmt:[v=>Math.round(v)+' m²',v=>v.toFixed(1)+' km'],
+    gen:()=>{const x=35+rnd()*125, y=rnd()*15, s=x*(1-0.045*y)+gau()*5; return {x,y,c:s<48?0:s<82?1:2};}},
+  diag:{name:'Diagonal',ax:['x₁','x₂'],rng:[[0,10],[0,10]],cls:['clase A','clase B'],fmt:[v=>v.toFixed(1),v=>v.toFixed(1)],
+    gen:()=>{const x=rnd()*10,y=rnd()*10; return {x,y,c:y>x+gau()*0.6?1:0};}},
+  circ:{name:'Círculo',ax:['x₁','x₂'],rng:[[0,10],[0,10]],cls:['fuera','dentro'],fmt:[v=>v.toFixed(1),v=>v.toFixed(1)],
+    gen:()=>{const x=rnd()*10,y=rnd()*10; return {x,y,c:Math.hypot(x-5,y-5)+gau()*0.35<3?1:0};}},
+  xor:{name:'XOR',ax:['x₁','x₂'],rng:[[0,10],[0,10]],cls:['clase A','clase B'],fmt:[v=>v.toFixed(1),v=>v.toFixed(1)],
+    gen:()=>{const x=rnd()*10,y=rnd()*10; return {x,y,c:((x+gau()*0.4>5)!==(y+gau()*0.4>5))?1:0};}},
+  noise:{name:'Ruido',ax:['x₁','x₂'],rng:[[0,10],[0,10]],cls:['clase A','clase B'],fmt:[v=>v.toFixed(1),v=>v.toFixed(1)],
+    gen:()=>{const c=rnd()<0.5?1:0, m=c?6:4; return {x:Math.max(0,Math.min(10,m+gau()*1.9)),y:Math.max(0,Math.min(10,m+gau()*1.9)),c};}},
+};
+let dsKey='pisos', D=DS.pisos, train=[], test=[], K=3;
+function gen(){ rs=4242+Object.keys(DS).indexOf(dsKey)*97; train=[...Array(160)].map(D.gen); test=[...Array(400)].map(D.gen); K=D.cls.length; }
+
+/* ---------- tree ---------- */
+let maxDepth=4, minLeaf=3, crit='gini';
+const impurity=(cnt,n)=>{ if(!n) return 0; if(crit==='gini'){ let s=1; for(const c of cnt) s-=(c/n)**2; return s; } let s=0; for(const c of cnt) if(c){ const p=c/n; s-=p*Math.log2(p); } return s; };
+let nid=0;
+function makeNode(pts,depth,b,parent){ const cnt=Array(K).fill(0); pts.forEach(p=>cnt[p.c]++); const n=pts.length;
+  return {id:nid++,pts,depth,b,cnt,n,imp:impurity(cnt,n),maj:cnt.indexOf(Math.max(...cnt)),split:null,L:null,R:null,parent,final:false}; }
+function cands(node,f){
+  const key=f?'y':'x', s=[...node.pts].sort((a,b)=>a[key]-b[key]); const out=[]; const lc=Array(K).fill(0), rc=[...node.cnt]; const n=s.length;
+  for(let i=0;i<n-1;i++){ lc[s[i].c]++; rc[s[i].c]--; if(s[i][key]===s[i+1][key]) continue; const nl=i+1, nr=n-nl;
+    const t=(s[i][key]+s[i+1][key])/2, w=(nl*impurity(lc,nl)+nr*impurity(rc,nr))/n; out.push({t,w,ok:nl>=minLeaf&&nr>=minLeaf}); }
+  let best=null; out.forEach(c=>{ if(c.ok&&(!best||c.w<best.w-1e-12)) best=c; }); return {list:out,best};
+}
+const splittable=n=>n.depth<maxDepth && n.n>=2*minLeaf && n.imp>1e-9;
+function bestSplit(node, feats=[0,1]){
+  let res=null; for(const f of feats){ const c=cands(node,f); if(c.best&&(!res||c.best.w<res.w-1e-12)) res={f,t:c.best.t,w:c.best.w}; } return res; }
+function applySplit(node,s){
+  node.split=s; const key=s.f?'y':'x';
+  const lb=[...node.b], rb=[...node.b]; if(s.f===0){ lb[1]=s.t; rb[0]=s.t; } else { lb[3]=s.t; rb[2]=s.t; }
+  node.L=makeNode(node.pts.filter(p=>p[key]<=s.t),node.depth+1,lb,node); node.R=makeNode(node.pts.filter(p=>p[key]>s.t),node.depth+1,rb,node);
+}
+function buildFull(pts,depth,rand){ // for depth chart and forest
+  const root=makeNode(pts,0,[...D.rng[0],...D.rng[1]],null); const q=[root];
+  while(q.length){ const n=q.shift(); if(n.depth>=depth||n.n<2*minLeaf||n.imp<1e-9) continue;
+    let feats=[0,1]; if(rand){ feats=[rand()<0.5?0:1]; }
+    let s=bestSplit(n,feats); if(!s&&rand) s=bestSplit(n,[1-feats[0]]);
+    if(!s||n.imp-s.w<1e-9) continue; applySplit(n,s); q.push(n.L,n.R); }
+  return root;
+}
+const predictNode=(n,p)=>{ while(n.split){ n=(n.split.f?p.y:p.x)<=n.split.t?n.L:n.R; } return n; };
+const acc=(root,set)=>set.filter(p=>predictNode(root,p).maj===p.c).length/set.length;
+const leaves=r=>{const o=[];(function w(n){ if(n.split){w(n.L);w(n.R);} else o.push(n); })(r); return o;};
+const depthOf=r=>Math.max(...leaves(r).map(l=>l.depth));
+
+/* ---------- step-wise growth state ---------- */
+let root, queue, stepN=0, search=null, done=false, playing=false, hoverNode=null, hoverPt=null, forestOn=false, forest=null, forestImg=null;
+function reset(){
+  nid=0; root=makeNode(train,0,[...D.rng[0],...D.rng[1]],null); queue=[root]; stepN=0; search=null; done=false; hoverNode=null;
+  forest=null; forestImg=null; if(forestOn) buildForest();
+  depthCurve(); panel(); drawTree();
+}
+function nextNode(){ while(queue.length){ const n=queue.shift(); if(splittable(n)) return n; n.final=true; } return null; }
+function beginStep(){
+  if(search||done) return false;
+  const node=nextNode(); if(!node){ done=true; panel(); return false; }
+  const c0=cands(node,0), c1=cands(node,1); let best=null;
+  [[0,c0],[1,c1]].forEach(([f,c])=>{ if(c.best&&(!best||c.best.w<best.w-1e-12)) best={f,t:c.best.t,w:c.best.w}; });
+  if(!best||node.imp-best.w<1e-9){ node.final=true; return beginStep(); }
+  const dur=(reduce?0:(playing?1300:2200))/speedMul();
+  search={node,c:[c0,c1],best,t0:performance.now(),dur};
+  panel(); return true;
+}
+const speedMul=()=>fast?6:1; let fast=false;
+function finishStep(){ const s=search; search=null; applySplit(s.node,s.best); queue.push(s.node.L,s.node.R); stepN++; lastSplit=s; panel(); drawTree(); }
+let lastSplit=null;
+
+/* ---------- panel ---------- */
+const pct=v=>(v*100).toFixed(1)+' %';
+function panel(){
+  $('h0').textContent=`Impureza tras cortar en ${D.ax[0]}`; $('h1').textContent=`Impureza tras cortar en ${D.ax[1]}`;
+  $('stEy').textContent=`Corte ${stepN}${done?' · terminado':''}`;
+  $('stEq').innerHTML= crit==='gini'?'Gini = 1 − Σ p<sub>k</sub>² &nbsp;·&nbsp; impureza del corte = (n<sub>izq</sub>·G<sub>izq</sub> + n<sub>der</sub>·G<sub>der</sub>) / n':'Entropía = − Σ p<sub>k</sub> log₂ p<sub>k</sub> &nbsp;·&nbsp; se minimiza la media ponderada de los dos lados';
+  const cn=crit==='gini'?'Gini':'entropía';
+  if(search){ const n=search.node, b=search.best;
+    $('stT').textContent=`Buscando el mejor corte`;
+    $('stD').textContent=`Nodo con ${n.n} puntos y ${cn} ${n.imp.toFixed(3)}. Se prueban ${search.c[0].list.length+search.c[1].list.length} cortes posibles. El mejor: ${D.ax[b.f]} ≤ ${D.fmt[b.f](b.t)}, que deja la ${cn} en ${b.w.toFixed(3)} (reduce ${(n.imp-b.w).toFixed(3)}).`; }
+  else if(done){ $('stT').textContent='Árbol terminado';
+    $('stD').textContent=`Ninguna hoja se puede dividir más: son puras, tienen menos de ${2*minLeaf} puntos o han llegado a profundidad ${maxDepth}. Cada hoja predice su clase mayoritaria.`; }
+  else if(lastSplit){ const s=lastSplit; $('stT').textContent=`${D.ax[s.best.f]} ≤ ${D.fmt[s.best.f](s.best.t)}`;
+    $('stD').textContent=`Corte aplicado: ${s.node.L.n} puntos van a la izquierda y ${s.node.R.n} a la derecha. Pulsa «Siguiente corte» para seguir con el siguiente nodo.`; }
+  else { $('stT').textContent='Nodo raíz'; $('stD').textContent=`Todos los ${root.n} puntos de entrenamiento están en un solo nodo, con ${cn} ${root.imp.toFixed(3)}. Si el árbol parara aquí, diría siempre «${D.cls[root.maj]}».`; }
+  $('atr').textContent=pct(acc(root,train)); $('ate').textContent=pct(acc(root,test));
+  const L=leaves(root); $('nl').textContent=L.length; $('nd').textContent=depthOf(root);
+  $('stepb').disabled=done;
+  $('legend').innerHTML=D.cls.map((c,k)=>`<span><i class="dot" style="background:var(--k${k})"></i>${c}</span>`).join('')+'<span>● entrenamiento</span>';
+  drawImp();
+  if(forestOn&&forest) forestPanel();
+}
+
+/* ---------- plot ---------- */
+const cv=$('plot'), g=cv.getContext('2d'); let W=0,H=0,dpr=1; const PL=52,PR=12,PT=12,PB=40;
+function size(){ dpr=devicePixelRatio||1; W=cv.clientWidth; H=Math.round(Math.min(560,W*0.72)); cv.style.height=H+'px'; cv.width=W*dpr; cv.height=H*dpr; forestImg=null; }
+const X=v=>PL+(v-D.rng[0][0])/(D.rng[0][1]-D.rng[0][0])*(W-PL-PR), Y=v=>H-PB-(v-D.rng[1][0])/(D.rng[1][1]-D.rng[1][0])*(H-PT-PB);
+const IX=px=>D.rng[0][0]+(px-PL)/(W-PL-PR)*(D.rng[0][1]-D.rng[0][0]), IY=py=>D.rng[1][0]+(H-PB-py)/(H-PT-PB)*(D.rng[1][1]-D.rng[1][0]);
+const hex=h=>{h=h.replace('#','');return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16));};
+function drawPlot(now){
+  const C={plot:css('--plot'),ink:css('--ink'),mu:css('--muted'),ln:css('--line'),hl:css('--hl'),surf:css('--surface'),k:[0,1,2].map(i=>css('--k'+i))};
+  g.setTransform(dpr,0,0,dpr,0,0); g.fillStyle=css('--surface'); g.fillRect(0,0,W,H);
+  g.fillStyle=C.plot; g.fillRect(PL,PT,W-PL-PR,H-PT-PB);
+  // regions
+  if(forestOn && forestImg){ g.imageSmoothingEnabled=true; g.drawImage(forestImg,PL,PT,W-PL-PR,H-PT-PB); }
+  else for(const l of leaves(root)){ if(!l.n) continue; const pur=l.cnt[l.maj]/l.n, a=0.08+0.22*((pur-1/K)/(1-1/K));
+    g.fillStyle=C.k[l.maj]; g.globalAlpha=Math.max(0.06,a); g.fillRect(X(l.b[0]),Y(l.b[3]),X(l.b[1])-X(l.b[0]),Y(l.b[2])-Y(l.b[3])); g.globalAlpha=1; }
+  // axes
+  g.font=`11px ${css('--mono')}`; g.fillStyle=C.mu; g.textAlign='center'; g.textBaseline='top';
+  for(let i=0;i<=5;i++){ const v=D.rng[0][0]+i/5*(D.rng[0][1]-D.rng[0][0]); g.fillText(Math.round(v*10)/10,X(v),H-PB+5); }
+  g.textAlign='right'; g.textBaseline='middle';
+  for(let i=0;i<=5;i++){ const v=D.rng[1][0]+i/5*(D.rng[1][1]-D.rng[1][0]); g.fillText(Math.round(v*10)/10,PL-6,Y(v)); }
+  g.font=`500 12px ${css('--body')}`; g.fillStyle=C.ink; g.textAlign='center'; g.textBaseline='bottom'; g.fillText(D.ax[0]+' →',(PL+W-PR)/2,H-4);
+  g.save(); g.translate(13,(PT+H-PB)/2); g.rotate(-Math.PI/2); g.textBaseline='middle'; g.fillText(D.ax[1]+' →',0,0); g.restore();
+  // split lines (tree)
+  if(!forestOn) (function walk(n){ if(!n.split) return; const s=n.split; g.strokeStyle=C.ink; g.lineWidth=Math.max(1,3-n.depth*0.5);
+    g.beginPath(); if(s.f===0){ g.moveTo(X(s.t),Y(n.b[2])); g.lineTo(X(s.t),Y(n.b[3])); } else { g.moveTo(X(n.b[0]),Y(s.t)); g.lineTo(X(n.b[1]),Y(s.t)); } g.stroke(); walk(n.L); walk(n.R); })(root);
+  // search animation
+  if(search){ const n=search.node, k=Math.min(1,(now-search.t0)/Math.max(1,search.dur));
+    g.strokeStyle=C.hl; g.lineWidth=2.5; g.strokeRect(X(n.b[0]),Y(n.b[3]),X(n.b[1])-X(n.b[0]),Y(n.b[2])-Y(n.b[3]));
+    const cur=searchCursor(k);
+    if(cur){ g.setLineDash(cur.best?[]:[5,4]); g.lineWidth=cur.best?3:2; g.beginPath();
+      if(cur.f===0){ g.moveTo(X(cur.t),Y(n.b[2])); g.lineTo(X(cur.t),Y(n.b[3])); } else { g.moveTo(X(n.b[0]),Y(cur.t)); g.lineTo(X(n.b[1]),Y(cur.t)); } g.stroke(); g.setLineDash([]); }
+    if(k>=1) finishStep();
+  }
+  // hover region
+  const hn=hoverNode || (hoverPt&&!forestOn?predictNode(root,hoverPt):null);
+  if(hn){ g.strokeStyle=C.hl; g.lineWidth=2.5; g.setLineDash([6,3]); g.strokeRect(X(hn.b[0]),Y(hn.b[3]),X(hn.b[1])-X(hn.b[0]),Y(hn.b[2])-Y(hn.b[3])); g.setLineDash([]); }
+  // points
+  for(const p of train){ g.fillStyle=C.k[p.c]; g.strokeStyle=C.surf; g.lineWidth=1.2; g.beginPath(); g.arc(X(p.x),Y(p.y),3.8,0,7); g.fill(); g.stroke(); }
+  if(search&&search.dur>0) drawImp(Math.min(1,(now-search.t0)/search.dur));
+  requestAnimationFrame(drawPlot);
+}
+// maps progress k∈[0,1] to a candidate: first 45% sweep feature 0, next 45% feature 1, last 10% show best
+function searchCursor(k){
+  if(!search) return null; const [c0,c1]=search.c;
+  if(k<0.45){ const l=c0.list; if(!l.length) return null; const i=Math.min(l.length-1,Math.floor(k/0.45*l.length)); return {f:0,t:l[i].t,i}; }
+  if(k<0.9){ const l=c1.list; if(!l.length) return null; const i=Math.min(l.length-1,Math.floor((k-0.45)/0.45*l.length)); return {f:1,t:l[i].t,i}; }
+  return {f:search.best.f,t:search.best.t,best:true};
+}
+cv.addEventListener('pointermove',e=>{ const r=cv.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top;
+  if(px<PL||px>W-PR||py<PT||py>H-PB){ hoverPt=null; } else hoverPt={x:IX(px),y:IY(py)}; drawTree(); });
+cv.addEventListener('pointerleave',()=>{hoverPt=null; drawTree();});
+
+/* ---------- impurity charts ---------- */
+function drawImp(k){
+  for(let f=0;f<2;f++){
+    const c=$('i'+f), d=devicePixelRatio||1, w=c.clientWidth, h=c.clientHeight; c.width=w*d; c.height=h*d; const x=c.getContext('2d'); x.setTransform(d,0,0,d,0,0);
+    const mu=css('--muted'), ln=css('--line'), ink=css('--ink'), hl=css('--hl'), col=css('--k0');
+    const pl=38,pr=8,pt=8,pb=18;
+    x.font=`10.5px ${css('--mono')}`; x.fillStyle=mu;
+    const S=search||lastSplit; if(!S){ x.textAlign='center'; x.textBaseline='middle'; x.fillText('Pulsa «Siguiente corte»',w/2,h/2); continue; }
+    const n=S.node, list=S.c[f].list, lo=n.b[f?2:0], hi=n.b[f?3:1], ymax=Math.max(0.05,n.imp*1.1);
+    const XX=t=>pl+(t-lo)/(hi-lo)*(w-pl-pr), YY=v=>pt+(1-v/ymax)*(h-pt-pb);
+    x.strokeStyle=ln; x.lineWidth=1; [0,ymax/2,ymax].forEach(v=>{ x.beginPath(); x.moveTo(pl,YY(v)); x.lineTo(w-pr,YY(v)); x.stroke(); x.textAlign='right'; x.textBaseline='middle'; x.fillText(v.toFixed(2),pl-4,YY(v)); });
+    x.textAlign='left'; x.textBaseline='top'; x.fillText(D.fmt[f](lo),pl,h-pb+3); x.textAlign='right'; x.fillText(D.fmt[f](hi),w-pr,h-pb+3);
+    // parent impurity
+    x.strokeStyle=mu; x.setLineDash([4,3]); x.beginPath(); x.moveTo(pl,YY(n.imp)); x.lineTo(w-pr,YY(n.imp)); x.stroke(); x.setLineDash([]);
+    x.textAlign='right'; x.textBaseline='bottom'; x.fillText('antes del corte',w-pr,YY(n.imp)-2);
+    // how many to draw
+    let upto=list.length;
+    if(search && k!=null){ if(f===0) upto=Math.floor(Math.min(1,k/0.45)*list.length); else upto=k<0.45?0:Math.floor(Math.min(1,(k-0.45)/0.45)*list.length); }
+    x.strokeStyle=col; x.lineWidth=2; x.beginPath(); let started=false;
+    for(let i=0;i<upto;i++){ const cnd=list[i]; if(!cnd.ok){ started=false; continue; } const px=XX(cnd.t), py=YY(cnd.w); if(!started){x.moveTo(px,py);started=true;} else x.lineTo(px,py); }
+    x.stroke();
+    const best=S.c[f].best, chosen=S.best.f===f;
+    const showBest=!search || (k!=null && ((f===0&&k>=0.45)||(f===1&&k>=0.9)));
+    if(best&&showBest){ x.fillStyle=chosen?hl:col; x.beginPath(); x.arc(XX(best.t),YY(best.w),chosen?5:3.5,0,7); x.fill();
+      x.fillStyle=ink; x.font=`600 11px ${css('--mono')}`; x.textAlign=XX(best.t)>w-90?'right':'left'; x.textBaseline='top'; x.fillText((chosen?'★ ':'')+best.w.toFixed(3),XX(best.t)+(XX(best.t)>w-90?-6:6),YY(best.w)+4); }
+  }
+}
+
+/* ---------- tree diagram ---------- */
+const tc=$('tree'); let boxes=[];
+function drawTree(){
+  const L=leaves(root), nL=L.length, avail=tc.parentElement.clientWidth;
+  const NW=Math.max(78,Math.min(130,(avail-20)/nL-10)), NH=62, GX=10, GY=34;
+  const depth=depthOf(root)+1, w=Math.max(avail,nL*(NW+GX)+20), h=depth*(NH+GY)+10;
+  const d=devicePixelRatio||1; tc.style.width=w+'px'; tc.style.height=h+'px'; tc.width=w*d; tc.height=h*d; const x=tc.getContext('2d'); x.setTransform(d,0,0,d,0,0);
+  const C={ink:css('--ink'),mu:css('--muted'),ln:css('--line'),surf:css('--surface'),bg:css('--bg'),hl:css('--hl'),k:[0,1,2].map(i=>css('--k'+i))};
+  let li=0; const pos=new Map();
+  (function lay(n){ if(n.split){ lay(n.L); lay(n.R); pos.set(n,{x:(pos.get(n.L).x+pos.get(n.R).x)/2,y:5+n.depth*(NH+GY)}); } else { const off=(w-nL*(NW+GX))/2; pos.set(n,{x:off+li*(NW+GX)+NW/2,y:5+n.depth*(NH+GY)}); li++; } })(root);
+  const hp=hoverPt&&!forestOn?predictNode(root,hoverPt):null; const onPath=new Set(); for(let n=hp;n;n=n.parent) onPath.add(n);
+  // edges
+  pos.forEach((p,n)=>{ if(!n.split) return; [n.L,n.R].forEach((c,side)=>{ const q=pos.get(c); x.strokeStyle=onPath.has(c)?C.hl:C.ln; x.lineWidth=onPath.has(c)?2.5:1.5;
+    x.beginPath(); x.moveTo(p.x,p.y+NH); x.bezierCurveTo(p.x,p.y+NH+GY/2,q.x,q.y-GY/2,q.x,q.y); x.stroke();
+    x.fillStyle=C.mu; x.font=`10.5px ${css('--body')}`; x.textAlign='center'; x.textBaseline='middle'; x.fillText(side?'no':'sí',(p.x+q.x)/2+(side?8:-8),p.y+NH+GY/2); }); });
+  boxes=[];
+  pos.forEach((p,n)=>{ const bx=p.x-NW/2, by=p.y;
+    const active=search&&search.node===n, hov=hoverNode===n||onPath.has(n);
+    x.fillStyle=C.surf; x.strokeStyle=active||hov?C.hl:(n.split?C.ink:C.k[n.maj]); x.lineWidth=active||hov?2.5:1.5;
+    x.beginPath(); x.roundRect(bx,by,NW,NH,6); x.fill(); x.stroke();
+    x.fillStyle=C.ink; x.textAlign='center'; x.textBaseline='top';
+    const small=NW<100; x.font=`600 ${small?10.5:12}px ${css('--mono')}`;
+    const ax=D.ax[n.split?.f??0].replace(' construidos','').replace(' al centro (km)','');
+    const txt=n.split?`${ax} ≤ ${D.fmt[n.split.f](n.split.t)}`:`→ ${D.cls[n.maj]}`;
+    x.fillText(txt,p.x,by+6,NW-8);
+    x.font=`${small?10:11}px ${css('--mono')}`; x.fillStyle=C.mu; x.fillText(`n=${n.n} · ${crit==='gini'?'g':'H'}=${n.imp.toFixed(2)}`,p.x,by+24,NW-8);
+    // class mix bar
+    let cx=bx+8; const bw=NW-16; n.cnt.forEach((c,k)=>{ const ww=n.n?c/n.n*bw:0; x.fillStyle=C.k[k]; x.fillRect(cx,by+NH-15,ww,7); cx+=ww; });
+    boxes.push({n,bx,by,NW,NH});
+  });
+}
+tc.addEventListener('pointermove',e=>{ const r=tc.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top;
+  const b=boxes.find(b=>px>=b.bx&&px<=b.bx+b.NW&&py>=b.by&&py<=b.by+b.NH); const nn=b?b.n:null; if(nn!==hoverNode){ hoverNode=nn; drawTree(); } });
+tc.addEventListener('pointerleave',()=>{ hoverNode=null; drawTree(); });
+
+/* ---------- depth chart ---------- */
+let curve=[];
+function depthCurve(){
+  curve=[]; for(let d=1;d<=10;d++){ const r=buildFull(train,d); curve.push([acc(r,train),acc(r,test)]); } drawDepth(); }
+function drawDepth(){
+  const c=$('depthc'), d=devicePixelRatio||1, w=c.clientWidth, h=c.clientHeight; c.width=w*d; c.height=h*d; const x=c.getContext('2d'); x.setTransform(d,0,0,d,0,0);
+  const mu=css('--muted'), ln=css('--line'), ink=css('--ink'), k0=css('--k0'), hl=css('--hl');
+  const pl=44,pr=12,pt=26,pb=26; const lo=Math.floor(Math.min(...curve.flat())*10)/10;
+  const X_=i=>pl+(i-1)/9*(w-pl-pr), Y_=v=>pt+(1-(v-lo)/(1-lo))*(h-pt-pb);
+  x.font=`11px ${css('--mono')}`; x.fillStyle=mu; x.strokeStyle=ln; x.lineWidth=1;
+  for(let v=lo;v<=1.0001;v+=0.1){ x.beginPath(); x.moveTo(pl,Y_(v)); x.lineTo(w-pr,Y_(v)); x.stroke(); x.textAlign='right'; x.textBaseline='middle'; x.fillText(Math.round(v*100)+'%',pl-6,Y_(v)); }
+  x.textAlign='center'; x.textBaseline='top'; for(let i=1;i<=10;i++) x.fillText(i,X_(i),h-pb+5);
+  x.fillStyle=hl; x.globalAlpha=0.12; x.fillRect(X_(maxDepth)-12,pt,24,h-pt-pb); x.globalAlpha=1;
+  const line=(k,col,dash)=>{ x.strokeStyle=col; x.lineWidth=2.4; x.setLineDash(dash); x.beginPath(); curve.forEach((v,i)=>i?x.lineTo(X_(i+1),Y_(v[k])):x.moveTo(X_(1),Y_(v[k]))); x.stroke(); x.setLineDash([]);
+    curve.forEach((v,i)=>{ x.fillStyle=col; x.beginPath(); x.arc(X_(i+1),Y_(v[k]),i+1===maxDepth?5:3,0,7); x.fill(); }); };
+  line(0,ink,[]); line(1,k0,[6,4]);
+  let bi=0; curve.forEach((v,i)=>{ if(v[1]>curve[bi][1]) bi=i; });
+  x.fillStyle=k0; x.font=`600 11px ${css('--body')}`; x.textAlign='center'; x.textBaseline='bottom'; x.fillText('mejor en test',X_(bi+1),Y_(curve[bi][1])-8);
+  x.textAlign='left'; x.textBaseline='middle'; x.font=`12px ${css('--body')}`;
+  x.fillStyle=ink; x.fillRect(pl,9,16,3); x.fillStyle=mu; x.fillText('entrenamiento',pl+22,10);
+  x.strokeStyle=k0; x.lineWidth=2.4; x.setLineDash([6,4]); x.beginPath(); x.moveTo(pl+122,10); x.lineTo(pl+140,10); x.stroke(); x.setLineDash([]); x.fillStyle=mu; x.fillText('test',pl+146,10);
+  x.textAlign='right'; x.fillText('profundidad →',w-pr,10);
+}
+
+/* ---------- forest ---------- */
+function buildForest(){
+  let fs=777; const fr=()=>{fs=(fs*48271)%2147483647;return fs/2147483647};
+  forest=[...Array(25)].map(()=>{ const boot=[...Array(train.length)].map(()=>train[Math.floor(fr()*train.length)]); return buildFull(boot,maxDepth,fr); });
+  const vote=p=>{ const v=Array(K).fill(0); forest.forEach(t=>v[predictNode(t,p).maj]++); return v; };
+  forest.acc=[train,test].map(set=>set.filter(p=>{const v=vote(p);return v.indexOf(Math.max(...v))===p.c;}).length/set.length);
+  const G=90, oc=document.createElement('canvas'); oc.width=G; oc.height=G; const og=oc.getContext('2d'), im=og.createImageData(G,G);
+  const pl=hex(css('--plot')), ks=[0,1,2].map(i=>hex(css('--k'+i)));
+  for(let j=0;j<G;j++)for(let i=0;i<G;i++){ const p={x:D.rng[0][0]+(i+.5)/G*(D.rng[0][1]-D.rng[0][0]), y:D.rng[1][1]-(j+.5)/G*(D.rng[1][1]-D.rng[1][0])};
+    const v=vote(p), m=v.indexOf(Math.max(...v)), a=0.08+0.3*(v[m]/25-1/K)/(1-1/K), c=ks[m], o=(j*G+i)*4;
+    im.data[o]=pl[0]+(c[0]-pl[0])*a; im.data[o+1]=pl[1]+(c[1]-pl[1])*a; im.data[o+2]=pl[2]+(c[2]-pl[2])*a; im.data[o+3]=255; }
+  og.putImageData(im,0,0); forestImg=oc;
+}
+function forestPanel(){
+  if(!forestOn) return;
+  $('stT').textContent='Random Forest · 25 árboles';
+  $('stD').textContent=`Cada árbol se entrena con una muestra aleatoria con reemplazo de los datos y, en cada corte, solo puede mirar una variable elegida al azar. La predicción es el voto de la mayoría. Acierto en test del bosque: ${pct(forest.acc[1])}, frente a ${pct(acc(root,test))} del árbol único.`;
+  $('atr').textContent=pct(forest.acc[0]); $('ate').textContent=pct(forest.acc[1]);
+}
+
+/* ---------- controls ---------- */
+function buildDS(){ $('ds').innerHTML=Object.entries(DS).map(([k,d])=>`<button class="${k===dsKey?'on':''}" aria-selected="${k===dsKey}" data-k="${k}">${d.name}</button>`).join(''); }
+$('ds').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; dsKey=b.dataset.k; D=DS[dsKey]; buildDS(); stop(); gen(); lastSplit=null; reset(); };
+let loopT=null;
+function stop(){ playing=false; fast=false; $('play').textContent='▶ Construir'; }
+function playLoop(){ if(!playing) return; if(!search){ if(!beginStep()&&done){ stop(); return; } } loopT=setTimeout(playLoop,120); }
+$('play').onclick=()=>{ if(playing){ stop(); return; } if(done){ lastSplit=null; reset(); } playing=true; $('play').textContent='❚❚ Pausa'; playLoop(); };
+$('stepb').onclick=()=>{ stop(); if(search){ search.dur=0; return; } beginStep(); };
+$('reset').onclick=()=>{ stop(); lastSplit=null; reset(); };
+$('depth').oninput=e=>{ maxDepth=+e.target.value; $('depthv').textContent=maxDepth; stop(); lastSplit=null; reset(); };
+$('minleaf').oninput=e=>{ minLeaf=+e.target.value; $('minleafv').textContent=minLeaf; stop(); lastSplit=null; reset(); };
+$('crit').onchange=e=>{ crit=e.target.value; stop(); lastSplit=null; reset(); };
+$('forest').onclick=()=>{ forestOn=!forestOn; $('forest').classList.toggle('on',forestOn); $('forest').textContent=forestOn?'Volver al árbol':'Ver Random Forest'; if(forestOn){ if(!forest) buildForest(); forestPanel(); } else panel(); drawTree(); };
+new ResizeObserver(()=>{ size(); if(forestOn&&forest) buildForest(); drawTree(); drawDepth(); drawImp(); }).observe(document.body);
+
+buildDS(); gen(); size(); reset(); requestAnimationFrame(drawPlot);
+if(!reduce) setTimeout(()=>$('play').click(),700);
+})();
+</script>
+
+<a href="/lab" style="position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9;font:600 13px system-ui,sans-serif;background:#0E1621;color:#fff;padding:9px 12px;border-radius:8px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.25)">← MLE·AI</a><script>if(window.self!==window.top){document.currentScript.previousElementSibling.remove()}</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="MLE·AI, inicio"><span class="mk">ML/AI</span><span><b>MLE·AI</b><small>Machine Learning Engineering</small></span></a>
+    <nav class="mainnav" aria-label="Principal">
+      <button type="button" id="topics-btn" data-nav="topics" aria-expanded="false" aria-controls="mega">Temas ▾</button>
+      <a href="#lab" data-nav="lab">Laboratorio</a>
+      <a href="#transformer" data-nav="transformer">Transformer</a>
+      <a href="#path" data-nav="path">Ruta</a>
+      <a href="#projects" data-nav="projects">Proyectos</a>
+      <a href="#papers" data-nav="papers">Papers</a>
+      <a href="#datasets" data-nav="datasets">Datasets</a>
+    </nav>
+    <span class="spacer"></span>
+    <button type="button" class="searchbtn" data-open-search aria-label="Buscar">⌕ Buscar en el portal<kbd>/</kbd></button>
+    <button type="button" class="iconbtn" id="theme-btn" aria-label="Cambiar tema">☾</button>
+    <button type="button" class="iconbtn" id="menu-btn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  </div>
+  <div class="mega" id="mega" hidden><div class="wrap" id="mega-inner">{{MEGA}}</div></div>
+</header>
+<nav class="drawer" aria-label="Menú móvil">
+  <button type="button" class="searchbtn mobile-search" data-open-search>⌕ Buscar en el portal</button>
+  <span class="dl">Secciones</span>
+  <a href="#home">Inicio</a><a href="#lab">Laboratorio</a><a href="#transformer">Transformer Visualizer</a><a href="#path">Ruta de aprendizaje</a><a href="#projects">Proyectos</a><a href="#papers">Papers</a><a href="#datasets">Datasets</a>
+  <span class="dl">Temas</span>
+  <div id="drawer-topics" style="display:contents">{{DRAWER}}</div>
+</nav>
+
+<main id="app" class="wrap">{{MAIN}}</main>
+
+<div class="search" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscador">
+  <div class="search-box">
+    <label for="search-input">⌕<input id="search-input" type="search" placeholder="Conceptos, algoritmos, papers, datasets…" autocomplete="off" maxlength="80"><kbd>Esc</kbd></label>
+    <div id="search-results"></div>
+    <div class="search-foot">↑ ↓ para moverte · Enter para abrir · búsqueda por texto sobre todo el contenido</div>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <span>MLE·AI · Machine Learning Engineering &amp; Artificial Intelligence</span>
+    <nav aria-label="Pie"><a href="#ml">Machine Learning</a><a href="#dl">Deep Learning</a><a href="#math">Matemáticas</a><a href="#prog">Programación</a><a href="#llm">LLM</a><a href="#mlops">MLOps</a><a href="#research">Investigación</a><a href="#about">Arquitectura</a></nav>
+  </div>
+</footer>

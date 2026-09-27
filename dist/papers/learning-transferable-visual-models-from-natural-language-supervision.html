@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Learning Transferable Visual Models From Natural Language Supervision (2021) · MLE·AI</title>
+<meta name="description" content="CLIP: entrenar imagen y texto en un espacio común con aprendizaje contrastivo sobre pares imagen–texto de internet. A. Radford et al., 2021.">
+<link rel="canonical" href="https://mle-ai.vercel.app/papers/learning-transferable-visual-models-from-natural-language-supervision">
+<meta name="theme-color" content="#0E1621">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MLE·AI">
+<meta property="og:title" content="Learning Transferable Visual Models From Natural Language Supervision (2021)">
+<meta property="og:description" content="CLIP: entrenar imagen y texto en un espacio común con aprendizaje contrastivo sobre pares imagen–texto de internet. A. Radford et al., 2021.">
+<meta property="og:url" content="https://mle-ai.vercel.app/papers/learning-transferable-visual-models-from-natural-language-supervision">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="https://mle-ai.vercel.app/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mle-ai.vercel.app/img/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1621'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='11' font-weight='700' fill='%236E9BFF' text-anchor='middle'%3EML%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/assets/style.css?v=6ba0d61068">
+<script>try{var t=JSON.parse(localStorage.getItem('mlai.theme'));if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","name":"Learning Transferable Visual Models From Natural Language Supervision","headline":"Learning Transferable Visual Models From Natural Language Supervision","datePublished":"2021","author":[{"@type":"Person","name":"A. Radford"}],"isPartOf":"ICML 2021","inLanguage":"en"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://mle-ai.vercel.app"},{"@type":"ListItem","position":2,"name":"Papers","item":"https://mle-ai.vercel.app/papers"},{"@type":"ListItem","position":3,"name":"Learning Transferable Visual Models From Natural Language Supervision","item":"https://mle-ai.vercel.app/papers/learning-transferable-visual-models-from-natural-language-supervision"}]}</script>
+</head>
+<body data-page="paper">
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="MLE·AI, inicio"><span class="mk">ML/AI</span><span><b>MLE·AI</b><small>Machine Learning Engineering</small></span></a>
+    <nav class="mainnav" aria-label="Principal">
+      <button type="button" id="topics-btn" data-nav="topics" aria-expanded="false" aria-controls="mega">Temas ▾</button>
+      <a href="/lab" data-nav="lab">Laboratorio</a>
+      <a href="/llm/transformer-visualizer" data-nav="transformer">Transformer</a>
+      <a href="/learning-path" data-nav="path">Ruta</a>
+      <a href="/projects" data-nav="projects">Proyectos</a>
+      <a href="/papers" data-nav="papers" class="on">Papers</a>
+      <a href="/datasets" data-nav="datasets">Datasets</a>
+    </nav>
+    <span class="spacer"></span>
+    <button type="button" class="searchbtn" data-open-search aria-label="Buscar">⌕ Buscar en el portal<kbd>/</kbd></button>
+    <button type="button" class="iconbtn" id="theme-btn" aria-label="Cambiar tema">☾</button>
+    <button type="button" class="iconbtn" id="menu-btn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  </div>
+  <div class="mega" id="mega" hidden><div class="wrap" id="mega-inner"><a href="/machine-learning" class="mega-item"><b>Machine Learning</b><small>16 temas · Algoritmos clásicos</small></a><a href="/deep-learning" class="mega-item"><b>Deep Learning</b><small>13 temas · Redes neuronales</small></a><a href="/mathematics" class="mega-item"><b>Matemáticas para IA</b><small>10 temas · Fundamentos</small></a><a href="/programming" class="mega-item"><b>Programación</b><small>8 temas · Herramientas</small></a><a href="/llm" class="mega-item"><b>LLM</b><small>13 temas · Modelos de lenguaje</small></a><a href="/mlops" class="mega-item"><b>MLOps</b><small>12 temas · Producción</small></a><a href="/research" class="mega-item"><b>Investigación</b><small>8 temas · Estado del arte</small></a><a href="/llm/transformer-visualizer" class="mega-item hl"><b>Transformer Visualizer</b><small>13 etapas interactivas</small></a></div></div>
+</header>
+<nav class="drawer" aria-label="Menú móvil">
+  <button type="button" class="searchbtn mobile-search" data-open-search>⌕ Buscar en el portal</button>
+  <span class="dl">Secciones</span>
+  <a href="/">Inicio</a><a href="/lab">Laboratorio</a><a href="/llm/transformer-visualizer">Transformer Visualizer</a><a href="/learning-path">Ruta de aprendizaje</a><a href="/projects">Proyectos</a><a href="/papers">Papers</a><a href="/datasets">Datasets</a>
+  <span class="dl">Temas</span>
+  <div id="drawer-topics" style="display:contents"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas para IA</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a></div>
+</nav>
+
+<main id="app" class="wrap"><nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a><span class="sep">/</span><a href="/research">Investigación</a><span class="sep">/</span><a href="/papers">Papers</a><span class="sep">/</span><span>2021</span></nav><header class="page-head"><span class="kicker">Paper · Multimodal · 2021</span><h1>Learning Transferable Visual Models From Natural Language Supervision</h1><p class="lede">A. Radford et al.</p><p class="meta"><i>ICML 2021</i></p></header>
+      <article class="prose paper-page">
+        <h2>Problema que aborda</h2><p>Los modelos de visión necesitaban etiquetas fijas y costosas.</p>
+        <h2>Aportación principal</h2><p>CLIP: entrenar imagen y texto en un espacio común con aprendizaje contrastivo sobre pares imagen–texto de internet.</p>
+        <h2>Arquitectura</h2><p>Encoder de imagen (ResNet o ViT) + encoder de texto Transformer.</p>
+        <h2>Relevancia histórica</h2><p>Base de muchos modelos multimodales y generadores de imágenes.</p>
+        <h2>Implementaciones</h2><p><code>open_clip</code></p>
+        
+        
+        <h2>Referencia</h2><p class="ref">A. Radford et al. (2021). «Learning Transferable Visual Models From Natural Language Supervision». <i>ICML 2021</i>.</p>
+        
+        <p><a href="/papers">← Volver a la biblioteca</a></p>
+      </article></main>
+
+<div class="search" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscador">
+  <div class="search-box">
+    <label for="search-input">⌕<input id="search-input" type="search" placeholder="Conceptos, algoritmos, papers, datasets…" autocomplete="off" maxlength="80"><kbd>Esc</kbd></label>
+    <div id="search-results"></div>
+    <div class="search-foot">↑ ↓ para moverte · Enter para abrir · búsqueda por texto sobre todo el contenido</div>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <span>MLE·AI · Machine Learning Engineering &amp; Artificial Intelligence</span>
+    <nav aria-label="Pie"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a><a href="/about">Arquitectura</a></nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js?v=33d8273119" defer></script>
+</body>
+</html>
