@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://mle-ai.vercel.app/</loc></url>
+  <url><loc>https://mle-ai.vercel.app/labs/arbol-decision.html</loc></url>
+  <url><loc>https://mle-ai.vercel.app/labs/atencion.html</loc></url>
+  <url><loc>https://mle-ai.vercel.app/labs/descenso-gradiente.html</loc></url>
+  <url><loc>https://mle-ai.vercel.app/labs/frontera-decision.html</loc></url>
+  <url><loc>https://mle-ai.vercel.app/labs/kmeans.html</loc></url>
+  <url><loc>https://mle-ai.vercel.app/labs/red-neuronal.html</loc></url>
+  <url><loc>https://mle-ai.vercel.app/labs/regularizacion.html</loc></url>
+  <url><loc>https://mle-ai.vercel.app/labs/sigmoide.html</loc></url>
+  <url><loc>https://mle-ai.vercel.app/labs/sobreajuste.html</loc></url>
+</urlset>
