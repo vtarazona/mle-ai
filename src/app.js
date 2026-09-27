@@ -102,7 +102,7 @@ const PAGES = {
         <dl class="stats"><div><dt>Laboratorios</dt><dd>${LABS.length}</dd></div><div><dt>Temas</dt><dd>${AREAS.reduce((a, x) => a + x.topics.length, 0)}</dd></div><div><dt>Papers</dt><dd>${PAPERS.length}</dd></div><div><dt>Niveles</dt><dd>${PATH.length}</dd></div></dl>
       </div>
       <figure class="hero-art">
-        <img src="${HERO_IMG}" width="200" height="150" alt="Ilustración en pixel art de un Transformer: las palabras «el gato» entran por abajo, pasan por embedding, atención, add &amp; norm y feed forward, y sale la palabra «come». A la izquierda, un robot conectado; a la derecha, un mapa de atención." decoding="async" fetchpriority="high">
+        <canvas id="hero-canvas" width="200" height="150" role="img" aria-label="Animación en pixel art de un Transformer: un dato sube desde las palabras «el gato» por embedding, atención, add &amp; norm y feed forward hasta generar la siguiente palabra. A la izquierda, un robot conectado; a la derecha, un mapa de atención que se ilumina."></canvas>
         <figcaption><span>fig. 1</span> Un bloque Transformer: de «el gato» a «come»</figcaption>
       </figure>
     </section>
@@ -300,10 +300,11 @@ function goResult(d) { closeSearch(); pendingAnchor = d.anchor || null; if (loca
 let pendingAnchor = null, labTimer = null;
 function route() {
   clearInterval(labTimer);
+  PixelHero.unmount();
   const h = (location.hash || '#home').slice(1) || 'home';
   const app = document.getElementById('app');
   let html, after = null, title = 'MLE·AI';
-  if (h === 'home') { html = PAGES.home(); }
+  if (h === 'home') { html = PAGES.home(); after = () => PixelHero.mount(document.getElementById('hero-canvas'), HERO_IMG); }
   else if (AREA[h]) { html = PAGES.area(h); title = AREA[h].t; }
   else if (h === 'lab') { html = PAGES.lab(); title = 'Laboratorio'; }
   else if (h.startsWith('lab-')) { const id = h.slice(4); html = PAGES.labDetail(id); title = LAB[id]?.t || 'Laboratorio'; after = () => mountLab(id); }

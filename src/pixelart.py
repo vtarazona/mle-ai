@@ -1,4 +1,6 @@
 from PIL import Image
+import sys
+ANIM='--anim' in sys.argv
 import random, math
 W,H,S=200,150,6
 img=Image.new('RGB',(W,H)); P=img.load()
@@ -67,7 +69,7 @@ for (x,y) in [(18,12),(182,20),(160,8),(30,30)]:
 hy=128
 for x in range(W):
     for y in range(hy,H):
-        if (y-hy) in (0,3,7,12,18): px(x,y,C['cyd'])
+        if (y-hy)==0 or (not ANIM and (y-hy) in (3,7,12,18)): px(x,y,C['cyd'])
 for k in range(-12,13):
     x0=100+k*9; x1=100+k*30; line(x0,hy,x1,H-1,C['cyd'])
 # ---------- title ----------
@@ -78,12 +80,12 @@ tx,twd=76,48; cxm=tx+twd//2
 def arrow_up(x,y0,y1,c=C['txt']):
     rect(x,y1+1,1,y0-y1,c); px(x-1,y1+2,c); px(x+1,y1+2,c); px(x,y1+1,c)
 # output token
-tok='COME'; bw=tw(tok)+8; box(cxm-bw//2,27,bw,9,C['sm'],C['smd'],C['sml']); text(cxm-bw//2+4,29,tok,C['dk'])
+tok='COME'; bw=tw(tok)+8; box(cxm-bw//2,27,bw,9,C['sm'],C['smd'],C['sml']); (None if ANIM else text(cxm-bw//2+4,29,tok,C['dk']))
 px(cxm+bw//2+3,26,C['star']); px(cxm+bw//2+5,24,C['sml']); px(cxm-bw//2-4,25,C['star'])
 # softmax bars
 vals=[3,5,9,4,2,6,3,2]
 for i,v in enumerate(vals):
-    col=C['sml'] if v==9 else C['sm']; rect(tx+6+i*5,48-v,3,v,col)
+    col=C['sml'] if v==9 else C['sm']; (None if ANIM else rect(tx+6+i*5,48-v,3,v,col))
 rect(tx+4,48,40,1,C['mu'])
 arrow_up(cxm,52,48)
 layers=[('SOFTMAX',53,8,'sm'),('LINEAR',64,8,'lin'),('ADD+NORM',77,8,'nrm'),('FEED FWD',88,11,'ffn'),('ADD+NORM',102,8,'nrm'),('ATTENTION',113,13,'att'),('EMBED',131,8,'emb')]
@@ -109,7 +111,7 @@ for (y0,y1) in [(128,106),(101,81)]:
     rect(tx+twd,y0,4,1,C['metal']); rect(rx+1,y1,1,y0-y1+1,C['metal']); rect(tx+twd,y1,4,1,C['metal']); px(tx+twd+1,y1-1,C['metal']); px(tx+twd+1,y1+1,C['metal'])
 # positional encoding wave (left of embed)
 for x in range(44,70):
-    y=int(round(135+3*math.sin((x-44)/3.2))); px(x,y,C['emb']); 
+    y=int(round(135+3*math.sin((x-44)/3.2))); (None if ANIM else px(x,y,C['emb']))
 box(66,132,7,6,C['bg2'],C['dk'],C['mu']); text(68,132,'+',C['txt'])
 text(40,142,'POS',C['emb'])
 # input tokens below? place inside floor: show token chips at bottom
@@ -119,11 +121,11 @@ for j,t in enumerate(['EL','GATO']):
     box(x,142,w,7,C['metal'],C['metald'],C['metall']); text(x+3,143,t,C['dk'])
 # ---------- robot / AI (left) ----------
 rx0,ry0=8,52
-rect(rx0+14,ry0-10,2,8,C['metald']); rect(rx0+13,ry0-13,4,3,C['red']); px(rx0+14,ry0-13,C['txt'])
+rect(rx0+14,ry0-10,2,8,C['metald']); (None if ANIM else (rect(rx0+13,ry0-13,4,3,C['red']), px(rx0+14,ry0-13,C['txt'])))
 box(rx0,ry0,30,26,C['metal'],C['metald'],C['metall'])
 box(rx0+3,ry0+4,24,10,C['dk'],C['dk'],C['bg2'],border=C['metald'])
 for ex in (rx0+7,rx0+19):
-    rect(ex,ry0+7,4,4,C['cy']); px(ex,ry0+7,C['txt']); px(ex+1,ry0+7,C['txt'])
+    (None if ANIM else (rect(ex,ry0+7,4,4,C['cy']), px(ex,ry0+7,C['txt']), px(ex+1,ry0+7,C['txt'])))
 for k in range(5): rect(rx0+6+k*4,ry0+18,2,3,C['metald'])
 box(rx0-4,ry0+8,3,9,C['metald'],C['dk'],C['metal']); box(rx0+31,ry0+8,3,9,C['metald'],C['dk'],C['metal'])
 box(rx0+5,ry0+27,20,20,C['metal'],C['metald'],C['metall'])
@@ -149,7 +151,7 @@ for i in range(6):
         else:
             v=random.random()*(0.5 if j!=i-1 else 1)+ (0.5 if j==i-1 else 0)
             c=C['attl'] if v>0.9 else C['att'] if v>0.55 else C['attd'] if v>0.25 else C['bg1']
-        rect(gx+j*cs,gy+i*cs,cs-1,cs-1,c)
+        rect(gx+j*cs,gy+i*cs,cs-1,cs-1,C['bg1'] if ANIM else c)
 rect(gx-2,gy-2,6*cs+3,1,C['mu']); rect(gx-2,gy+6*cs,6*cs+3,1,C['mu']); rect(gx-2,gy-2,1,6*cs+3,C['mu']); rect(gx+6*cs,gy-2,1,6*cs+3,C['mu'])
 
 # connection from tower attention to map
@@ -160,5 +162,5 @@ random.seed(11)
 for i in range(6):
     for j in range(5):
         v=random.random(); c=C['embl'] if v>.75 else C['emb'] if v>.4 else C['embd']
-        rect(170+i*4,98+j*4,3,3,c)
-img.save('native.png'); img.resize((W*S,H*S),Image.NEAREST).save('transformer_pixelart.png'); print('ok')
+        rect(170+i*4,98+j*4,3,3,C['embd'] if ANIM else c)
+img.save('bg-anim.png' if ANIM else 'native.png'); (None if ANIM else img.resize((W*S,H*S),Image.NEAREST).save('transformer_pixelart.png')); print('ok')
