@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Human-level control through deep reinforcement learning (2015) · MLE·AI</title>
-<meta name="description" content="Deep Q-Network: Q-learning con una CNN, experience replay y red objetivo; nivel humano en muchos juegos de Atari 2600. V. Mnih et al., 2015.">
-<link rel="canonical" href="https://mle-ai.vercel.app/papers/human-level-control-through-deep-reinforcement-learning">
+<title>Laboratorio de Python · Laboratorio · MLE·AI</title>
+<meta name="description" content="Diez retos con corrección automática para practicar variables, listas, bucles, funciones, NumPy y Pandas. Python se ejecuta de verdad en tu navegador y los errores se explican en español.">
+<link rel="canonical" href="https://mle-ai.vercel.app/lab/python">
 <meta name="theme-color" content="#0E1621">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MLE·AI">
-<meta property="og:title" content="Human-level control through deep reinforcement learning (2015)">
-<meta property="og:description" content="Deep Q-Network: Q-learning con una CNN, experience replay y red objetivo; nivel humano en muchos juegos de Atari 2600. V. Mnih et al., 2015.">
-<meta property="og:url" content="https://mle-ai.vercel.app/papers/human-level-control-through-deep-reinforcement-learning">
+<meta property="og:title" content="Laboratorio de Python · Laboratorio">
+<meta property="og:description" content="Diez retos con corrección automática para practicar variables, listas, bucles, funciones, NumPy y Pandas. Python se ejecuta de verdad en tu navegador y los errores se explican en español.">
+<meta property="og:url" content="https://mle-ai.vercel.app/lab/python">
 <meta property="og:locale" content="es_ES">
 <meta property="og:image" content="https://mle-ai.vercel.app/img/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -25,20 +25,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/assets/style.css?v=2def8a3a7e">
 <script>try{var t=JSON.parse(localStorage.getItem('mlai.theme'));if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","name":"Human-level control through deep reinforcement learning","headline":"Human-level control through deep reinforcement learning","datePublished":"2015","author":[{"@type":"Person","name":"V. Mnih"}],"isPartOf":"Nature 518, 529–533","inLanguage":"en"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://mle-ai.vercel.app"},{"@type":"ListItem","position":2,"name":"Papers","item":"https://mle-ai.vercel.app/papers"},{"@type":"ListItem","position":3,"name":"Human-level control through deep reinforcement learning","item":"https://mle-ai.vercel.app/papers/human-level-control-through-deep-reinforcement-learning"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://mle-ai.vercel.app"},{"@type":"ListItem","position":2,"name":"Laboratorio","item":"https://mle-ai.vercel.app/lab"},{"@type":"ListItem","position":3,"name":"Laboratorio de Python","item":"https://mle-ai.vercel.app/lab/python"}]}</script>
 </head>
-<body data-page="paper">
+<body data-page="lab">
 <header class="top">
   <div class="wrap">
     <a class="brand" href="/" aria-label="MLE·AI, inicio"><span class="mk">ML/AI</span><span><b>MLE·AI</b><small>Machine Learning Engineering</small></span></a>
     <nav class="mainnav" aria-label="Principal">
       <button type="button" id="topics-btn" data-nav="topics" aria-expanded="false" aria-controls="mega">Temas ▾</button>
-      <a href="/lab" data-nav="lab">Laboratorio</a>
+      <a href="/lab" data-nav="lab" class="on">Laboratorio</a>
       <a href="/llm/transformer-visualizer" data-nav="transformer">Transformer</a>
       <a href="/learning-path" data-nav="path">Ruta</a>
       <a href="/projects" data-nav="projects">Proyectos</a>
-      <a href="/papers" data-nav="papers" class="on">Papers</a>
+      <a href="/papers" data-nav="papers">Papers</a>
       <a href="/datasets" data-nav="datasets">Datasets</a>
     </nav>
     <span class="spacer"></span>
@@ -56,19 +55,10 @@
   <div id="drawer-topics" style="display:contents"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas para IA</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a></div>
 </nav>
 
-<main id="app" class="wrap"><nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a><span class="sep">/</span><a href="/research">Investigación</a><span class="sep">/</span><a href="/papers">Papers</a><span class="sep">/</span><span>2015</span></nav><header class="page-head"><span class="kicker">Paper · Aprendizaje por refuerzo · 2015</span><h1>Human-level control through deep reinforcement learning</h1><p class="lede">V. Mnih et al.</p><p class="meta"><i>Nature 518, 529–533</i></p></header>
-      <article class="prose paper-page">
-        <h2>Problema que aborda</h2><p>Aprender a jugar a partir de los píxeles de la pantalla y la puntuación.</p>
-        <h2>Aportación principal</h2><p>Deep Q-Network: Q-learning con una CNN, experience replay y red objetivo; nivel humano en muchos juegos de Atari 2600.</p>
-        <h2>Arquitectura</h2><p>CNN que estima el valor Q de cada acción.</p>
-        <h2>Relevancia histórica</h2><p>Punto de partida del deep reinforcement learning.</p>
-        <h2>Implementaciones</h2><p><code>Stable-Baselines3 DQN</code></p>
-        
-        
-        <h2>Referencia</h2><p class="ref">V. Mnih et al. (2015). «Human-level control through deep reinforcement learning». <i>Nature 518, 529–533</i>.</p>
-        
-        <p><a href="/papers">← Volver a la biblioteca</a></p>
-      </article></main>
+<main id="app" class="wrap"><nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a><span class="sep">/</span><a href="/lab">Laboratorio</a><span class="sep">/</span><span>Laboratorio de Python</span></nav><header class="lab-head"><div><span class="tag t-prog">Programación</span><h1>Laboratorio de Python</h1><p>Diez retos con corrección automática para practicar variables, listas, bucles, funciones, NumPy y Pandas. Python se ejecuta de verdad en tu navegador y los errores se explican en español.</p></div>
+       <div class="lab-actions"><a class="btn" href="/labs/python.html" target="_blank" rel="noopener">Abrir en pestaña nueva ↗</a></div></header>
+       <div class="lab-frame" id="lab-frame" data-file="/labs/python.html" data-title="Laboratorio de Python"><p class="loading">Cargando laboratorio… Si no se carga, <a href="/labs/python.html">ábrelo aquí</a>.</p></div>
+       <nav class="lab-nav"><a class="card" href="/lab/attention"><small>← Anterior</small><b>Visualizador de atención</b></a><a class="card right" href="/lab/gradient-descent"><small>Siguiente →</small><b>Descenso de gradiente</b></a></nav></main>
 
 <div class="search" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscador">
   <div class="search-box">

@@ -122,7 +122,7 @@ const PAGES = {
   },
 
   lab() {
-    return C.crumbs([['Inicio', 'home'], ['Laboratorio']]) + C.pageHead('Laboratorio interactivo', 'Experimenta con los algoritmos', 'Nueve simulaciones que calculan todo en tu navegador. Cambia parámetros y mira el efecto al instante: tasa de aprendizaje, profundidad, regularización, número de grupos, capas de una red o cabezas de atención.') +
+    return C.crumbs([['Inicio', 'home'], ['Laboratorio']]) + C.pageHead('Laboratorio interactivo', 'Experimenta con los algoritmos', 'Diez laboratorios que se ejecutan en tu navegador. Nueve simulaciones en las que cambias parámetros y ves el efecto al instante (tasa de aprendizaje, profundidad, regularización, número de grupos, capas de una red o cabezas de atención) y un laboratorio de Python con retos corregidos automáticamente.') +
       `<div class="grid g3">${LABS.map(C.labCard).join('')}</div>
       <aside class="card note-card"><h3>Transformer Visualizer</h3><p>El recorrido completo de un Transformer, de texto a token generado, con tensores y código PyTorch en cada etapa.</p><a class="btn sm primary" href="#transformer">Abrir el visualizador</a></aside>`;
   },

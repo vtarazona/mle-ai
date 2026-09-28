@@ -36,6 +36,9 @@ const LABS = [
   { id:'attn', file:'labs/atencion.html', url:'https://claude.ai/artifact/VbXKZaAct7gVB3KafTEaob',
     t:'Visualizador de atención', d:'Query, Key y Value con las cuentas a la vista, dos cabezas y máscara causal.',
     area:'llm', tags:['attention','transformer','qkv','self-attention'] },
+  { id:'python', file:'labs/python.html', url:'/labs/python',
+    t:'Laboratorio de Python', d:'Diez retos con corrección automática para practicar variables, listas, bucles, funciones, NumPy y Pandas. Python se ejecuta de verdad en tu navegador y los errores se explican en español.',
+    area:'prog', tags:['python','numpy','pandas','ejercicios','programación'] },
 ];
 
 /* Áreas temáticas. Cada tema: t título, d definición breve, lab (id de laboratorio), art (id de artículo). */
@@ -86,9 +89,9 @@ const AREAS = [
     {t:'Métodos numéricos', d:'Cálculo aproximado con ordenadores: estabilidad, precisión en coma flotante, softmax estable.'},
   ]},
   { id:'prog', t:'Programación', kicker:'Herramientas', d:'El ecosistema de Python con el que se construye casi todo el machine learning actual.', topics:[
-    {t:'Python', d:'El lenguaje de facto para datos e IA por su legibilidad y su ecosistema.'},
-    {t:'NumPy', d:'Arrays n-dimensionales y álgebra lineal vectorizada; la base de todas las demás librerías.'},
-    {t:'Pandas', d:'DataFrames para cargar, limpiar, unir y agregar datos tabulares.'},
+    {t:'Python', d:'El lenguaje de facto para datos e IA por su legibilidad y su ecosistema.', lab:'python'},
+    {t:'NumPy', d:'Arrays n-dimensionales y álgebra lineal vectorizada; la base de todas las demás librerías.', lab:'python'},
+    {t:'Pandas', d:'DataFrames para cargar, limpiar, unir y agregar datos tabulares.', lab:'python'},
     {t:'Matplotlib', d:'La librería de gráficos de referencia para explorar datos y resultados.'},
     {t:'Scikit-learn', d:'API uniforme fit/predict para ML clásico, preprocesado, validación y métricas.', art:'logistic-regression'},
     {t:'PyTorch', d:'Tensores con autograd y GPU; el framework dominante en investigación y LLM.', route:'transformer', art:'neural-networks'},
@@ -225,7 +228,7 @@ const DATASETS = [
 /* Ruta de aprendizaje en 10 niveles. */
 const PATH = [
   { n:1, t:'Matemáticas', th:'Vectores y matrices, derivadas y regla de la cadena, gradientes, probabilidad básica.', ex:'Calcula a mano el gradiente de f(x, y) = x² + 3xy y comprueba el resultado con diferencias finitas en Python.', pr:'Implementa el descenso de gradiente para minimizar una función de dos variables y dibuja la trayectoria.', ok:'Sabes explicar qué es un gradiente y por qué se resta en cada paso.', labs:['gd','sigmoid'], lesson:'lesson-1' },
-  { n:2, t:'Python', th:'Sintaxis, funciones, NumPy vectorizado, Pandas y Matplotlib.', ex:'Carga un CSV con Pandas, limpia valores nulos y agrupa por una columna.', pr:'Análisis exploratorio completo del dataset Wine Quality con gráficos.', ok:'Escribes código NumPy sin bucles innecesarios y usas groupby con soltura.', labs:[], lesson:'lesson-2' },
+  { n:2, t:'Python', th:'Sintaxis, funciones, NumPy vectorizado, Pandas y Matplotlib.', ex:'Carga un CSV con Pandas, limpia valores nulos y agrupa por una columna.', pr:'Análisis exploratorio completo del dataset Wine Quality con gráficos.', ok:'Escribes código NumPy sin bucles innecesarios y usas groupby con soltura.', labs:['python'], lesson:'lesson-2' },
   { n:3, t:'Estadística', th:'Distribuciones, media y varianza, correlación, teorema central del límite, contraste de hipótesis, Bayes.', ex:'Simula el teorema central del límite con medias de muestras de una distribución exponencial.', pr:'Estudio de correlaciones y outliers en California Housing.', ok:'Distingues correlación de causalidad y sabes interpretar un intervalo de confianza.', labs:[], lesson:'lesson-3' },
   { n:4, t:'Machine Learning', th:'Supervisado y no supervisado, validación, sobreajuste, regularización, árboles y ensembles, métricas.', ex:'Compara un árbol y un Random Forest con validación cruzada de 5 particiones.', pr:'Clasificador de fallos con AI4I 2020, con métricas adecuadas para clases desbalanceadas.', ok:'Eliges la métrica correcta y detectas sobreajuste con curvas de validación.', labs:['overfit','reg','tree','kmeans'] },
   { n:5, t:'Deep Learning', th:'Neuronas, activaciones, MLP, backpropagation, optimizadores, CNN y RNN.', ex:'Implementa en NumPy una red de una capa oculta y verifica su gradiente numéricamente.', pr:'CNN en PyTorch para CIFAR-10 con aumento de datos.', ok:'Puedes escribir un bucle de entrenamiento en PyTorch desde cero y depurarlo.', labs:['boundary','backprop'] },

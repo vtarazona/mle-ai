@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow">
+<style>html,body{margin:0}</style>
+<title>Laboratorio de Python</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --ink:#16202B; --muted:#5B6877; --line:#D3DAE2; --soft:#E4E8ED;
+  --accent:#2458D6; --ok:#1F8A5B; --bad:#C8453A; --warn:#B7791F;
+  --code-bg:#0E1621; --code-ink:#E5ECF3; --code-muted:#6F8093;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743; --soft:#1E2A35;
+    --accent:#6E9BFF; --ok:#4CC08A; --bad:#EE7266; --warn:#E5B05A; --code-bg:#0A0F15;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F151C; --surface:#17212B; --ink:#E6ECF2; --muted:#8FA0B2; --line:#2A3743; --soft:#1E2A35;
+  --accent:#6E9BFF; --ok:#4CC08A; --bad:#EE7266; --warn:#E5B05A; --code-bg:#0A0F15;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding:24px 16px 48px}
+a{color:var(--accent)}
+code{font:13.5px var(--mono);background:var(--soft);padding:1px 5px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header h1{font:700 clamp(28px,4.4vw,44px)/1.05 var(--display);margin:0 0 8px;letter-spacing:-.01em}
+header p{margin:0;color:var(--muted);max-width:72ch}
+.status{display:inline-flex;align-items:center;gap:8px;margin-top:12px;font:500 13px var(--mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.status i{width:9px;height:9px;border-radius:50%;background:var(--warn);display:inline-block}
+.status.ok i{background:var(--ok)} .status.bad i{background:var(--bad)}
+.main{display:grid;grid-template-columns:260px minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.main{grid-template-columns:1fr}}
+.main>*{min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+nav.retos{padding:14px}
+nav.retos h2{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.prog{height:6px;background:var(--soft);border-radius:4px;overflow:hidden;margin-bottom:6px} .prog span{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.prog-t{font-size:12.5px;color:var(--muted);margin:0 0 10px}
+nav.retos ol{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:2px}
+nav.retos button{width:100%;text-align:left;display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;background:none;border:0;border-radius:7px;padding:7px 8px;font:14px/1.3 var(--body);color:var(--ink);cursor:pointer}
+nav.retos button small{display:block;color:var(--muted);font-size:11.5px}
+nav.retos button:hover{background:var(--soft)}
+nav.retos button.on{background:var(--soft);box-shadow:inset 3px 0 0 var(--accent)}
+nav.retos .n{font:600 12px/22px var(--mono);color:var(--muted);text-align:center;border-radius:50%;width:22px;height:22px;border:1px solid var(--line)}
+nav.retos .done .n{background:var(--ok);border-color:var(--ok);color:#fff}
+@media (max-width:860px){nav.retos ol{flex-direction:row;overflow-x:auto;padding-bottom:4px} nav.retos button{grid-template-columns:22px;min-width:44px} nav.retos button span:last-child{display:none} nav.retos li{flex:none}}
+.reto{padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.tema{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.reto h2{font:700 24px/1.15 var(--display);margin:4px 0 0}
+.enun{margin:0} .enun p{margin:0 0 8px} .enun ul{margin:0 0 8px;padding-left:20px}
+.teoria{font-size:13.5px;color:var(--muted);margin:0}
+.editor{display:grid;grid-template-columns:auto 1fr;background:var(--code-bg);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.gutter{font:13.5px/1.6 var(--mono);color:var(--code-muted);text-align:right;padding:12px 8px 12px 12px;user-select:none;white-space:pre;border-right:1px solid #223041}
+textarea{font:13.5px/1.6 var(--mono);color:var(--code-ink);background:transparent;border:0;outline:0;resize:vertical;padding:12px 14px;min-height:220px;white-space:pre;overflow-x:auto;tab-size:4;caret-color:#6E9BFF;width:100%}
+textarea:focus-visible{box-shadow:inset 0 0 0 2px #6E9BFF}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:6px;font:600 14px/1 var(--body);padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.go{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.bar .sp{flex:1}
+.bar kbd{font:500 11px var(--mono);opacity:.75}
+.out{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-height:64px}
+.out h3{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.out pre{margin:0;font:13.5px/1.55 var(--mono);white-space:pre-wrap;word-break:break-word}
+.out .empty{color:var(--muted);font-size:14px;margin:0}
+.msg{border-radius:10px;padding:12px 14px;font-size:14.5px;border:1px solid}
+.msg b{display:block;margin-bottom:2px}
+.msg.ok{background:color-mix(in srgb,var(--ok) 10%,var(--surface));border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.msg.bad{background:color-mix(in srgb,var(--bad) 8%,var(--surface));border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
+.msg.info{background:color-mix(in srgb,var(--accent) 8%,var(--surface));border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+.msg .tech{display:block;margin-top:6px;font:12.5px var(--mono);color:var(--muted)}
+details.help{border:1px dashed var(--line);border-radius:10px;padding:10px 14px}
+details.help summary{cursor:pointer;font-weight:600;font-size:14px}
+details.help pre{margin:8px 0 0;background:var(--code-bg);color:var(--code-ink);border-radius:8px;padding:10px 12px;font:13px/1.55 var(--mono);overflow-x:auto}
+.foot{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Laboratorio de Python</h1>
+    <p>Diez retos cortos para practicar lo del <a href="/learning-path/python" target="_top">Nivel 2 · Python</a> sin instalar nada: escribe el código, pulsa <b>Ejecutar</b> para probar y <b>Comprobar</b> para que el laboratorio lo corrija. Python funciona de verdad dentro de tu navegador, y los errores se explican en español.</p>
+    <span class="status" id="status" role="status"><i></i><span>Cargando Python en tu navegador… (unos segundos la primera vez)</span></span>
+  </header>
+  <div class="main">
+    <nav class="panel retos" aria-label="Retos">
+      <h2>Retos</h2>
+      <div class="prog"><span id="prog-bar"></span></div>
+      <p class="prog-t" id="prog-t">0 de 10 superados</p>
+      <ol id="lista"></ol>
+    </nav>
+    <section class="panel reto" aria-live="polite">
+      <div><span class="tema" id="tema"></span><h2 id="titulo"></h2></div>
+      <div class="enun" id="enun"></div>
+      <p class="teoria" id="teoria"></p>
+      <div class="editor"><div class="gutter" id="gutter" aria-hidden="true">1</div><textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Editor de código Python"></textarea></div>
+      <div class="bar">
+        <button class="btn primary" id="run" disabled>▶ Ejecutar <kbd>Ctrl+Intro</kbd></button>
+        <button class="btn go" id="check" disabled>✓ Comprobar</button>
+        <span class="sp"></span>
+        <button class="btn" id="reset" title="Volver al código inicial del reto">↺ Reiniciar</button>
+      </div>
+      <div id="verdict"></div>
+      <div class="out"><h3>Salida</h3><div id="out"><p class="empty">Aquí aparecerá lo que muestre tu código con <code>print()</code>.</p></div></div>
+      <details class="help" id="hint"><summary>💡 Ver una pista</summary><p id="hint-t"></p></details>
+      <details class="help" id="sol"><summary>🔑 Ver la solución (inténtalo antes)</summary><pre id="sol-t"></pre></details>
+      <div class="bar"><button class="btn" id="prev">← Anterior</button><span class="sp"></span><button class="btn" id="next">Siguiente reto →</button></div>
+    </section>
+  </div>
+  <p class="foot">Python se ejecuta con <a href="https://pyodide.org" target="_blank" rel="noopener">Pyodide</a> (Python 3.12 compilado a WebAssembly) en tu propio navegador: tu código no se envía a ningún servidor. El progreso y tus borradores se guardan solo en este navegador.</p>
+</div>
+<script>
+(() => {
+/* ------------------------------------------------------------------ retos */
+const VENTAS = `csv = """tienda,mes,ventas
+Centro,ene,120
+Centro,feb,
+Playa,ene,80
+Playa,feb,95
+Puerto,ene,
+Puerto,feb,60
+"""
+df = pd.read_csv(io.StringIO(csv))`;
+const RETOS = [
+  { id:'variables', tema:'1 · Variables', t:'Tu primera cuenta', sec:'p2-variables',
+    enun:'<p>Crea la variable <code>precio</code> con el valor <b>12.5</b> y <code>unidades</code> con <b>3</b>. Calcula <code>total</code> multiplicando las dos y muéstralo con la f-string que ya está escrita.</p>',
+    code:'# Completa las tres líneas\nprecio = \nunidades = \ntotal = \n\nprint(f"Total: {total} €")\n',
+    hint:'Una variable se crea con <code>nombre = valor</code>. Los decimales llevan punto: <code>12.5</code>. Para multiplicar se usa <code>*</code>.',
+    sol:'precio = 12.5\nunidades = 3\ntotal = precio * unidades\n\nprint(f"Total: {total} €")',
+    check:`for v in ("precio", "unidades", "total"):
+    assert v in ns, f"Falta la variable «{v}»."
+assert ns["precio"] == 12.5, f"precio vale {ns['precio']!r}; debería ser 12.5 (con punto)."
+assert ns["unidades"] == 3, f"unidades vale {ns['unidades']!r}; debería ser 3."
+assert ns["total"] == 37.5, f"total vale {ns['total']!r}; debería ser precio * unidades = 37.5."
+assert "37.5" in out, "Muestra el total con print()."
+msg = "Has creado tres variables y has hecho tu primera cuenta con ellas."` },
+  { id:'operaciones', tema:'1 · Variables', t:'Cajas de botellas', sec:'p2-variables',
+    enun:'<p>Tienes <code>botellas = 50</code> y en cada caja caben <code>por_caja = 6</code>. Calcula:</p><ul><li><code>cajas_llenas</code>: cuántas cajas se llenan del todo.</li><li><code>sobran</code>: cuántas botellas quedan sueltas.</li><li><code>cajas_necesarias</code>: cuántas cajas hacen falta en total (si sobra alguna botella, hace falta una caja más).</li></ul><p>Usa las variables, no escribas los números a mano: el laboratorio probará tu código también con otra cantidad de botellas.</p>',
+    code:'botellas = 50\npor_caja = 6\n\ncajas_llenas = \nsobran = \ncajas_necesarias = \n\nprint(cajas_llenas, sobran, cajas_necesarias)\n',
+    hint:'<code>//</code> es la división entera y <code>%</code> el resto. Para la última puedes usar un if, o sumar <code>1 if sobran > 0 else 0</code>.',
+    sol:'botellas = 50\npor_caja = 6\n\ncajas_llenas = botellas // por_caja\nsobran = botellas % por_caja\nif sobran > 0:\n    cajas_necesarias = cajas_llenas + 1\nelse:\n    cajas_necesarias = cajas_llenas\n\nprint(cajas_llenas, sobran, cajas_necesarias)',
+    check:`for v in ("cajas_llenas", "sobran", "cajas_necesarias"):
+    assert v in ns, f"Falta la variable «{v}»."
+assert ns["cajas_llenas"] == 8, f"cajas_llenas vale {ns['cajas_llenas']!r}; con 50 botellas se llenan 8 cajas."
+assert ns["sobran"] == 2, f"sobran vale {ns['sobran']!r}; deberían sobrar 2 botellas."
+assert ns["cajas_necesarias"] == 9, f"cajas_necesarias vale {ns['cajas_necesarias']!r}; hacen falta 9 cajas."
+import contextlib, io as _io
+for b, esperado in ((48, (8, 0, 8)), (7, (1, 1, 2))):
+    assert "botellas = 50" in code, "No cambies la línea «botellas = 50»: la uso para probar tu código con otras cantidades."
+    ns2 = {}
+    with contextlib.redirect_stdout(_io.StringIO()):
+        exec(code.replace("botellas = 50", f"botellas = {b}"), ns2)
+    got = (ns2["cajas_llenas"], ns2["sobran"], ns2["cajas_necesarias"])
+    assert got == esperado, f"Con {b} botellas tu código da {got} y debería dar {esperado}. ¿Has escrito algún número a mano?"
+msg = "Funciona con cualquier número de botellas: // y % son muy útiles, por ejemplo para repartir datos en lotes."` },
+  { id:'listas', tema:'2 · Listas', t:'Las notas del grupo', sec:'p2-colecciones',
+    enun:'<p>Con la lista <code>notas</code>, guarda en variables:</p><ul><li><code>primera</code>: la primera nota.</li><li><code>ultima</code>: la última (sin contar cuántas hay).</li><li><code>tres_primeras</code>: una lista con las tres primeras.</li><li><code>media</code>: la media de todas.</li></ul>',
+    code:'notas = [7, 5, 9, 6, 8]\n\nprimera = \nultima = \ntres_primeras = \nmedia = \n\nprint(primera, ultima, tres_primeras, media)\n',
+    hint:'Los índices empiezan en 0, y <code>-1</code> es el último. <code>notas[0:3]</code> (o <code>notas[:3]</code>) da los tres primeros. La media es <code>sum(...) / len(...)</code>.',
+    sol:'notas = [7, 5, 9, 6, 8]\n\nprimera = notas[0]\nultima = notas[-1]\ntres_primeras = notas[:3]\nmedia = sum(notas) / len(notas)\n\nprint(primera, ultima, tres_primeras, media)',
+    check:`for v in ("primera", "ultima", "tres_primeras", "media"):
+    assert v in ns, f"Falta la variable «{v}»."
+assert ns["primera"] == 7, f"primera vale {ns['primera']!r}. Recuerda: la primera posición es la 0."
+assert ns["ultima"] == 8, f"ultima vale {ns['ultima']!r}. Prueba con el índice -1."
+assert ns["tres_primeras"] == [7, 5, 9], f"tres_primeras vale {ns['tres_primeras']!r}; debería ser [7, 5, 9]. En notas[a:b] el b no se incluye."
+assert abs(ns["media"] - 7) < 1e-9, f"media vale {ns['media']!r}; debería ser 7.0."
+assert "-1" in code, "Para la última nota usa el índice -1, que funciona sea cual sea la longitud de la lista."
+msg = "Índices, trozos y media: con esto ya puedes recorrer cualquier lista."` },
+  { id:'diccionarios', tema:'2 · Diccionarios', t:'La ficha de un vino', sec:'p2-colecciones',
+    enun:'<p>El diccionario <code>vino</code> describe un vino. Haz tres cosas:</p><ul><li>Guarda su grado de alcohol en <code>alcohol</code>, leyéndolo del diccionario.</li><li>Cambia su <code>"calidad"</code> a <b>6</b>.</li><li>Añade la clave <code>"color"</code> con el valor <code>"tinto"</code>.</li></ul>',
+    code:'vino = {"alcohol": 9.4, "acidez": 0.70, "calidad": 5}\n\nalcohol = \n# cambia la calidad\n\n# añade el color\n\nprint(vino)\n',
+    hint:'Se lee con <code>vino["clave"]</code> y se cambia o añade con <code>vino["clave"] = valor</code>. Es la misma sintaxis para cambiar y para añadir.',
+    sol:'vino = {"alcohol": 9.4, "acidez": 0.70, "calidad": 5}\n\nalcohol = vino["alcohol"]\nvino["calidad"] = 6\nvino["color"] = "tinto"\n\nprint(vino)',
+    check:`assert "vino" in ns and isinstance(ns["vino"], dict), "No borres el diccionario vino."
+v = ns["vino"]
+assert ns.get("alcohol") == 9.4, "alcohol debería valer 9.4, leído del diccionario con vino[\\"alcohol\\"]."
+assert 'vino["alcohol"]' in code or "vino['alcohol']" in code, "Lee el alcohol del diccionario (vino[\\"alcohol\\"]) en vez de escribir 9.4 a mano."
+assert v.get("calidad") == 6, f"La calidad vale {v.get('calidad')!r}; debería ser 6."
+assert v.get("color") == "tinto", "Falta la clave \\"color\\" con el valor \\"tinto\\" (ojo con las comillas y las mayúsculas)."
+msg = "Leer, cambiar y añadir: lo mismo harás con la configuración de un modelo."` },
+  { id:'bucles', tema:'3 · Bucles y condiciones', t:'Días de calor', sec:'p2-control',
+    enun:'<p>Con un bucle <code>for</code> y un <code>if</code>, recorre <code>temperaturas</code> y guarda en <code>lista_calurosos</code> las que pasan de <b>25</b> grados, y en <code>calurosos</code> cuántas son.</p>',
+    code:'temperaturas = [22, 27, 31, 19, 25, 28]\n\nlista_calurosos = []\nfor t in temperaturas:\n    # si t pasa de 25, añádela a la lista\n\ncalurosos = len(lista_calurosos)\nprint(calurosos, lista_calurosos)\n',
+    hint:'Dentro del for, escribe <code>if t > 25:</code> y, en la línea siguiente con 8 espacios, <code>lista_calurosos.append(t)</code>. Borra el comentario o deja el if debajo de él.',
+    sol:'temperaturas = [22, 27, 31, 19, 25, 28]\n\nlista_calurosos = []\nfor t in temperaturas:\n    if t > 25:\n        lista_calurosos.append(t)\n\ncalurosos = len(lista_calurosos)\nprint(calurosos, lista_calurosos)',
+    check:`assert "for" in code and "if" in code, "Resuélvelo con un bucle for y un if: es el objetivo del reto."
+assert ns.get("lista_calurosos") == [27, 31, 28], f"lista_calurosos vale {ns.get('lista_calurosos')!r}; debería ser [27, 31, 28]. ¿Has usado > (mayor) y no >= (mayor o igual)?"
+assert ns.get("calurosos") == 3, "calurosos debería valer 3."
+msg = "Recorrer y filtrar es el patrón más repetido de la programación. En el reto de NumPy lo harás sin bucle."` },
+  { id:'funciones', tema:'4 · Funciones', t:'Tu propia función media', sec:'p2-funciones',
+    enun:'<p>Escribe dos funciones:</p><ul><li><code>media(valores)</code>, que devuelva la media de una lista.</li><li><code>precio_final(precio, descuento=0)</code>, que devuelva el precio con el descuento aplicado (0.25 significa un 25 %).</li></ul>',
+    code:'def media(valores):\n    # calcula y devuelve la media\n    \n\ndef precio_final(precio, descuento=0):\n    # devuelve el precio con el descuento aplicado\n    \n\nprint(media([2, 4, 6]))\nprint(precio_final(20), precio_final(20, 0.25))\n',
+    hint:'Cada función necesita un <code>return</code>. La media es <code>sum(valores) / len(valores)</code> y el precio final, <code>precio * (1 - descuento)</code>.',
+    sol:'def media(valores):\n    return sum(valores) / len(valores)\n\ndef precio_final(precio, descuento=0):\n    return precio * (1 - descuento)\n\nprint(media([2, 4, 6]))\nprint(precio_final(20), precio_final(20, 0.25))',
+    check:`assert callable(ns.get("media")), "No encuentro la función media. Se define con def media(valores):"
+assert callable(ns.get("precio_final")), "No encuentro la función precio_final."
+r = ns["media"]([2, 4, 6])
+assert r is not None, "media() devuelve None: te falta el return."
+assert r == 4, f"media([2, 4, 6]) da {r!r}; debería dar 4."
+assert ns["media"]([7]) == 7 and abs(ns["media"]([1, 2]) - 1.5) < 1e-9, "media() no funciona con otras listas. ¿Has escrito algún número a mano?"
+p = ns["precio_final"](20)
+assert p is not None, "precio_final() devuelve None: te falta el return."
+assert p == 20, f"precio_final(20) da {p!r}; sin descuento debería dar 20."
+assert abs(ns["precio_final"](20, 0.25) - 15) < 1e-9, "precio_final(20, 0.25) debería dar 15."
+msg = "Dos funciones reutilizables, una con un parámetro por defecto, como las de scikit-learn."` },
+  { id:'depurar', tema:'3 · Condiciones · Depurar', t:'Arregla el código', sec:'p2-control',
+    enun:'<p>Este código tiene <b>tres errores</b> típicos. Ejecútalo, lee el mensaje de error y arréglalos uno a uno. Cuando funcione debe mostrar <code>matrícula aprobado suspenso</code>.</p>',
+    code:'def nota_final(nota)\n    if nota = 10:\n        return "matrícula"\n    elif nota >= 5:\n    return "aprobado"\n    else:\n        return "suspenso"\n\nprint(nota_final(10), nota_final(6), nota_final(3))\n',
+    hint:'Busca: (1) una línea con <code>def</code> sin dos puntos al final; (2) un <code>=</code> que debería ser <code>==</code> para comparar; (3) un <code>return</code> que no está desplazado dentro de su <code>elif</code>.',
+    sol:'def nota_final(nota):\n    if nota == 10:\n        return "matrícula"\n    elif nota >= 5:\n        return "aprobado"\n    else:\n        return "suspenso"\n\nprint(nota_final(10), nota_final(6), nota_final(3))',
+    check:`f = ns.get("nota_final")
+assert callable(f), "La función nota_final no existe todavía: arregla los errores."
+casos = {10: "matrícula", 6: "aprobado", 5: "aprobado", 3: "suspenso"}
+for n, e in casos.items():
+    assert f(n) == e, f"nota_final({n}) da {f(n)!r} y debería dar {e!r}."
+msg = "Leer el mensaje de error y fijarse en el número de línea es media vida de un programador."` },
+  { id:'numpy', tema:'5 · NumPy', t:'Sin bucles', sec:'p2-numpy', packages:['numpy'],
+    enun:'<p>Con el array <code>t</code> (temperaturas en °C) y <b>sin usar ningún bucle</b>:</p><ul><li><code>fahrenheit</code>: las temperaturas en °F (F = C · 1,8 + 32).</li><li><code>calurosas</code>: solo las que pasan de 20 °C, con una máscara.</li><li><code>media</code>: la temperatura media.</li></ul>',
+    code:'import numpy as np\n\nt = np.array([12, 18, 25, 31, 9])\n\nfahrenheit = \ncalurosas = \nmedia = \n\nprint(fahrenheit)\nprint(calurosas, media)\n',
+    hint:'En NumPy las operaciones se aplican a todo el array: <code>t * 1.8 + 32</code>. Para filtrar, <code>t[t > 20]</code>. Y los arrays tienen el método <code>.mean()</code>.',
+    sol:'import numpy as np\n\nt = np.array([12, 18, 25, 31, 9])\n\nfahrenheit = t * 1.8 + 32\ncalurosas = t[t > 20]\nmedia = t.mean()\n\nprint(fahrenheit)\nprint(calurosas, media)',
+    check:`import numpy as np
+sin_comentarios = "\\n".join(l.split("#")[0] for l in code.splitlines())
+assert "for " not in sin_comentarios and "while " not in sin_comentarios, "Hazlo sin bucles: la gracia de NumPy es operar con el array entero."
+for v in ("fahrenheit", "calurosas", "media"):
+    assert v in ns, f"Falta la variable «{v}»."
+assert np.allclose(ns["fahrenheit"], [53.6, 64.4, 77.0, 87.8, 48.2]), f"fahrenheit vale {ns['fahrenheit']!r}; debería ser [53.6 64.4 77. 87.8 48.2]."
+assert list(np.asarray(ns["calurosas"])) == [25, 31], f"calurosas vale {ns['calurosas']!r}; debería ser [25 31]."
+assert abs(float(ns["media"]) - 19) < 1e-9, f"media vale {ns['media']!r}; debería ser 19.0."
+msg = "Sin un solo bucle. Así se escriben los modelos: operaciones con arrays enteros."` },
+  { id:'pandas-nulos', tema:'6 · Pandas', t:'Limpiar los huecos', sec:'p2-pandas', packages:['numpy', 'pandas'],
+    enun:'<p>La tabla <code>df</code> de ventas tiene huecos. Guarda en <code>nulos</code> cuántos valores faltan en la columna <code>ventas</code>, en <code>mediana</code> la mediana de esa columna, y después <b>rellena</b> los huecos de <code>df</code> con esa mediana.</p>',
+    code:'import pandas as pd\nimport io\n\n' + VENTAS + '\nprint(df)\n\nnulos = \nmediana = \ndf = \n\nprint(nulos, mediana)\nprint(df)\n',
+    hint:'<code>df["ventas"].isna().sum()</code> cuenta los huecos. <code>df["ventas"].median()</code> ignora los nulos. Para rellenar: <code>df.fillna({"ventas": mediana})</code>.',
+    sol:'import pandas as pd\nimport io\n\n' + VENTAS + '\n\nnulos = df["ventas"].isna().sum()\nmediana = df["ventas"].median()\ndf = df.fillna({"ventas": mediana})\n\nprint(nulos, mediana)\nprint(df)',
+    check:`import pandas as pd
+assert int(ns.get("nulos", -1)) == 2, f"nulos vale {ns.get('nulos')!r}; en la columna ventas faltan 2 valores."
+assert abs(float(ns.get("mediana", 0)) - 87.5) < 1e-9, f"mediana vale {ns.get('mediana')!r}; debería ser 87.5."
+d = ns.get("df")
+assert isinstance(d, pd.DataFrame), "df ya no es una tabla. ¿Has escrito df = df.fillna(...)?"
+assert d["ventas"].isna().sum() == 0, "Todavía quedan huecos en df. Recuerda guardar el resultado: df = df.fillna(...)."
+assert len(d) == 6 and abs(d["ventas"].sum() - 530) < 1e-9, "Los huecos deberían rellenarse con 87.5 sin quitar filas."
+msg = "Contar, decidir y rellenar: el primer paso de cualquier proyecto con datos reales."` },
+  { id:'pandas-grupos', tema:'6 · Pandas', t:'¿Qué tienda vende más?', sec:'p2-pandas', packages:['numpy', 'pandas'],
+    enun:'<p>La tabla ya está limpia. Calcula:</p><ul><li><code>por_tienda</code>: las ventas totales de cada tienda, con <code>groupby</code>.</li><li><code>mejor</code>: el nombre de la tienda que más vende.</li><li><code>grandes</code>: las filas de <code>df</code> con ventas mayores que 90.</li></ul>',
+    code:'import pandas as pd\nimport io\n\n' + VENTAS + '\ndf = df.fillna({"ventas": df["ventas"].median()})\n\npor_tienda = \nmejor = \ngrandes = \n\nprint(por_tienda)\nprint(mejor)\nprint(grandes)\n',
+    hint:'<code>df.groupby("tienda")["ventas"].sum()</code>. Para el nombre del máximo, <code>por_tienda.idxmax()</code>. Para filtrar filas, <code>df[df["ventas"] > 90]</code>.',
+    sol:'import pandas as pd\nimport io\n\n' + VENTAS + '\ndf = df.fillna({"ventas": df["ventas"].median()})\n\npor_tienda = df.groupby("tienda")["ventas"].sum()\nmejor = por_tienda.idxmax()\ngrandes = df[df["ventas"] > 90]\n\nprint(por_tienda)\nprint(mejor)\nprint(grandes)',
+    check:`import pandas as pd
+p = ns.get("por_tienda")
+assert isinstance(p, pd.Series), "por_tienda debería ser el resultado de un groupby: df.groupby(\\"tienda\\")[\\"ventas\\"].sum()."
+assert dict(p.round(2)) == {"Centro": 207.5, "Playa": 175.0, "Puerto": 147.5}, f"por_tienda no cuadra: {dict(p)}. ¿Has sumado la columna ventas?"
+assert ns.get("mejor") == "Centro", f"mejor vale {ns.get('mejor')!r}; debería ser 'Centro' (el nombre, no la cifra)."
+g = ns.get("grandes")
+assert isinstance(g, pd.DataFrame), "grandes debería ser una tabla filtrada: df[df[\\"ventas\\"] > 90]."
+assert sorted(g["ventas"]) == [95.0, 120.0], f"grandes debería tener 2 filas (120 y 95) y tiene {len(g)}."
+msg = "¡Laboratorio completado! Ya tienes lo necesario para el proyecto de Wine Quality."` },
+  { id:'libre', tema:'Zona libre', t:'Experimenta', sec:'p2-objetivos', free:true, packages:['numpy', 'pandas'],
+    enun:'<p>Sin corrección: prueba lo que quieras. Cambia los ejemplos de la lección, provoca errores a propósito para ver qué dicen o combina NumPy y Pandas.</p>',
+    code:'import numpy as np\nimport pandas as pd\n\nx = np.arange(1, 11)\nprint("cuadrados:", x ** 2)\n\ntabla = pd.DataFrame({"x": x, "doble": x * 2})\nprint(tabla.describe())\n',
+    hint:'¿Ideas? Calcula la suma de los números del 1 al 100 con un bucle y con NumPy; crea un diccionario con tus películas favoritas; provoca un <code>IndexError</code>.',
+    sol:'# No hay una solución: es tu espacio para experimentar.' },
+];
+const N = RETOS.filter(r => !r.free).length;
+
+/* ------------------------------------------------------------ utilidades */
+const $ = id => document.getElementById(id);
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+let done = store.get('mlai.pylab.done', {}), drafts = store.get('mlai.pylab.code', {}), cur = 0;
+
+/* ------------------------------------------------ errores explicados en español */
+function explica(e) {
+  const L = e.line ? ` en la línea <b>${e.line}</b>` : '', ln = e.line ? `la línea <b>${e.line}</b>` : 'una línea', m = e.msg || '';
+  const n = (m.match(/name '(\w+)' is not defined/) || [])[1];
+  const T = {
+    SyntaxError: /expected ':'/.test(m) ? `Falta <b>:</b> (dos puntos) al final de ${ln}. Van detrás de <code>def</code>, <code>if</code>, <code>elif</code>, <code>else</code> y <code>for</code>.`
+      : /Maybe you meant '=='/.test(m) ? `Para <b>comparar</b> se usan dos iguales (<code>==</code>)${L}. Un solo <code>=</code> sirve para guardar un valor.`
+      : /was never closed|unterminated/.test(m) ? `Hay un paréntesis, corchete o comillas sin cerrar${L}.`
+      : /invalid decimal literal|invalid syntax/.test(m) && /\d,\d/.test(m) ? `Los decimales se escriben con punto, no con coma${L}.`
+      : `Python no entiende cómo está escrita ${ln}. Revisa que no falte nada después del <code>=</code>, que los paréntesis y las comillas estén cerrados y que los decimales usen punto.`,
+    IndentationError: /expected an indented block/.test(m) ? `Python esperaba un bloque desplazado a la derecha (4 espacios)${L}. Lo que va dentro de un <code>def</code>, <code>if</code> o <code>for</code> tiene que llevar sangría, y un bloque no puede quedarse solo con un comentario.`
+      : `La sangría (los espacios del principio)${L} no cuadra con las líneas de alrededor. Usa siempre 4 espacios por nivel.`,
+    NameError: n ? `Usas <code>${esc(n)}</code>${L}, pero no existe. ¿La has creado antes de usarla? ¿Está escrita igual, con las mismas mayúsculas?` : `Usas un nombre que no existe${L}.`,
+    TypeError: /NoneType/.test(m) ? `Estás operando con <code>None</code>${L}. Suele pasar cuando una función no tiene <code>return</code>.` : `Estás mezclando tipos que no encajan${L}, por ejemplo sumar un texto y un número, o llamar a algo que no es una función.`,
+    ZeroDivisionError: `Estás dividiendo entre cero${L}. ¿La lista está vacía?`,
+    IndexError: `Pides una posición que no existe${L}. Recuerda que la primera es la 0 y la última se puede pedir con -1.`,
+    KeyError: `La clave ${esc(m)} no existe${L}: en un diccionario o en las columnas de una tabla hay que escribirla exactamente igual, con mayúsculas y tildes.`,
+    AttributeError: `Ese objeto no tiene ese método o atributo${L}. Revisa cómo está escrito.`,
+    ValueError: `El valor no tiene el formato que se esperaba${L}.`,
+    ModuleNotFoundError: `Ese módulo no está disponible en el laboratorio. Aquí puedes usar la librería estándar, NumPy y Pandas.`,
+  };
+  return `<div class="msg bad"><b>Error: ${esc(e.type)}</b>${T[e.type] || `Algo ha fallado${L}.`}<span class="tech">${esc(e.type)}: ${esc(m)}</span></div>`;
+}
+
+/* ---------------------------------------------------------------- Python */
+let worker, ready = false, pending = null, seq = 0, timer = null, loaded = new Set();
+const status = (t, cls = '') => { const s = $('status'); s.className = 'status ' + cls; s.lastElementChild.textContent = t; };
+function startWorker() {
+  worker = new Worker('/labs/python-worker.js');
+  worker.onmessage = ({ data }) => {
+    if (data.kind === 'ready') { ready = true; status(`Python ${data.version} listo`, 'ok'); $('run').disabled = $('check').disabled = false; return; }
+    if (!pending || data.id !== pending.id) return;
+    if (data.kind === 'status') { status(data.msg); return; }
+    if (data.kind === 'running') { clearTimeout(timer); timer = setTimeout(timeout, 8000); return; }
+    clearTimeout(timer); const p = pending; pending = null; busy(false);
+    if (data.kind === 'fatal') { status('No se ha podido ejecutar Python', 'bad'); $('verdict').innerHTML = `<div class="msg bad"><b>Error interno</b>${esc(data.msg)}</div>`; return; }
+    (p.packages || []).forEach(x => loaded.add(x));
+    status('Python listo', 'ok'); p.resolve(data);
+  };
+  worker.onerror = e => { status('No se ha podido cargar Python. Comprueba tu conexión y recarga la página.', 'bad'); };
+  const q = new URLSearchParams(location.search).get('pyodide');
+  worker.postMessage({ id: 0, kind: 'init', base: q || undefined });
+}
+function timeout() {
+  worker.terminate(); ready = false; busy(false);
+  const p = pending; pending = null; loaded = new Set();
+  $('verdict').innerHTML = '<div class="msg bad"><b>Tiempo agotado</b>Tu código lleva más de 8 segundos ejecutándose. ¿Hay un bucle que no termina nunca (por ejemplo, un <code>while</code> cuya condición nunca deja de cumplirse)? He reiniciado Python.</div>';
+  status('Reiniciando Python…'); $('run').disabled = $('check').disabled = true; startWorker();
+  if (p) p.resolve(null);
+}
+const busy = b => { $('run').disabled = $('check').disabled = b || !ready; $('run').textContent = b ? 'Ejecutando…' : '▶ Ejecutar'; if (!b) $('run').insertAdjacentHTML('beforeend', ' <kbd>Ctrl+Intro</kbd>'); };
+function exec(code, check, packages) {
+  return new Promise(resolve => {
+    const id = ++seq, need = (packages || []).filter(x => !loaded.has(x));
+    pending = { id, resolve, packages }; busy(true);
+    // el tiempo máximo empieza a contar cuando Python ya tiene cargadas las librerías
+    timer = setTimeout(timeout, need.length ? 90000 : 8000);
+    worker.postMessage({ id, kind: 'run', code, check, packages: need });
+  });
+}
+
+/* -------------------------------------------------------------- interfaz */
+const ta = $('code');
+const gutter = () => { const n = ta.value.split('\n').length; $('gutter').textContent = Array.from({ length: n }, (_, i) => i + 1).join('\n'); };
+function lista() {
+  $('lista').innerHTML = RETOS.map((r, i) => `<li><button type="button" data-i="${i}" class="${i === cur ? 'on' : ''} ${done[r.id] ? 'done' : ''}"><span class="n">${r.free ? '∞' : done[r.id] ? '✓' : i + 1}</span><span>${r.t}<small>${r.tema}</small></span></button></li>`).join('');
+  const k = RETOS.filter(r => !r.free && done[r.id]).length;
+  $('prog-bar').style.width = (k / N * 100) + '%'; $('prog-t').textContent = `${k} de ${N} superados`;
+}
+function abrir(i) {
+  cur = Math.max(0, Math.min(RETOS.length - 1, i)); const r = RETOS[cur];
+  $('tema').textContent = r.tema; $('titulo').textContent = (r.free ? '' : `Reto ${cur + 1} · `) + r.t;
+  $('enun').innerHTML = r.enun;
+  $('teoria').innerHTML = `Teoría: <a href="/learning-path/python#${r.sec}" target="_top">lección del Nivel 2, apartado «${r.tema.replace(/ · Depurar/, '')}»</a>.`;
+  ta.value = drafts[r.id] ?? r.code; gutter();
+  $('hint-t').innerHTML = r.hint; $('sol-t').textContent = r.sol; $('hint').open = $('sol').open = false;
+  $('check').hidden = !!r.free; $('verdict').innerHTML = done[r.id] && !r.free ? '<div class="msg ok"><b>Reto ya superado ✓</b>Puedes repetirlo o seguir con el siguiente.</div>' : '';
+  $('out').innerHTML = '<p class="empty">Aquí aparecerá lo que muestre tu código con <code>print()</code>.</p>';
+  $('prev').disabled = cur === 0; $('next').disabled = cur === RETOS.length - 1;
+  lista(); history.replaceState(null, '', '#reto-' + (cur + 1));
+}
+async function correr(conCheck) {
+  const r = RETOS[cur]; if (!ready || pending) return;
+  $('verdict').innerHTML = '';
+  const res = await exec(ta.value, conCheck ? r.check : '', r.packages);
+  if (!res) return;
+  $('out').innerHTML = res.out ? `<pre>${esc(res.out)}</pre>` : '<p class="empty">Tu código no ha mostrado nada. Usa <code>print()</code> para ver resultados.</p>';
+  if (res.err) { $('verdict').innerHTML = explica(res.err); return; }
+  if (!conCheck) { $('verdict').innerHTML = r.free ? '' : '<div class="msg info"><b>Se ha ejecutado sin errores</b>Cuando creas que está bien, pulsa «Comprobar».</div>'; return; }
+  if (res.check.ok) {
+    done[r.id] = true; store.set('mlai.pylab.done', done); lista();
+    $('verdict').innerHTML = `<div class="msg ok"><b>¡Correcto! ✓</b>${esc(res.check.msg)}</div>`;
+  } else $('verdict').innerHTML = `<div class="msg bad"><b>Casi…</b>${esc(res.check.msg)}</div>`;
+}
+
+ta.addEventListener('input', () => { gutter(); drafts[RETOS[cur].id] = ta.value; store.set('mlai.pylab.code', drafts); });
+ta.addEventListener('scroll', () => { $('gutter').scrollTop = ta.scrollTop; });
+ta.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); correr(false); return; }
+  const s = ta.selectionStart, v = ta.value;
+  if (e.key === 'Tab' && !e.shiftKey) { e.preventDefault(); ta.setRangeText('    ', s, ta.selectionEnd, 'end'); ta.dispatchEvent(new Event('input')); }
+  if (e.key === 'Enter' && !e.shiftKey) {
+    const linea = v.slice(v.lastIndexOf('\n', s - 1) + 1, s), ind = linea.match(/^ */)[0] + (/:\s*$/.test(linea) ? '    ' : '');
+    if (ind) { e.preventDefault(); ta.setRangeText('\n' + ind, s, ta.selectionEnd, 'end'); ta.dispatchEvent(new Event('input')); }
+  }
+});
+$('run').onclick = () => correr(false);
+$('check').onclick = () => correr(true);
+$('reset').onclick = () => { if (!confirm('¿Volver al código inicial de este reto? Se perderá lo que has escrito.')) return; delete drafts[RETOS[cur].id]; store.set('mlai.pylab.code', drafts); abrir(cur); };
+$('prev').onclick = () => abrir(cur - 1);
+$('next').onclick = () => abrir(cur + 1);
+$('lista').onclick = e => { const b = e.target.closest('button[data-i]'); if (b) abrir(+b.dataset.i); };
+const h = +(location.hash.match(/reto-(\d+)/) || [])[1];
+abrir(h ? h - 1 : Math.max(0, RETOS.findIndex(r => !done[r.id])));
+startWorker();
+})();
+</script>
+</body>
+</html>

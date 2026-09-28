@@ -516,7 +516,7 @@ const PixelHero = (() => {
 
   if (page === 'lab') {
     const box = $('lab-frame'), file = box.dataset.file;
-    const fr = document.createElement('iframe'); fr.title = box.dataset.title; fr.src = file;
+    const fr = document.createElement('iframe'); fr.title = box.dataset.title; fr.src = file + (location.hash.startsWith('#reto-') ? location.hash : '');
     box.innerHTML = ''; box.appendChild(fr);
     const fit = () => { try { const d = fr.contentDocument; if (d && d.body) { const t = document.documentElement.dataset.theme; if (t) d.documentElement.dataset.theme = t; const h = Math.max(d.documentElement.scrollHeight, d.body.scrollHeight); if (h > 50) fr.style.height = h + 'px'; } } catch (e) { fr.style.height = '85vh'; clearInterval(timer); } };
     fr.onload = fit; const timer = setInterval(fit, 700);

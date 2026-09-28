@@ -471,3 +471,5 @@ pre.out .eyebrow{display:block;margin-bottom:6px}
 .chart .whisk{stroke:var(--ink);stroke-width:1.5} .chart .box{fill:color-mix(in srgb,var(--accent) 16%,transparent);stroke:var(--accent);stroke-width:1.5}
 .chart .medline{stroke:var(--neg);stroke-width:2.5} .chart .outl{fill:none;stroke:var(--neg);stroke-width:1.5}
 .chart .panel-t{min-height:2.7em}
+.t-prog{color:var(--a-prog);background:color-mix(in srgb,var(--a-prog) 12%,transparent)}
+.callout.lab-cta{background:color-mix(in srgb,var(--a-prog) 9%,var(--surface));border-color:color-mix(in srgb,var(--a-prog) 35%,var(--line))}

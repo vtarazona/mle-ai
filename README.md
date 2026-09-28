@@ -3,7 +3,7 @@
 Portal educativo de Machine Learning e IA: https://mle-ai.vercel.app
 
 - **6 artículos completos** (Random Forest, regresión lineal, regresión logística, gradient boosting, redes neuronales, Transformers) con la plantilla de 20 secciones y cifras obtenidas ejecutando el código.
-- **9 laboratorios interactivos** y un **Transformer Visualizer** de 13 etapas.
+- **10 laboratorios interactivos** (uno de ellos, retos de Python ejecutados con Pyodide) y un **Transformer Visualizer** de 13 etapas.
 - Temario de 7 áreas, ruta de aprendizaje en 10 niveles, 17 papers con ficha propia, datasets y buscador.
 
 ## Estructura
@@ -22,7 +22,7 @@ src/
   pixelhero.js       Animación pixel art de la portada
   layout.html        Cabecera, menús, buscador y pie comunes
   style.css          Estilos (modo claro y oscuro)
-  labs/              Los 9 laboratorios, páginas independientes
+  labs/              Los 10 laboratorios, páginas independientes
   img/               Ilustraciones y og-image
 notebooks/           Scripts (.py) y cuadernos (.ipynb) de cada artículo; se abren en Google Colab
 scripts/             serve.py (servidor local con URLs limpias) y py2nb.py (.py → .ipynb)

@@ -43,7 +43,7 @@ const { U, PAGES, LABS, AREAS, PAPERS, ARTICLES, LESSONS } = X;
 
 /* ---------- 2. Mapa de rutas (token interno → URL semántica) ---------- */
 const AREA_SLUG = { ml:'machine-learning', dl:'deep-learning', math:'mathematics', prog:'programming', llm:'llm', mlops:'mlops', research:'research' };
-const LAB_SLUG = { gd:'gradient-descent', overfit:'overfitting', reg:'lasso-ridge', tree:'decision-tree', kmeans:'k-means', sigmoid:'sigmoid', boundary:'decision-boundary', backprop:'backpropagation', attn:'attention' };
+const LAB_SLUG = { gd:'gradient-descent', overfit:'overfitting', reg:'lasso-ridge', tree:'decision-tree', kmeans:'k-means', sigmoid:'sigmoid', boundary:'decision-boundary', backprop:'backpropagation', attn:'attention', python:'python' };
 const paperSlug = p => U.slug(p.t).slice(0, 80).replace(/-$/, '');
 const ROUTES = {
   home:'/', lab:'/lab', transformer:'/llm/transformer-visualizer', path:'/learning-path', papers:'/papers',
@@ -70,7 +70,7 @@ add('home', { page:'home', html: PAGES.home(), title:'MLE·AI — Machine Learni
   desc:'Portal de Machine Learning e IA: teoría rigurosa, laboratorios interactivos, Transformer Visualizer, artículos con código real, ruta de aprendizaje, papers y datasets.',
   ld:[{ '@context':'https://schema.org', '@type':'WebSite', name:'MLE·AI', url: SITE + '/', inLanguage:'es', description:'Portal de Machine Learning Engineering e Inteligencia Artificial' }] });
 for (const a of AREAS) add(a.id, { page:'area', html: PAGES.area(a.id), title: a.t, desc: `${a.d} ${a.topics.length} temas con definiciones, laboratorios y artículos.`, ld:[crumbLD([['Inicio', 'home'], [a.t, a.id]])] });
-add('lab', { page:'labs', html: PAGES.lab(), title:'Laboratorio interactivo', desc:'Nueve simulaciones interactivas de machine learning: descenso de gradiente, sobreajuste, Lasso y Ridge, árboles, K-means, sigmoide, redes neuronales, backpropagation y atención.', ld:[crumbLD([['Inicio', 'home'], ['Laboratorio', 'lab']])] });
+add('lab', { page:'labs', html: PAGES.lab(), title:'Laboratorio interactivo', desc:'Diez laboratorios interactivos: descenso de gradiente, sobreajuste, Lasso y Ridge, árboles, K-means, sigmoide, redes neuronales, backpropagation, atención y retos de Python que se ejecutan en el navegador.', ld:[crumbLD([['Inicio', 'home'], ['Laboratorio', 'lab']])] });
 for (const l of LABS) add('lab-' + l.id, { page:'lab', html: PAGES.labDetail(l.id), title: `${l.t} · Laboratorio`, desc: l.d, ld:[crumbLD([['Inicio', 'home'], ['Laboratorio', 'lab'], [l.t, 'lab-' + l.id]])] });
 add('transformer', { page:'transformer', html: PAGES.transformer(), title:'Transformer Visualizer', katex: true,
   desc:'Recorre un Transformer real etapa a etapa: tokenización, embeddings, codificación posicional, Q/K/V, atención, softmax, multi-head, feed forward, logits y el token generado, con código PyTorch.',

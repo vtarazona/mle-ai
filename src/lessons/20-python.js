@@ -6,6 +6,7 @@
 (() => {
 const { idea, enIA, ojo, ex, quiz, checklist } = LX;
 const out = t => `<pre class="out"><span class="eyebrow">Salida</span>${t}</pre>`;
+const lab = (nums, extra = '') => `<p class="callout lab-cta"><b>Practica ahora:</b> resuelve ${nums.length > 1 ? 'los retos' : 'el reto'} ${nums.map(n => `<a href="/lab/python#reto-${n}">${n}</a>`).join(' y ')} del <a href="#lab-python">Laboratorio de Python</a>.${extra}</p>`;
 
 const C_VAR = `precio = 12.5          # float: número con decimales
 unidades = 3           # int: número entero
@@ -153,6 +154,7 @@ LESSONS.push({
         ['Matplotlib', 'Dibujar gráficos', 'Entender los datos y los resultados']])}
       <h4>Antes de empezar: abre Google Colab</h4>
       <p><a href="https://colab.research.google.com" target="_blank" rel="noopener">Google Colab</a> es un cuaderno de Python en el navegador, gratis y sin instalar nada. Escribes código en una <b>celda</b>, pulsas <kbd>Mayús</kbd> + <kbd>Intro</kbd> y ves el resultado debajo. El botón «Abrir en Google Colab» del final de la lección carga todos los ejemplos.</p>
+      <p class="callout lab-cta"><b>¿Prefieres no salir de la web?</b> El <a href="#lab-python">Laboratorio de Python</a> ejecuta Python dentro del navegador, con 10 retos que se corrigen solos y errores explicados en español. Al final de cada apartado verás qué retos practicar.</p>
       <p>El método es el del nivel 1: <b>la idea en una frase</b>, un ejemplo corto y dónde aparece en IA. Con una diferencia: aquí se aprende <b>escribiendo</b>. Teclea los ejemplos en vez de copiarlos, cambia los números y mira qué pasa. Equivocarse y leer el error es parte del aprendizaje.</p>` },
 
     { id:'variables', t:'1 · Variables y tipos', plain:'variables tipos int float str bool print f-string operaciones', html:() => `
@@ -164,6 +166,7 @@ LESSONS.push({
       <h4>Operaciones con números</h4>
       ${U.code(C_OPS)}
       ${ojo('en Python los decimales se escriben con <b>punto</b>, no con coma: <code>12.5</code>, nunca <code>12,5</code>. Con coma, Python entiende dos números distintos.')}
+      ${lab([1, 2])}
       ${enIA('la tasa de aprendizaje del nivel 1 se guarda así: <code>eta = 0.1</code>. Los hiperparámetros de un modelo son, sencillamente, variables.')}` },
 
     { id:'colecciones', t:'2 · Listas y diccionarios', plain:'lista diccionario índice slicing append len sum', html:() => `
@@ -174,6 +177,7 @@ LESSONS.push({
       <h4>Diccionarios: cajas con etiqueta</h4>
       <p>En vez de por posición, cada valor se busca por su nombre (su <b>clave</b>). Es perfecto para describir una cosa con varias propiedades:</p>
       ${U.code(C_DICT)}
+      ${lab([3, 4])}
       ${enIA('una lista de resultados de cada época de entrenamiento, o un diccionario con la configuración del modelo: <code>{"capas": 3, "eta": 0.01}</code>.')}` },
 
     { id:'control', t:'3 · Condiciones y bucles', plain:'if elif else for range bucle comprensión listas indentación', html:() => `
@@ -185,6 +189,7 @@ LESSONS.push({
       <h4>Atajo muy usado: listas por comprensión</h4>
       <p>Crear una lista nueva a partir de otra en una línea. Se lee casi como en español: «n al cuadrado para cada n en…».</p>
       ${U.code(C_COMP)}
+      ${lab([5, 7], ' El 7 es un código con tres errores que tienes que arreglar.')}
       ${enIA('entrenar un modelo es un bucle: <code>for epoca in range(100):</code> calcula el error, calcula el gradiente, da un paso. Es el bucle del descenso de gradiente del nivel 1.')}` },
 
     { id:'funciones', t:'4 · Funciones', plain:'funciones def return parámetros valor por defecto', html:() => `
@@ -193,6 +198,7 @@ LESSONS.push({
       <p><code>def</code> crea la función, entre paréntesis van sus <b>parámetros</b> y <code>return</code> dice qué devuelve. Si un parámetro tiene valor por defecto (<code>descuento=0.0</code>) puedes no pasarlo.</p>
       ${ojo('olvidar el <code>return</code>. La función se ejecuta, pero devuelve <code>None</code> y el error aparece más adelante, lejos de donde está el fallo.')}
       <p><b>Regla práctica:</b> si copias el mismo código dos veces, conviértelo en una función.</p>
+      ${lab([6])}
       ${enIA('en scikit-learn todo son funciones y métodos con parámetros por defecto: <code>RandomForestClassifier(n_estimators=100)</code>. Leer su documentación es leer la lista de parámetros.')}` },
 
     { id:'numpy', t:'5 · NumPy: cuentas con muchos números a la vez', plain:'numpy array vectorización máscara booleana velocidad', html:() => `
@@ -204,6 +210,7 @@ LESSONS.push({
       <p>Sumar los cuadrados de un millón de números de las dos formas:</p>
       ${U.code(C_SPEED)}
       ${CH.bars([['Bucle de Python', 27], ['NumPy', 1.6, true]], { fmt: v => String(v).replace('.', ',') + ' ms', caption: 'Tiempo medido en nuestra prueba (el mejor de 5 intentos). NumPy fue unas 16 veces más rápido; la cifra exacta cambia según el ordenador, pero la diferencia siempre es grande.' })}
+      ${lab([8])}
       ${enIA('un lote de 32 imágenes de 28 × 28 píxeles es un array de forma (32, 784), y una capa de red neuronal es <code>X @ W</code>. PyTorch y TensorFlow funcionan con la misma idea y casi la misma sintaxis que NumPy.')}` },
 
     { id:'pandas', t:'6 · Pandas: tablas', plain:'pandas dataframe read_csv head shape isna dropna fillna groupby filtrar', html:() => `
@@ -220,6 +227,7 @@ LESSONS.push({
       <p><code>groupby</code> es la herramienta estrella: «para cada tienda, suma sus ventas». Es como una tabla dinámica de Excel en una línea.</p>
       ${U.code(C_GROUP)}
       ${ojo('un CSV no siempre separa con comas. Si al cargarlo te sale una sola columna con todo junto, prueba <code>pd.read_csv(archivo, sep=";")</code>. Te pasará en el proyecto.')}
+      ${lab([9, 10])}
       ${enIA('el 80 % del trabajo real en machine learning es esto: cargar, limpiar y entender los datos antes de entrenar nada. Un modelo entrenado con datos sucios da resultados sucios.')}` },
 
     { id:'matplotlib', t:'7 · Matplotlib: gráficos', plain:'matplotlib gráfico histograma dispersión barras título ejes', html:() => `
@@ -234,7 +242,7 @@ LESSONS.push({
       ${enIA('la curva de aprendizaje (el error en cada época) es un gráfico de líneas, y con ella se detecta el sobreajuste. Lo verás en el <a href="#lab-overfit">laboratorio de sobreajuste</a>.')}` },
 
     { id:'ejercicios', t:'Ejercicios', plain:'ejercicios soluciones práctica python', html:() => `
-      <p>Escríbelos en Colab antes de abrir la solución. Si algo da error, lee el mensaje: casi siempre dice la línea y el motivo.</p>
+      <p>Escríbelos en Colab (o en la zona libre del <a href="/lab/python#reto-11">Laboratorio de Python</a>) antes de abrir la solución. Si algo da error, lee el mensaje: casi siempre dice la línea y el motivo.</p>
       ${ex(1, '¿Qué muestra <code>print(f"{2 + 3} manzanas")</code>? ¿Y <code>10 // 3</code> y <code>10 % 3</code>?', '<p><code>5 manzanas</code>. <code>10 // 3</code> es <b>3</b> (división entera) y <code>10 % 3</code> es <b>1</b> (el resto).</p>')}
       ${ex(2, 'Con <code>edades = [23, 35, 18, 42, 29]</code>, obtén el primer y el último elemento, los tres primeros y la media.', '<p><code>edades[0]</code> → 23, <code>edades[-1]</code> → 29, <code>edades[:3]</code> → [23, 35, 18], <code>sum(edades) / len(edades)</code> → <b>29.4</b>.</p>', 'la media es la suma entre el número de elementos.')}
       ${ex(3, 'Escribe una función <code>es_par(n)</code> que devuelva <code>True</code> si n es par. Úsala para quedarte solo con los pares de <code>range(10)</code>.', '<pre><code>def es_par(n):\n    return n % 2 == 0\n\n[n for n in range(10) if es_par(n)]   # [0, 2, 4, 6, 8]</code></pre>', 'un número es par si el resto de dividir entre 2 es 0.')}
@@ -279,6 +287,7 @@ LESSONS.push({
         'Sé cargar un CSV con Pandas, contar los nulos y decidir si quitarlos o rellenarlos.',
         'Sé usar groupby para calcular un total o una media por grupo.',
         'Sé hacer un histograma y un gráfico de dispersión con título y ejes.',
+        'He superado los 10 retos del Laboratorio de Python.',
         'He terminado el análisis de Wine Quality y sé explicar qué he encontrado.',
         'He sacado al menos 8 de 10 en el test.'])}
       <h4>Para practicar más</h4>
