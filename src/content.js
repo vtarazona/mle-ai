@@ -296,6 +296,16 @@ function ARTICLE_PAGE(id) {
     ar.sections, ar.prefix);
 }
 
+/* Lecciones de la ruta de aprendizaje: misma plantilla que los artículos. */
+function LESSON_PAGE(id) {
+  const le = LESSONS.find(l => l.id === id);
+  return articleLayout(C.crumbs([['Inicio', 'home'], ['Ruta de aprendizaje', 'path'], [le.title]]),
+    `<header class="page-head in-article"><span class="kicker">${le.kicker}</span><h1>${le.title}</h1>
+     <p class="lede">${le.lede}</p>
+     <p class="meta">${le.meta}</p></header>`,
+    le.sections, le.prefix);
+}
+
 /* =========================================================================
    PROYECTO: MANTENIMIENTO PREDICTIVO (plantilla de 10 etapas)
    ========================================================================= */

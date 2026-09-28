@@ -531,6 +531,39 @@ const PixelHero = (() => {
     map.forEach((_, id) => { const el = $(id); if (el) obs.observe(el); });
   }
 
+  // lecciones: test de autoevaluación
+  document.querySelectorAll('[data-quiz]').forEach(qz => {
+    const qs = [...qz.querySelectorAll('li.q')], score = qz.querySelector('.score');
+    qz.querySelector('[data-check]').onclick = () => {
+      let ok = 0, blank = 0;
+      qs.forEach(q => {
+        const sel = q.querySelector('input:checked'), fb = q.querySelector('.fb');
+        q.classList.remove('right', 'wrong');
+        if (!sel) { blank++; fb.hidden = true; return; }
+        const right = sel.value === q.dataset.answer; ok += right;
+        q.classList.add(right ? 'right' : 'wrong'); fb.hidden = false;
+      });
+      score.textContent = `${ok} de ${qs.length} correctas` + (blank ? ` · ${blank} sin contestar` : '') +
+        (ok === qs.length ? ' · ¡Perfecto!' : ok >= qs.length * 0.8 ? ' · ¡Superado!' : ' · Repasa los apartados de las preguntas falladas y vuelve a intentarlo.');
+      U.store.set('mlai.quiz.' + qz.dataset.quiz, Math.max(ok, U.store.get('mlai.quiz.' + qz.dataset.quiz, 0)));
+    };
+    qz.querySelector('[data-reset]').onclick = () => {
+      qs.forEach(q => { q.classList.remove('right', 'wrong'); q.querySelector('.fb').hidden = true; q.querySelectorAll('input').forEach(i => i.checked = false); });
+      score.textContent = '';
+    };
+  });
+  // lecciones: lista de comprobación y botón de nivel completado
+  document.querySelectorAll('[data-checklist]').forEach(cl => {
+    const key = 'mlai.check.' + cl.dataset.checklist, boxes = [...cl.querySelectorAll('input[data-item]')];
+    const saved = U.store.get(key, {}); boxes.forEach(b => { b.checked = !!saved[b.dataset.item]; b.onchange = () => { const d = U.store.get(key, {}); d[b.dataset.item] = b.checked; U.store.set(key, d); }; });
+  });
+  document.querySelectorAll('[data-complete-level]').forEach(btn => {
+    const n = btn.dataset.completeLevel, status = btn.parentElement.querySelector('[data-level-status]');
+    const paint = () => { const done = !!U.store.get('mlai.path', {})[n]; btn.textContent = done ? 'Nivel completado ✓ (desmarcar)' : 'Marcar el nivel como completado'; btn.classList.toggle('primary', !done); status.textContent = done ? 'Aparece como completado en la ruta de aprendizaje.' : ''; };
+    btn.onclick = () => { const d = U.store.get('mlai.path', {}); d[n] = !d[n]; U.store.set('mlai.path', d); paint(); };
+    paint();
+  });
+
   if (page === 'path') {
     const boxes = [...document.querySelectorAll('[data-level]')], bar = document.querySelector('.progress');
     const paint = () => {

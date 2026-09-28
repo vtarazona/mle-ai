@@ -401,3 +401,56 @@ html{scroll-behavior:smooth}
 .hb.hl .hbt i{background:var(--accent)}
 .repo-links{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
 blockquote.sample{margin:10px 0 16px;padding:14px 16px;border-left:3px solid var(--a-llm);background:var(--surface);border-radius:0 10px 10px 0;font:14px/1.6 var(--mono);color:var(--ink)}
+
+/* ---------- lecciones de la ruta ---------- */
+.idea{border-left:4px solid var(--accent);background:var(--soft);border-radius:0 10px 10px 0;padding:12px 16px;font:600 17px/1.45 var(--body);margin:4px 0 16px}
+.idea .eyebrow{display:block;margin-bottom:6px;color:var(--accent)}
+.callout.ia{background:color-mix(in srgb,var(--ok) 9%,var(--surface));border-color:color-mix(in srgb,var(--ok) 35%,var(--line))}
+.tl-lesson{margin:12px 0 4px}
+.chart .curve{fill:none;stroke:var(--accent);stroke-width:2.5}
+.chart .tan{stroke:var(--neg);stroke-width:2}
+.chart .dash{stroke:var(--muted);stroke-dasharray:4 4;fill:none}
+.chart .minpt{fill:var(--ok);stroke:var(--surface);stroke-width:1.5}
+.chart .stp{stroke:var(--neg);stroke-width:2} .chart .stp-f{fill:var(--neg)} .chart .stp-p{fill:var(--neg)}
+.chart .va{stroke:var(--accent);stroke-width:2.5} .chart .va-f{fill:var(--accent)} .chart .va-t{fill:var(--accent)}
+.chart .vb{stroke:var(--a-math);stroke-width:2.5} .chart .vb-f{fill:var(--a-math)} .chart .vb-t{fill:var(--a-math)}
+.chart .vs{stroke:var(--ok);stroke-width:2.5} .chart .vs-f{fill:var(--ok)} .chart .vs-t{fill:var(--ok)}
+.chart .vl{font:600 12px var(--mono)}
+.vecfig{max-width:420px}
+.chart .lvl{fill:none;stroke:var(--line);stroke-width:1.2}
+.chart .t1{fill:none;stroke:var(--accent);stroke-width:2} .chart .t1-p{fill:var(--accent)}
+.chart .t2{fill:none;stroke:var(--a-math);stroke-width:2} .chart .t2-p{fill:var(--a-math)}
+.chart .t3{fill:none;stroke:var(--neg);stroke-width:1.6;stroke-dasharray:5 4} .chart .t3-p{fill:var(--neg)}
+.chart .legend .k3{background:var(--neg)}
+.exercise{margin:10px 0;padding:0}
+.exercise summary{cursor:pointer;padding:14px 16px;list-style:none;line-height:1.5}
+.exercise summary::-webkit-details-marker{display:none}
+.exercise summary::after{content:'Ver solución ▾';display:block;margin-top:6px;font:600 12.5px var(--body);color:var(--accent)}
+.exercise[open] summary::after{content:'Ocultar ▴'}
+.exn{display:inline-block;font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent);background:var(--soft);border-radius:5px;padding:4px 7px;margin-right:8px}
+.exercise .hintline{margin:0 16px 10px;font-size:14.5px;color:var(--muted)}
+.exercise .sol{border-top:1px dashed var(--line);padding:12px 16px 14px}
+.exercise .sol p{margin:6px 0 0}
+.quiz ol{list-style:none;padding:0;margin:0;counter-reset:q}
+.quiz .q{counter-increment:q;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 0 12px;background:var(--surface)}
+.quiz .qt{margin:0 0 10px;font-weight:600}
+.quiz .qt::before{content:counter(q) '. ';color:var(--accent);font-family:var(--mono)}
+.quiz .opts{display:grid;gap:6px}
+.quiz .opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:8px;cursor:pointer;line-height:1.4}
+.quiz .opts label:hover{background:var(--soft)}
+.quiz .opts input{margin-top:3px;accent-color:var(--accent)}
+.quiz .q.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 7%,var(--surface))}
+.quiz .q.wrong{border-color:var(--neg);background:color-mix(in srgb,var(--neg) 6%,var(--surface))}
+.quiz .fb{margin:10px 0 0;font-size:14.5px}
+.quiz .q.right .fb::before{content:'✓ Correcto. ';font-weight:700;color:var(--ok)}
+.quiz .q.wrong .fb::before{content:'✗ No es esa. ';font-weight:700;color:var(--neg)}
+.quiz-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:6px}
+.quiz-bar .score{margin:0;font-weight:600}
+.checklist{list-style:none;padding:0;margin:0 0 14px;display:grid;gap:6px}
+.checklist label{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;line-height:1.45}
+.checklist input{margin-top:3px;accent-color:var(--ok)}
+.checklist input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--ok)}
+.level-done{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:18px}
+.level-done .note{color:var(--ok);font-size:14px}
+.next-level{margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}
+.chart.mini{max-width:600px}

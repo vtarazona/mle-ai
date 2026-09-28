@@ -29,15 +29,17 @@ const read = f => fs.readFileSync(path.join(SRC, f), 'utf8');
 /* ---------- 1. Cargar el contenido en un contexto aislado ---------- */
 const articleFiles = fs.existsSync(path.join(SRC, 'articles'))
   ? fs.readdirSync(path.join(SRC, 'articles')).filter(f => f.endsWith('.js')).sort().map(f => 'articles/' + f) : [];
-const code = ['utils.js', 'data.js', 'pages.js', 'content.js', ...articleFiles].map(read).join('\n;\n') +
-  '\n;globalThis.__X = { U, C, PAGES, LABS, LAB, AREAS, AREA, PAPERS, DATASETS, PROJECTS, PATH, ARTICLES, PM_STAGES, INDEX, buildIndex };';
+const lessonFiles = fs.existsSync(path.join(SRC, 'lessons'))
+  ? fs.readdirSync(path.join(SRC, 'lessons')).filter(f => f.endsWith('.js')).sort().map(f => 'lessons/' + f) : [];
+const code = ['utils.js', 'data.js', 'pages.js', 'content.js', ...articleFiles, ...lessonFiles].map(read).join('\n;\n') +
+  '\n;globalThis.__X = { U, C, PAGES, LABS, LAB, AREAS, AREA, PAPERS, DATASETS, PROJECTS, PATH, ARTICLES, LESSONS, PM_STAGES, INDEX, buildIndex };';
 const ctx = vm.createContext({
   console, katex, window: { katex },
   document: { addEventListener() {} }, matchMedia: () => ({ matches: false }),
 });
 vm.runInContext(code, ctx, { filename: 'contenido.js' });
 const X = ctx.__X;
-const { U, PAGES, LABS, AREAS, PAPERS, ARTICLES } = X;
+const { U, PAGES, LABS, AREAS, PAPERS, ARTICLES, LESSONS } = X;
 
 /* ---------- 2. Mapa de rutas (token interno → URL semántica) ---------- */
 const AREA_SLUG = { ml:'machine-learning', dl:'deep-learning', math:'mathematics', prog:'programming', llm:'llm', mlops:'mlops', research:'research' };
@@ -50,6 +52,7 @@ const ROUTES = {
 for (const [k, v] of Object.entries(AREA_SLUG)) ROUTES[k] = '/' + v;
 for (const l of LABS) { ROUTES['lab-' + l.id] = '/lab/' + LAB_SLUG[l.id]; l.url = '/' + l.file; }
 for (const a of ARTICLES) ROUTES[a.id] = `/${AREA_SLUG[a.area]}/${a.id}`;
+ROUTES['lesson-1'] = '/learning-path/mathematics';
 for (const p of PAPERS) ROUTES['paper-' + p.id] = '/papers/' + paperSlug(p);
 
 const link = html => html.replace(/href="#([A-Za-z0-9_-]+)"/g, (m, t) => ROUTES[t] ? `href="${ROUTES[t]}"` : m);
@@ -76,6 +79,10 @@ for (const a of ARTICLES) add(a.id, { page:'article', html: PAGES.article(a.id),
   ld:[{ '@context':'https://schema.org', '@type':'TechArticle', headline: a.title, description: trim(a.lede), inLanguage:'es', url: SITE + ROUTES[a.id], author: org, publisher: org, about: a.areaName },
       crumbLD([['Inicio', 'home'], [a.areaName, a.area], [a.title, a.id]])] });
 add('path', { page:'path', html: PAGES.path(), title:'Ruta de aprendizaje', desc:'Ruta de aprendizaje de IA en 10 niveles, de las matemáticas a la investigación, con teoría, ejercicios, proyectos y criterios de superación.', ld:[crumbLD([['Inicio', 'home'], ['Ruta de aprendizaje', 'path']])] });
+for (const le of LESSONS) add(le.id, { page:'article', html: vm.runInContext(`LESSON_PAGE(${JSON.stringify(le.id)})`, ctx), title: le.title, desc: trim(le.lede),
+  ld:[{ '@context':'https://schema.org', '@type':'LearningResource', name: le.title, headline: le.title, description: trim(le.lede), inLanguage:'es', url: SITE + ROUTES[le.id],
+        learningResourceType:'Lección', educationalLevel:'Principiante', timeRequired:'PT5H', teaches:'Vectores, matrices, derivadas, regla de la cadena, gradiente, descenso de gradiente y probabilidad básica', author: org, publisher: org },
+      crumbLD([['Inicio', 'home'], ['Ruta de aprendizaje', 'path'], [le.title, le.id]])] });
 add('papers', { page:'papers', html: PAGES.papers(), title:'Papers fundamentales', desc:`Biblioteca de ${PAPERS.length} papers fundamentales de la IA: backpropagation, LSTM, AlexNet, ResNet, Attention Is All You Need, BERT, GPT-3, LoRA y RAG.`, ld:[crumbLD([['Inicio', 'home'], ['Investigación', 'research'], ['Papers', 'papers']])] });
 for (const p of PAPERS) add('paper-' + p.id, { page:'paper', html: PAGES.paper(p.id), title: `${p.t} (${p.y})`, desc: trim(`${p.c} ${p.a}, ${p.y}.`),
   ld:[{ '@context':'https://schema.org', '@type':'ScholarlyArticle', name: p.t, headline: p.t, datePublished: String(p.y), author: p.a.replace(/ et al\.?/, '').split(',').map(n => ({ '@type':'Person', name: n.trim() })), isPartOf: p.v, inLanguage:'en' },
@@ -117,7 +124,7 @@ function render(pg) {
   const canonical = SITE + (pg.url === '/' ? '/' : pg.url);
   const title = pg.route === 'home' ? pg.title : `${pg.title} · MLE·AI`;
   let body = layout.replace('{{MAIN}}', pg.html);
-  const navKey = NAV[pg.page] || (pg.route === 'project-mantenimiento' ? 'projects' : '');
+  const navKey = pg.route.startsWith('lesson-') ? 'path' : NAV[pg.page] || (pg.route === 'project-mantenimiento' ? 'projects' : '');
   if (navKey) body = body.replace(`data-nav="${navKey}"`, `data-nav="${navKey}" class="on"`);
   body = link(body);
   const head = `<!doctype html>
