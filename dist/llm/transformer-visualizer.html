@@ -55,7 +55,7 @@
   <div id="drawer-topics" style="display:contents"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas para IA</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a></div>
 </nav>
 
-<main id="app" class="wrap"><nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a><span class="sep">/</span><a href="/llm">LLM</a><span class="sep">/</span><span>Transformer Visualizer</span></nav><header class="page-head"><span class="kicker">LLM · Transformer Visualizer</span><h1>Del texto al siguiente token</h1><p class="lede">Un Transformer decoder real de una capa (d<sub>model</sub> = 8, 2 cabezas, d<sub>ff</sub> = 16) que se ejecuta en tu navegador. Escribe una frase y recorre las 13 etapas: en cada una verás la forma de los tensores, la ecuación, los números y el código PyTorch equivalente.</p><p class="honest">Los pesos son aleatorios con semilla fija: el modelo no está entrenado, así que la palabra que predice no tiene sentido. Las operaciones, las formas y los números sí son los que calcularía un modelo real con estos pesos.</p></header><div id="tv-root" class="tv"></div></main>
+<main id="app" class="wrap"><nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a><span class="sep">/</span><a href="/llm">LLM</a><span class="sep">/</span><span>Transformer Visualizer</span></nav><header class="page-head"><span class="kicker">LLM · Transformer Visualizer</span><h1>Del texto al siguiente token</h1><p class="lede">Un Transformer decoder real y entrenado, de una capa (d<sub>model</sub> = 8, 2 cabezas, d<sub>ff</sub> = 16), que se ejecuta en tu navegador. Escribe una frase y recorre las 13 etapas: en cada una verás la forma de los tensores, la ecuación, los números y el código PyTorch equivalente.</p><p class="honest">Es un modelo diminuto pero entrenado de verdad: sus 832 parámetros se ajustaron con PyTorch sobre 30.000 frases sintéticas con estas 37 palabras. Por eso completa «el gato come» con «pescado» o «el sol sale por la» con «mañana», pero no sabe nada fuera de su pequeño mundo. Las operaciones, las formas y los números son los mismos que en un modelo grande.</p></header><div id="tv-root" class="tv"></div></main>
 
 <div class="search" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscador">
   <div class="search-box">
@@ -73,7 +73,7 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" defer></script>
-<script src="/assets/app.js?v=33d8273119" defer></script>
+<script src="/assets/app.js?v=7d4c8c7019" defer></script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>

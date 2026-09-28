@@ -7,7 +7,7 @@ ART = {'linear_regression': 'machine-learning/linear-regression', 'logistic_regr
 PIP = {'gradient_boosting': '%pip install -q xgboost'}
 def md(t): return {'cell_type': 'markdown', 'metadata': {}, 'source': t}
 def code(t): return {'cell_type': 'code', 'metadata': {}, 'execution_count': None, 'outputs': [], 'source': t.strip('\n')}
-for py in sorted(pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else 'notebooks').glob('*.py')):
+for py in sorted(p for p in pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else 'notebooks').glob('*.py') if not p.stem.startswith('tv_')):
     src = py.read_text()
     doc = re.match(r'\s*"""(.*?)"""', src, re.S); title = doc.group(1).strip() if doc else py.stem
     body = src[doc.end():] if doc else src

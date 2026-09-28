@@ -1,9 +1,9 @@
 /* =========================================================================
    TRANSFORMER VISUALIZER
    Un Transformer decoder de 1 capa, d_model = 8, 2 cabezas, d_ff = 16,
-   implementado en JS puro. Los pesos son aleatorios (semilla fija): no está
-   entrenado, así que la predicción no tiene sentido lingüístico, pero todas
-   las formas, operaciones y números son reales.
+   implementado en JS puro. Sus 832 pesos se entrenaron con PyTorch sobre
+   30.000 frases sintéticas (notebooks/tv_train.py) y se cargan desde
+   src/tv-weights.js: el modelo completa frases de su pequeño vocabulario.
    ========================================================================= */
 const TV = (() => {
   const VOCAB = ['[PAD]','[UNK]','el','la','un','una','gato','perro','niña','niño','sol','luna',
@@ -11,19 +11,9 @@ const TV = (() => {
     'jardín','parque','noche','mañana','grande','pequeño','rápido','en','por','de','y','.',','];
   const D = 8, H = 2, DK = 4, DFF = 16, MAXT = 10;
 
-  // RNG determinista
-  let s = 20240917;
-  const rnd = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-  const gau = () => { let u = 0, v = 0; while (!u) u = rnd(); while (!v) v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
-  const mat = (r, c, sc) => Array.from({ length: r }, () => Array.from({ length: c }, () => gau() * sc));
 
-  const E  = mat(VOCAB.length, D, 0.8);
-  const WQ = [mat(D, DK, 0.6), mat(D, DK, 0.6)];
-  const WK = [mat(D, DK, 0.6), mat(D, DK, 0.6)];
-  const WV = [mat(D, DK, 0.6), mat(D, DK, 0.6)];
-  const WO = mat(D, D, 0.4);
-  const W1 = mat(D, DFF, 0.5), B1 = Array(DFF).fill(0).map(() => gau() * 0.1);
-  const W2 = mat(DFF, D, 0.35), B2 = Array(D).fill(0).map(() => gau() * 0.1);
+  // Pesos entrenados (ver notebooks/tv_train.py)
+  const { E, WQ, WK, WV, WO, W1, B1, W2, B2 } = TV_WEIGHTS;
 
   const mm = (A, B) => A.map(r => B[0].map((_, j) => r.reduce((acc, v, k) => acc + v * B[k][j], 0)));
   const T  = A => A[0].map((_, j) => A.map(r => r[j]));
@@ -89,7 +79,7 @@ const TVUI = (() => {
     { id:'probs', t:'Probabilidades', short:'Probabilidades' },
     { id:'gen', t:'Token generado', short:'Token' },
   ];
-  let text = 'el gato come pescado en la', stage = 0, head = 0, temp = 1, R = null, msg = '';
+  let text = 'el gato come', stage = 0, head = 0, temp = 1, R = null, msg = '';
 
   const f2 = v => v === -Infinity ? '−∞' : (v < 0 ? '−' : '') + Math.abs(v).toFixed(2);
   function cellStyle(v, max) {
@@ -193,10 +183,12 @@ const TVUI = (() => {
       case 'gen': return {
         shape: `nuevo id: ${R.next}`,
         tex: '\\hat{y} = \\arg\\max_i\\, p_i',
-        why: 'Se elige el token más probable (decodificación voraz) o se muestrea de la distribución. Se añade al texto y todo el proceso empieza de nuevo para el siguiente. Como estos pesos no están entrenados, la palabra elegida es arbitraria: un modelo real habría aprendido de miles de millones de frases qué suele venir después.',
+        why: 'Se elige el token más probable (decodificación voraz) o se muestrea de la distribución. Se añade al texto y todo el proceso empieza de nuevo para el siguiente token. Este modelo, con solo 832 parámetros, aprendió de 30.000 frases sintéticas qué suele venir después dentro de su mundo de 37 palabras; un LLM hace lo mismo con cientos de miles de millones de parámetros y buena parte del texto de internet.',
         viz: `<div class="chips big">${R.toks.map(t => `<span class="chip">${U.esc(t)}</span>`).join('')}<span class="chip new">${U.esc(TV.VOCAB[R.next])}</span></div>
           <p class="note">Probabilidad: ${(R.probs[R.next] * 100).toFixed(1)} %</p>
-          <button class="btn primary" id="tv-append" type="button">Añadir «${U.esc(TV.VOCAB[R.next])}» y volver a empezar</button>`,
+          ${R.toks[R.toks.length - 1] === '.'
+            ? `<p class="note"><b>La frase ya está terminada.</b> Este modelo se entrenó con frases sueltas, así que después de un punto no sabe continuar: lo que ves arriba es una suposición sin fundamento. Escribe otro comienzo en el cuadro de texto.</p>`
+            : `<button class="btn primary" id="tv-append" type="button">${TV.VOCAB[R.next] === '.' ? 'Añadir «.» y terminar la frase' : `Añadir «${U.esc(TV.VOCAB[R.next])}» y volver a empezar`}</button>`}`,
         code: `for _ in range(20):\n    logits = modelo(ids)[:, -1, :]\n    nuevo = logits.argmax(-1, keepdim=True)\n    ids = torch.cat([ids, nuevo], dim=1)` };
     }
   }
@@ -212,7 +204,7 @@ const TVUI = (() => {
         <label for="tv-text">Texto de entrada</label>
         <div class="tv-row"><input id="tv-text" type="text" maxlength="80" value="${U.esc(text)}" autocomplete="off" spellcheck="false">
         <button class="btn" id="tv-run" type="button">Procesar</button></div>
-        <p class="note">${msg ? `<b>${U.esc(msg)}</b> ` : ''}Vocabulario de ${TV.VOCAB.length} palabras (máximo ${TV.MAXT} tokens). Prueba: «la niña lee un libro en el», «el sol sale por la».</p>
+        <p class="note">${msg ? `<b>${U.esc(msg)}</b> ` : ''}Vocabulario de ${TV.VOCAB.length} palabras (máximo ${TV.MAXT} tokens). Prueba: «la niña lee un», «el sol sale por la», «el perro bebe» o «la luna brilla por la».</p>
       </div>
       <ol class="tv-steps" aria-label="Etapas">${STAGES.map((s, i) => `<li><button type="button" data-stage="${i}" class="${i === stage ? 'on' : ''} ${i < stage ? 'done' : ''}" aria-current="${i === stage}"><span>${String(i + 1).padStart(2, '0')}</span>${s.short}</button></li>`).join('')}</ol>
       <div class="tv-panel">

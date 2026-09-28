@@ -139,8 +139,8 @@ const PAGES = {
 
   transformer() {
     return C.crumbs([['Inicio', 'home'], ['LLM', 'llm'], ['Transformer Visualizer']]) + C.pageHead('LLM · Transformer Visualizer', 'Del texto al siguiente token',
-      'Un Transformer decoder real de una capa (d<sub>model</sub> = 8, 2 cabezas, d<sub>ff</sub> = 16) que se ejecuta en tu navegador. Escribe una frase y recorre las 13 etapas: en cada una verás la forma de los tensores, la ecuación, los números y el código PyTorch equivalente.',
-      `<p class="honest">Los pesos son aleatorios con semilla fija: el modelo no está entrenado, así que la palabra que predice no tiene sentido. Las operaciones, las formas y los números sí son los que calcularía un modelo real con estos pesos.</p>`) +
+      'Un Transformer decoder real y entrenado, de una capa (d<sub>model</sub> = 8, 2 cabezas, d<sub>ff</sub> = 16), que se ejecuta en tu navegador. Escribe una frase y recorre las 13 etapas: en cada una verás la forma de los tensores, la ecuación, los números y el código PyTorch equivalente.',
+      `<p class="honest">Es un modelo diminuto pero entrenado de verdad: sus 832 parámetros se ajustaron con PyTorch sobre 30.000 frases sintéticas con estas 37 palabras. Por eso completa «el gato come» con «pescado» o «el sol sale por la» con «mañana», pero no sabe nada fuera de su pequeño mundo. Las operaciones, las formas y los números son los mismos que en un modelo grande.</p>`) +
       `<div id="tv-root" class="tv"></div>`;
   },
 

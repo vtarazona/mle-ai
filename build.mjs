@@ -91,7 +91,7 @@ fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, 'assets'), { recursive: true });
 const hash = s => crypto.createHash('sha1').update(s).digest('hex').slice(0, 10);
 const css = read('style.css');
-const appJs = ['utils.js', 'tv.js', 'pixelhero.js', 'client.js'].map(read).join('\n;\n');
+const appJs = ['utils.js', 'tv-weights.js', 'tv.js', 'pixelhero.js', 'client.js'].map(read).join('\n;\n');
 fs.writeFileSync(path.join(OUT, 'assets/style.css'), css);
 fs.writeFileSync(path.join(OUT, 'assets/app.js'), appJs);
 const V = { css: hash(css), js: hash(appJs) };

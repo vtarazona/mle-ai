@@ -18,6 +18,7 @@ src/
   articles/          Un archivo por artículo + 00-charts.js (gráficos SVG)
   client.js          JavaScript del navegador: menús, tema, buscador, montaje de componentes
   tv.js              Transformer Visualizer (un Transformer real de 1 capa en JS)
+  tv-weights.js      Sus pesos entrenados (los genera notebooks/tv_train.py)
   pixelhero.js       Animación pixel art de la portada
   layout.html        Cabecera, menús, buscador y pie comunes
   style.css          Estilos (modo claro y oscuro)
@@ -38,6 +39,8 @@ python3 scripts/serve.py dist 8000   # http://localhost:8000
 ```
 
 Tras cambiar un notebook: `python3 scripts/py2nb.py notebooks` regenera los `.ipynb`.
+
+Para reentrenar el Transformer Visualizer: `python3 notebooks/tv_train.py` (PyTorch, ~1 min en CPU) reescribe `src/tv-weights.js`.
 
 ## SEO
 
