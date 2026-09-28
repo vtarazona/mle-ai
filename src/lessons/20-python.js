@@ -252,7 +252,7 @@ LESSONS.push({
       <p><b>3. Más alcohol, mejor nota.</b> La media de alcohol sube casi siempre con la calidad: 9,90 % en los de calidad 5, 10,63 % en los de 6, 11,47 % en los de 7 y 12,09 % en los de 8.</p>
       <p><b>4. Las dos pistas más fuertes.</b> La <b>correlación</b> es un número entre −1 y 1 que dice si dos columnas suben juntas (positiva) o una sube cuando la otra baja (negativa):</p>
       ${CH.bars([['alcohol', 0.476, true], ['sulfatos', 0.251], ['ácido cítrico', 0.226], ['azúcar residual', 0.014], ['densidad', -0.175], ['dióxido de azufre total', -0.185], ['acidez volátil', -0.391, true]], { fmt: v => (v > 0 ? '+' : '−') + Math.abs(v).toFixed(2).replace('.', ','), max: 0.5, caption: 'Correlación de algunas medidas químicas con la calidad. El alcohol va a favor y la acidez volátil (el sabor avinagrado) en contra.' })}
-      ${ojo('correlación no es causa. Que los vinos buenos tengan más alcohol no significa que añadir alcohol mejore un vino. Lo verás en el nivel 3.')}
+      ${ojo('correlación no es causa. Que los vinos buenos tengan más alcohol no significa que añadir alcohol mejore un vino. Lo verás en el <a href="#lesson-3">nivel 3</a>.')}
       <p><b>Para ir más allá:</b> (1) quita los duplicados con <code>vinos.drop_duplicates()</code> y comprueba si cambian las conclusiones; (2) haz lo mismo con los vinos blancos (<code>winequality-white.csv</code>); (3) escribe en tres frases, para alguien que no sabe de datos, qué has descubierto.</p>` },
 
     { id:'test', t:'Test de autoevaluación', plain:'test preguntas autoevaluación python', html:() => quiz('nivel-2', [
@@ -290,7 +290,7 @@ LESSONS.push({
       <h4>Ejecuta el código de la lección</h4>
       <p>Todos los ejemplos, los ejercicios y el proyecto, con los datos incluidos:</p>
       ${CH.repo('nivel2_python.py')}
-      <p class="next-level">Anterior: <a href="#lesson-1">Nivel 1 · Matemáticas</a> · Siguiente: <a href="#path">Nivel 3 · Estadística</a> (en preparación) · <a href="#path">Volver a la ruta</a></p>` },
+      <p class="next-level">Anterior: <a href="#lesson-1">Nivel 1 · Matemáticas</a> · Siguiente: <a href="#lesson-3">Nivel 3 · Estadística</a> · <a href="#path">Volver a la ruta</a></p>` },
   ],
 });
 })();

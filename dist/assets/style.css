@@ -458,3 +458,16 @@ pre.out{margin:-6px 0 16px;padding:10px 14px;background:var(--soft);border:1px s
 pre.out .eyebrow{display:block;margin-bottom:6px}
 .prose kbd{font:600 12px var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--surface)}
 .exercise .sol pre{background:var(--soft);border-radius:8px;padding:10px 12px;overflow-x:auto;font:13.5px/1.5 var(--mono)}
+.chart .band1{fill:color-mix(in srgb,var(--accent) 38%,transparent)} .chart .band2{fill:color-mix(in srgb,var(--accent) 20%,transparent)} .chart .band3{fill:color-mix(in srgb,var(--accent) 9%,transparent)}
+.chart .legend .kb1{background:color-mix(in srgb,var(--accent) 38%,transparent);height:10px} .chart .legend .kb2{background:color-mix(in srgb,var(--accent) 20%,transparent);height:10px} .chart .legend .kb3{background:color-mix(in srgb,var(--accent) 9%,transparent);height:10px;outline:1px solid var(--line)}
+.chart .lbl.sm{font-size:11px;font-weight:500}
+.chart .panels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.chart .panels.four{grid-template-columns:repeat(4,1fr)}
+@media (max-width:640px){.chart .panels,.chart .panels.four{grid-template-columns:repeat(2,1fr)}}
+.chart .panel-t{margin:0 0 4px;font-size:13px;color:var(--muted);line-height:1.35}
+.chart .panel-t b{color:var(--ink)}
+.chart .bar{fill:color-mix(in srgb,var(--a-math) 75%,transparent)} .chart .bar.hl{fill:var(--accent)}
+.chart .frame{fill:none;stroke:var(--line)}
+.chart .whisk{stroke:var(--ink);stroke-width:1.5} .chart .box{fill:color-mix(in srgb,var(--accent) 16%,transparent);stroke:var(--accent);stroke-width:1.5}
+.chart .medline{stroke:var(--neg);stroke-width:2.5} .chart .outl{fill:none;stroke:var(--neg);stroke-width:1.5}
+.chart .panel-t{min-height:2.7em}
