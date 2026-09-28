@@ -23,7 +23,7 @@ const SRC = path.join(ROOT, 'src');
 const OUT = path.join(ROOT, 'dist');
 const SITE = 'https://mle-ai.vercel.app';
 // Código de verificación de Google Search Console (etiqueta HTML). Vacío = sin etiqueta.
-const GOOGLE_SITE_VERIFICATION = '';
+const GOOGLE_SITE_VERIFICATION = 'lJoSxDvlrlGykHqKigsgqx-qXLGJBBRWoETnGGeEP_M';
 const read = f => fs.readFileSync(path.join(SRC, f), 'utf8');
 
 /* ---------- 1. Cargar el contenido en un contexto aislado ---------- */
