@@ -454,3 +454,7 @@ blockquote.sample{margin:10px 0 16px;padding:14px 16px;border-left:3px solid var
 .level-done .note{color:var(--ok);font-size:14px}
 .next-level{margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}
 .chart.mini{max-width:600px}
+pre.out{margin:-6px 0 16px;padding:10px 14px;background:var(--soft);border:1px solid var(--line);border-top:0;border-radius:0 0 10px 10px;font:13.5px/1.55 var(--mono);white-space:pre-wrap;color:var(--ink)}
+pre.out .eyebrow{display:block;margin-bottom:6px}
+.prose kbd{font:600 12px var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--surface)}
+.exercise .sol pre{background:var(--soft);border-radius:8px;padding:10px 12px;overflow-x:auto;font:13.5px/1.5 var(--mono)}

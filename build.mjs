@@ -52,7 +52,7 @@ const ROUTES = {
 for (const [k, v] of Object.entries(AREA_SLUG)) ROUTES[k] = '/' + v;
 for (const l of LABS) { ROUTES['lab-' + l.id] = '/lab/' + LAB_SLUG[l.id]; l.url = '/' + l.file; }
 for (const a of ARTICLES) ROUTES[a.id] = `/${AREA_SLUG[a.area]}/${a.id}`;
-ROUTES['lesson-1'] = '/learning-path/mathematics';
+for (const le of LESSONS) ROUTES[le.id] = '/learning-path/' + le.slug;
 for (const p of PAPERS) ROUTES['paper-' + p.id] = '/papers/' + paperSlug(p);
 
 const link = html => html.replace(/href="#([A-Za-z0-9_-]+)"/g, (m, t) => ROUTES[t] ? `href="${ROUTES[t]}"` : m);
@@ -81,7 +81,7 @@ for (const a of ARTICLES) add(a.id, { page:'article', html: PAGES.article(a.id),
 add('path', { page:'path', html: PAGES.path(), title:'Ruta de aprendizaje', desc:'Ruta de aprendizaje de IA en 10 niveles, de las matemáticas a la investigación, con teoría, ejercicios, proyectos y criterios de superación.', ld:[crumbLD([['Inicio', 'home'], ['Ruta de aprendizaje', 'path']])] });
 for (const le of LESSONS) add(le.id, { page:'article', html: vm.runInContext(`LESSON_PAGE(${JSON.stringify(le.id)})`, ctx), title: le.title, desc: trim(le.lede),
   ld:[{ '@context':'https://schema.org', '@type':'LearningResource', name: le.title, headline: le.title, description: trim(le.lede), inLanguage:'es', url: SITE + ROUTES[le.id],
-        learningResourceType:'Lección', educationalLevel:'Principiante', timeRequired:'PT5H', teaches:'Vectores, matrices, derivadas, regla de la cadena, gradiente, descenso de gradiente y probabilidad básica', author: org, publisher: org },
+        learningResourceType:'Lección', educationalLevel:'Principiante', timeRequired: le.time, teaches: le.teaches, author: org, publisher: org },
       crumbLD([['Inicio', 'home'], ['Ruta de aprendizaje', 'path'], [le.title, le.id]])] });
 add('papers', { page:'papers', html: PAGES.papers(), title:'Papers fundamentales', desc:`Biblioteca de ${PAPERS.length} papers fundamentales de la IA: backpropagation, LSTM, AlexNet, ResNet, Attention Is All You Need, BERT, GPT-3, LoRA y RAG.`, ld:[crumbLD([['Inicio', 'home'], ['Investigación', 'research'], ['Papers', 'papers']])] });
 for (const p of PAPERS) add('paper-' + p.id, { page:'paper', html: PAGES.paper(p.id), title: `${p.t} (${p.y})`, desc: trim(`${p.c} ${p.a}, ${p.y}.`),

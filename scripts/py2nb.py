@@ -4,7 +4,7 @@ import json, re, sys, pathlib
 ART = {'linear_regression': 'machine-learning/linear-regression', 'logistic_regression': 'machine-learning/logistic-regression',
        'gradient_boosting': 'machine-learning/gradient-boosting', 'neural_networks': 'deep-learning/neural-networks',
        'transformer': 'deep-learning/transformers', 'random_forest': 'machine-learning/random-forest',
-       'nivel1_matematicas': 'learning-path/mathematics'}
+       'nivel1_matematicas': 'learning-path/mathematics', 'nivel2_python': 'learning-path/python'}
 PIP = {'gradient_boosting': '%pip install -q xgboost'}
 def md(t): return {'cell_type': 'markdown', 'metadata': {}, 'source': t}
 def code(t): return {'cell_type': 'code', 'metadata': {}, 'execution_count': None, 'outputs': [], 'source': t.strip('\n')}

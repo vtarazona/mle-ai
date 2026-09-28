@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nivel 2 · Python para IA · MLE·AI</title>
+<meta name="description" content="El Python justo para empezar a trabajar con datos: las piezas básicas del lenguaje, NumPy para hacer cuentas con muchos números a la vez, Pandas para…">
+<link rel="canonical" href="https://mle-ai.vercel.app/learning-path/python">
+<meta name="theme-color" content="#0E1621">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MLE·AI">
+<meta property="og:title" content="Nivel 2 · Python para IA">
+<meta property="og:description" content="El Python justo para empezar a trabajar con datos: las piezas básicas del lenguaje, NumPy para hacer cuentas con muchos números a la vez, Pandas para…">
+<meta property="og:url" content="https://mle-ai.vercel.app/learning-path/python">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="https://mle-ai.vercel.app/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mle-ai.vercel.app/img/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1621'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='11' font-weight='700' fill='%236E9BFF' text-anchor='middle'%3EML%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/assets/style.css?v=8e9f8ba695">
+<script>try{var t=JSON.parse(localStorage.getItem('mlai.theme'));if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"Nivel 2 · Python para IA","headline":"Nivel 2 · Python para IA","description":"El Python justo para empezar a trabajar con datos: las piezas básicas del lenguaje, NumPy para hacer cuentas con muchos números a la vez, Pandas para…","inLanguage":"es","url":"https://mle-ai.vercel.app/learning-path/python","learningResourceType":"Lección","educationalLevel":"Principiante","timeRequired":"PT6H","teaches":"Variables, listas, diccionarios, condiciones, bucles, funciones, NumPy, Pandas y Matplotlib","author":{"@type":"Organization","name":"MLE·AI","url":"https://mle-ai.vercel.app"},"publisher":{"@type":"Organization","name":"MLE·AI","url":"https://mle-ai.vercel.app"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://mle-ai.vercel.app"},{"@type":"ListItem","position":2,"name":"Ruta de aprendizaje","item":"https://mle-ai.vercel.app/learning-path"},{"@type":"ListItem","position":3,"name":"Nivel 2 · Python para IA","item":"https://mle-ai.vercel.app/learning-path/python"}]}</script>
+</head>
+<body data-page="article">
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="MLE·AI, inicio"><span class="mk">ML/AI</span><span><b>MLE·AI</b><small>Machine Learning Engineering</small></span></a>
+    <nav class="mainnav" aria-label="Principal">
+      <button type="button" id="topics-btn" data-nav="topics" aria-expanded="false" aria-controls="mega">Temas ▾</button>
+      <a href="/lab" data-nav="lab">Laboratorio</a>
+      <a href="/llm/transformer-visualizer" data-nav="transformer">Transformer</a>
+      <a href="/learning-path" data-nav="path" class="on">Ruta</a>
+      <a href="/projects" data-nav="projects">Proyectos</a>
+      <a href="/papers" data-nav="papers">Papers</a>
+      <a href="/datasets" data-nav="datasets">Datasets</a>
+    </nav>
+    <span class="spacer"></span>
+    <button type="button" class="searchbtn" data-open-search aria-label="Buscar">⌕ Buscar en el portal<kbd>/</kbd></button>
+    <button type="button" class="iconbtn" id="theme-btn" aria-label="Cambiar tema">☾</button>
+    <button type="button" class="iconbtn" id="menu-btn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  </div>
+  <div class="mega" id="mega" hidden><div class="wrap" id="mega-inner"><a href="/machine-learning" class="mega-item"><b>Machine Learning</b><small>16 temas · Algoritmos clásicos</small></a><a href="/deep-learning" class="mega-item"><b>Deep Learning</b><small>13 temas · Redes neuronales</small></a><a href="/mathematics" class="mega-item"><b>Matemáticas para IA</b><small>10 temas · Fundamentos</small></a><a href="/programming" class="mega-item"><b>Programación</b><small>8 temas · Herramientas</small></a><a href="/llm" class="mega-item"><b>LLM</b><small>13 temas · Modelos de lenguaje</small></a><a href="/mlops" class="mega-item"><b>MLOps</b><small>12 temas · Producción</small></a><a href="/research" class="mega-item"><b>Investigación</b><small>8 temas · Estado del arte</small></a><a href="/llm/transformer-visualizer" class="mega-item hl"><b>Transformer Visualizer</b><small>13 etapas interactivas</small></a></div></div>
+</header>
+<nav class="drawer" aria-label="Menú móvil">
+  <button type="button" class="searchbtn mobile-search" data-open-search>⌕ Buscar en el portal</button>
+  <span class="dl">Secciones</span>
+  <a href="/">Inicio</a><a href="/lab">Laboratorio</a><a href="/llm/transformer-visualizer">Transformer Visualizer</a><a href="/learning-path">Ruta de aprendizaje</a><a href="/projects">Proyectos</a><a href="/papers">Papers</a><a href="/datasets">Datasets</a>
+  <span class="dl">Temas</span>
+  <div id="drawer-topics" style="display:contents"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas para IA</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a></div>
+</nav>
+
+<main id="app" class="wrap"><nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a><span class="sep">/</span><a href="/learning-path">Ruta de aprendizaje</a><span class="sep">/</span><span>Nivel 2 · Python para IA</span></nav><div class="article">
+    <nav class="toc" aria-label="Contenido del artículo"><span class="toc-t">Contenido</span><ol><li><a href="#p2-objetivos" data-target="p2-objetivos"><span>01</span>Cómo usar esta lección</a></li><li><a href="#p2-variables" data-target="p2-variables"><span>02</span>1 · Variables y tipos</a></li><li><a href="#p2-colecciones" data-target="p2-colecciones"><span>03</span>2 · Listas y diccionarios</a></li><li><a href="#p2-control" data-target="p2-control"><span>04</span>3 · Condiciones y bucles</a></li><li><a href="#p2-funciones" data-target="p2-funciones"><span>05</span>4 · Funciones</a></li><li><a href="#p2-numpy" data-target="p2-numpy"><span>06</span>5 · NumPy: cuentas con muchos números a la vez</a></li><li><a href="#p2-pandas" data-target="p2-pandas"><span>07</span>6 · Pandas: tablas</a></li><li><a href="#p2-matplotlib" data-target="p2-matplotlib"><span>08</span>7 · Matplotlib: gráficos</a></li><li><a href="#p2-ejercicios" data-target="p2-ejercicios"><span>09</span>Ejercicios</a></li><li><a href="#p2-proyecto" data-target="p2-proyecto"><span>10</span>Proyecto: tu primer análisis de datos reales</a></li><li><a href="#p2-test" data-target="p2-test"><span>11</span>Test de autoevaluación</a></li><li><a href="#p2-criterios" data-target="p2-criterios"><span>12</span>¿Has asimilado el nivel?</a></li></ol></nav>
+    <article class="prose"><header class="page-head in-article"><span class="kicker">Ruta de aprendizaje · Nivel 2 de 10</span><h1>Nivel 2 · Python para IA</h1>
+     <p class="lede">El Python justo para empezar a trabajar con datos: las piezas básicas del lenguaje, NumPy para hacer cuentas con muchos números a la vez, Pandas para manejar tablas y Matplotlib para dibujarlas. Termina con tu primer análisis de datos reales.</p>
+     <p class="meta">Unas 5–7 horas · No hace falta instalar nada: todo funciona en Google Colab · Código de todos los ejemplos en notebooks/nivel2_python.py</p></header><section id="p2-objetivos" class="sec"><h2><span class="n">01</span>Cómo usar esta lección</h2>
+      <p>Python es el idioma de la IA: casi todas las librerías de machine learning (scikit-learn, PyTorch, TensorFlow) se usan desde Python. No necesitas dominarlo entero; necesitas <b>soltura con unas pocas piezas</b> y cuatro herramientas.</p>
+      <div class="tbl"><table><thead><tr><th>Pieza</th><th>Para qué sirve</th><th>En un proyecto de IA</th></tr></thead><tbody><tr><td>Variables y tipos</td><td>Guardar un dato con un nombre</td><td>Parámetros, rutas de archivos, resultados</td></tr><tr><td>Listas y diccionarios</td><td>Guardar muchos datos juntos</td><td>Configuraciones, resultados de varios experimentos</td></tr><tr><td>Condiciones, bucles y funciones</td><td>Decidir, repetir y reutilizar</td><td>Limpiar datos, entrenar varias veces, evaluar</td></tr><tr><td>NumPy</td><td>Hacer cuentas con muchos números a la vez</td><td>Los datos de cualquier modelo son arrays de NumPy</td></tr><tr><td>Pandas</td><td>Manejar tablas</td><td>Cargar, limpiar y explorar los datos</td></tr><tr><td>Matplotlib</td><td>Dibujar gráficos</td><td>Entender los datos y los resultados</td></tr></tbody></table></div>
+      <h4>Antes de empezar: abre Google Colab</h4>
+      <p><a href="https://colab.research.google.com" target="_blank" rel="noopener">Google Colab</a> es un cuaderno de Python en el navegador, gratis y sin instalar nada. Escribes código en una <b>celda</b>, pulsas <kbd>Mayús</kbd> + <kbd>Intro</kbd> y ves el resultado debajo. El botón «Abrir en Google Colab» del final de la lección carga todos los ejemplos.</p>
+      <p>El método es el del nivel 1: <b>la idea en una frase</b>, un ejemplo corto y dónde aparece en IA. Con una diferencia: aquí se aprende <b>escribiendo</b>. Teclea los ejemplos en vez de copiarlos, cambia los números y mira qué pasa. Equivocarse y leer el error es parte del aprendizaje.</p></section><section id="p2-variables" class="sec"><h2><span class="n">02</span>1 · Variables y tipos</h2>
+      <p class="idea"><span class="eyebrow">La idea en una frase</span>Una variable es un nombre que apunta a un dato.</p>
+      <p>Con <code>=</code> guardas un valor bajo un nombre para usarlo después. Cada dato tiene un <b>tipo</b>, y los cuatro básicos son estos:</p>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code>precio = <span class="n">12.5</span>          <span class="c"># float: número con decimales</span>
+unidades = <span class="n">3</span>           <span class="c"># int: número entero</span>
+producto = <span class="s">&quot;vino&quot;</span>      <span class="c"># str: texto</span>
+en_oferta = <span class="k">True</span>       <span class="c"># bool: verdadero o falso</span>
+
+total = precio * unidades
+print(f<span class="s">&quot;{unidades} × {producto} = {total} €&quot;</span>)</code></pre></div>
+      <pre class="out"><span class="eyebrow">Salida</span>3 × vino = 37.5 €</pre>
+      <p>La <code>f</code> delante de las comillas (una <b>f-string</b>) permite meter variables dentro del texto entre llaves. Es la forma más cómoda de mostrar resultados.</p>
+      <h4>Operaciones con números</h4>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="n">7</span> / <span class="n">2</span>     <span class="c"># 3.5  división normal</span>
+<span class="n">7</span> // <span class="n">2</span>    <span class="c"># 3    división entera</span>
+<span class="n">7</span> % <span class="n">2</span>     <span class="c"># 1    resto</span>
+<span class="n">2</span> ** <span class="n">3</span>    <span class="c"># 8    potencia</span></code></pre></div>
+      <p class="callout warn"><b>Error típico:</b> en Python los decimales se escriben con <b>punto</b>, no con coma: <code>12.5</code>, nunca <code>12,5</code>. Con coma, Python entiende dos números distintos.</p>
+      <p class="callout ia"><b>¿Dónde aparece en IA?</b> la tasa de aprendizaje del nivel 1 se guarda así: <code>eta = 0.1</code>. Los hiperparámetros de un modelo son, sencillamente, variables.</p></section><section id="p2-colecciones" class="sec"><h2><span class="n">03</span>2 · Listas y diccionarios</h2>
+      <p class="idea"><span class="eyebrow">La idea en una frase</span>Una lista guarda datos en orden; un diccionario los guarda con nombre.</p>
+      <h4>Listas: una fila de cajas numeradas</h4>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code>notas = [<span class="n">7</span>, <span class="n">5</span>, <span class="n">9</span>, <span class="n">6</span>]
+
+len(notas)      <span class="c"># 4    cuántos elementos</span>
+sum(notas)      <span class="c"># 27</span>
+notas[<span class="n">0</span>]        <span class="c"># 7    ¡el primero es el 0!</span>
+notas[-<span class="n">1</span>]       <span class="c"># 6    el último</span>
+notas[<span class="n">1</span>:<span class="n">3</span>]      <span class="c"># [5, 9]  del 1 al 3, sin incluir el 3</span>
+
+notas.append(<span class="n">8</span>)                  <span class="c"># añade al final</span>
+sum(notas) / len(notas)          <span class="c"># 7.0  la media</span></code></pre></div>
+      <p class="callout warn"><b>Error típico:</b> los índices empiezan en <b>0</b>, no en 1. El primer elemento es <code>notas[0]</code>. Y en <code>notas[1:3]</code> el 3 no se incluye.</p>
+      <h4>Diccionarios: cajas con etiqueta</h4>
+      <p>En vez de por posición, cada valor se busca por su nombre (su <b>clave</b>). Es perfecto para describir una cosa con varias propiedades:</p>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code>vino = {<span class="s">&quot;alcohol&quot;</span>: <span class="n">9.4</span>, <span class="s">&quot;acidez&quot;</span>: <span class="n">0.70</span>, <span class="s">&quot;calidad&quot;</span>: <span class="n">5</span>}
+
+vino[<span class="s">&quot;alcohol&quot;</span>]        <span class="c"># 9.4</span>
+vino[<span class="s">&quot;calidad&quot;</span>] = <span class="n">6</span>    <span class="c"># cambiar un valor</span>
+vino.keys()            <span class="c"># los nombres: alcohol, acidez, calidad</span></code></pre></div>
+      <p class="callout ia"><b>¿Dónde aparece en IA?</b> una lista de resultados de cada época de entrenamiento, o un diccionario con la configuración del modelo: <code>{"capas": 3, "eta": 0.01}</code>.</p></section><section id="p2-control" class="sec"><h2><span class="n">04</span>3 · Condiciones y bucles</h2>
+      <p class="idea"><span class="eyebrow">La idea en una frase</span><code>if</code> decide qué hacer; <code>for</code> repite lo mismo para cada elemento.</p>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">def</span> etiqueta(calidad):
+    <span class="k">if</span> calidad &gt;= <span class="n">7</span>:
+        <span class="k">return</span> <span class="s">&quot;bueno&quot;</span>
+    <span class="k">elif</span> calidad &gt;= <span class="n">5</span>:
+        <span class="k">return</span> <span class="s">&quot;normal&quot;</span>
+    <span class="k">else</span>:
+        <span class="k">return</span> <span class="s">&quot;malo&quot;</span>
+
+<span class="k">for</span> c <span class="k">in</span> [<span class="n">4</span>, <span class="n">5</span>, <span class="n">7</span>]:
+    print(c, <span class="s">&quot;→&quot;</span>, etiqueta(c))</code></pre></div>
+      <pre class="out"><span class="eyebrow">Salida</span>4 → malo
+5 → normal
+7 → bueno</pre>
+      <p>Fíjate en los <b>dos puntos</b> al final de cada <code>if</code>, <code>elif</code>, <code>else</code> y <code>for</code>, y en que lo de dentro va <b>desplazado a la derecha</b> (4 espacios). En Python esa sangría no es estética: es lo que dice qué líneas están dentro del bloque.</p>
+      <p class="callout warn"><b>Error típico:</b> mezclar la sangría o olvidar los dos puntos da <code>IndentationError</code> o <code>SyntaxError</code>. Otro clásico: usar <code>=</code> (guardar) en vez de <code>==</code> (comparar) dentro de un <code>if</code>.</p>
+      <h4>Atajo muy usado: listas por comprensión</h4>
+      <p>Crear una lista nueva a partir de otra en una línea. Se lee casi como en español: «n al cuadrado para cada n en…».</p>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code>[n ** <span class="n">2</span> <span class="k">for</span> n <span class="k">in</span> range(<span class="n">5</span>)]         <span class="c"># [0, 1, 4, 9, 16]</span>
+[n <span class="k">for</span> n <span class="k">in</span> notas <span class="k">if</span> n &gt;= <span class="n">6</span>]       <span class="c"># [7, 9, 6, 8]  solo las aprobadas</span></code></pre></div>
+      <p class="callout ia"><b>¿Dónde aparece en IA?</b> entrenar un modelo es un bucle: <code>for epoca in range(100):</code> calcula el error, calcula el gradiente, da un paso. Es el bucle del descenso de gradiente del nivel 1.</p></section><section id="p2-funciones" class="sec"><h2><span class="n">05</span>4 · Funciones</h2>
+      <p class="idea"><span class="eyebrow">La idea en una frase</span>Una función es una receta con nombre: recibe datos, hace algo y devuelve un resultado.</p>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">def</span> media(valores):
+    <span class="k">return</span> sum(valores) / len(valores)
+
+<span class="k">def</span> precio_final(precio, descuento=<span class="n">0.0</span>):     <span class="c"># descuento tiene valor por defecto</span>
+    <span class="k">return</span> precio * (<span class="n">1</span> - descuento)
+
+media([<span class="n">7</span>, <span class="n">5</span>, <span class="n">9</span>, <span class="n">6</span>, <span class="n">8</span>])       <span class="c"># 7.0</span>
+precio_final(<span class="n">20</span>)             <span class="c"># 20.0</span>
+precio_final(<span class="n">20</span>, <span class="n">0.25</span>)       <span class="c"># 15.0</span></code></pre></div>
+      <p><code>def</code> crea la función, entre paréntesis van sus <b>parámetros</b> y <code>return</code> dice qué devuelve. Si un parámetro tiene valor por defecto (<code>descuento=0.0</code>) puedes no pasarlo.</p>
+      <p class="callout warn"><b>Error típico:</b> olvidar el <code>return</code>. La función se ejecuta, pero devuelve <code>None</code> y el error aparece más adelante, lejos de donde está el fallo.</p>
+      <p><b>Regla práctica:</b> si copias el mismo código dos veces, conviértelo en una función.</p>
+      <p class="callout ia"><b>¿Dónde aparece en IA?</b> en scikit-learn todo son funciones y métodos con parámetros por defecto: <code>RandomForestClassifier(n_estimators=100)</code>. Leer su documentación es leer la lista de parámetros.</p></section><section id="p2-numpy" class="sec"><h2><span class="n">06</span>5 · NumPy: cuentas con muchos números a la vez</h2>
+      <p class="idea"><span class="eyebrow">La idea en una frase</span>Un array de NumPy es una lista de números con la que puedes operar entera, sin bucles.</p>
+      <p>Con una lista normal, multiplicar todo por 2 exige un bucle. Con NumPy basta con <code>x * 2</code>: la operación se aplica a cada elemento. A esto se le llama <b>vectorizar</b>, y es la razón por la que los vectores del nivel 1 se programan tan fácil.</p>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">import</span> numpy <span class="k">as</span> np
+
+x = np.array([<span class="n">1.0</span>, <span class="n">2.0</span>, <span class="n">3.0</span>, <span class="n">4.0</span>])
+
+x * <span class="n">2</span>          <span class="c"># [2. 4. 6. 8.]     ¡sin bucle!</span>
+x + <span class="n">10</span>         <span class="c"># [11. 12. 13. 14.]</span>
+x ** <span class="n">2</span>         <span class="c"># [1. 4. 9. 16.]</span>
+x.mean()       <span class="c"># 2.5</span>
+x.max()        <span class="c"># 4.0</span>
+
+x &gt; <span class="n">2</span>          <span class="c"># [False False True True]</span>
+x[x &gt; <span class="n">2</span>]       <span class="c"># [3. 4.]   filtrar con una condición</span>
+
+u, v = np.array([<span class="n">3</span>, <span class="n">1</span>]), np.array([<span class="n">1</span>, <span class="n">2</span>])
+u @ v          <span class="c"># 5   el producto escalar del nivel 1</span></code></pre></div>
+      <p>La línea <code>x[x > 2]</code> es muy útil: la condición crea una lista de <code>True</code>/<code>False</code> (una <b>máscara</b>) y con ella te quedas solo con los elementos que la cumplen.</p>
+      <h4>¿Por qué no usar bucles? Por velocidad</h4>
+      <p>Sumar los cuadrados de un millón de números de las dos formas:</p>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code>datos = list(range(1_000_000))
+arr = np.arange(1_000_000, dtype=float)
+
+<span class="c"># Con un bucle de Python</span>
+total = <span class="n">0</span>
+<span class="k">for</span> d <span class="k">in</span> datos:
+    total += d * d
+
+<span class="c"># Con NumPy: una sola línea</span>
+total = (arr * arr).sum()</code></pre></div>
+      <figure class="chart"><div class="hbars"><div class="hb"><span class="hbl">Bucle de Python</span><span class="hbt"><i style="width:100%"></i></span><span class="hbn">27 ms</span></div><div class="hb hl"><span class="hbl">NumPy</span><span class="hbt"><i style="width:5.9259259259259265%"></i></span><span class="hbn">1,6 ms</span></div></div><figcaption>Tiempo medido en nuestra prueba (el mejor de 5 intentos). NumPy fue unas 16 veces más rápido; la cifra exacta cambia según el ordenador, pero la diferencia siempre es grande.</figcaption></figure>
+      <p class="callout ia"><b>¿Dónde aparece en IA?</b> un lote de 32 imágenes de 28 × 28 píxeles es un array de forma (32, 784), y una capa de red neuronal es <code>X @ W</code>. PyTorch y TensorFlow funcionan con la misma idea y casi la misma sintaxis que NumPy.</p></section><section id="p2-pandas" class="sec"><h2><span class="n">07</span>6 · Pandas: tablas</h2>
+      <p class="idea"><span class="eyebrow">La idea en una frase</span>Un DataFrame de Pandas es una hoja de cálculo que manejas con código.</p>
+      <p>Imagina este archivo <code>ventas.csv</code>, con dos huecos (datos que faltan):</p>
+      <div class="tbl"><table><thead><tr><th>tienda</th><th>mes</th><th>ventas</th></tr></thead><tbody><tr><td>Centro</td><td>ene</td><td>120</td></tr><tr><td>Centro</td><td>feb</td><td><i>vacío</i></td></tr><tr><td>Playa</td><td>ene</td><td>80</td></tr><tr><td>Playa</td><td>feb</td><td>95</td></tr><tr><td>Puerto</td><td>ene</td><td><i>vacío</i></td></tr><tr><td>Puerto</td><td>feb</td><td>60</td></tr></tbody></table></div>
+      <h4>Paso 1 · Cargar y mirar</h4>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df = pd.read_csv(<span class="s">&quot;ventas.csv&quot;</span>)
+
+df.shape                  <span class="c"># (6, 3): 6 filas y 3 columnas</span>
+df.head()                 <span class="c"># las primeras filas</span>
+df[<span class="s">&quot;ventas&quot;</span>]              <span class="c"># una columna</span>
+df.isna().sum()           <span class="c"># cuántos nulos hay en cada columna → ventas: 2</span></code></pre></div>
+      <p>Las casillas vacías aparecen como <code>NaN</code> («no es un número»). <b>Siempre</b> hay que buscarlas antes de hacer nada más.</p>
+      <h4>Paso 2 · Limpiar los nulos</h4>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code>df[<span class="s">&quot;ventas&quot;</span>].mean()                  <span class="c"># 88.75  (Pandas ignora los nulos)</span>
+
+df.dropna()                          <span class="c"># opción A: quitar filas con nulos → quedan 4</span>
+mediana = df[<span class="s">&quot;ventas&quot;</span>].median()      <span class="c"># 87.5</span>
+df = df.fillna({<span class="s">&quot;ventas&quot;</span>: mediana})  <span class="c"># opción B: rellenarlos con la mediana</span></code></pre></div>
+      <p>¿Quitar o rellenar? Si faltan pocas filas, quitarlas es lo más sencillo. Si son muchas, perderías demasiados datos, y es mejor rellenar con un valor razonable, como la mediana.</p>
+      <h4>Paso 3 · Agrupar y filtrar</h4>
+      <p><code>groupby</code> es la herramienta estrella: «para cada tienda, suma sus ventas». Es como una tabla dinámica de Excel en una línea.</p>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code>df.groupby(<span class="s">&quot;tienda&quot;</span>)[<span class="s">&quot;ventas&quot;</span>].sum()
+<span class="c"># Centro    207.5</span>
+<span class="c"># Playa     175.0</span>
+<span class="c"># Puerto    147.5</span>
+
+df[df[<span class="s">&quot;ventas&quot;</span>] &gt; <span class="n">90</span>]      <span class="c"># filtrar filas: solo las que venden más de 90</span></code></pre></div>
+      <p class="callout warn"><b>Error típico:</b> un CSV no siempre separa con comas. Si al cargarlo te sale una sola columna con todo junto, prueba <code>pd.read_csv(archivo, sep=";")</code>. Te pasará en el proyecto.</p>
+      <p class="callout ia"><b>¿Dónde aparece en IA?</b> el 80 % del trabajo real en machine learning es esto: cargar, limpiar y entender los datos antes de entrenar nada. Un modelo entrenado con datos sucios da resultados sucios.</p></section><section id="p2-matplotlib" class="sec"><h2><span class="n">08</span>7 · Matplotlib: gráficos</h2>
+      <p class="idea"><span class="eyebrow">La idea en una frase</span>Un gráfico te enseña en un segundo lo que una tabla esconde.</p>
+      <p>Con tres tipos de gráfico cubres casi todo al empezar:</p>
+      <div class="tbl"><table><thead><tr><th>Gráfico</th><th>Pregunta que responde</th><th>Código</th></tr></thead><tbody><tr><td>Histograma</td><td>¿Cómo se reparten los valores de una columna?</td><td><code>plt.hist(col)</code></td></tr><tr><td>Dispersión</td><td>¿Hay relación entre dos columnas?</td><td><code>plt.scatter(x, y)</code></td></tr><tr><td>Barras</td><td>¿Cuánto hay de cada categoría?</td><td><code>plt.bar(nombres, valores)</code></td></tr></tbody></table></div>
+      <div class="code"><div class="lab">Python<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+plt.hist(vinos[<span class="s">&quot;alcohol&quot;</span>], bins=<span class="n">20</span>)        <span class="c"># histograma: cómo se reparten los valores</span>
+plt.title(<span class="s">&quot;Grado de alcohol de los vinos&quot;</span>)
+plt.xlabel(<span class="s">&quot;alcohol (%)&quot;</span>); plt.ylabel(<span class="s">&quot;número de vinos&quot;</span>)
+plt.show()
+
+plt.scatter(vinos[<span class="s">&quot;alcohol&quot;</span>], vinos[<span class="s">&quot;quality&quot;</span>], s=<span class="n">8</span>)   <span class="c"># dispersión: relación entre dos columnas</span>
+plt.xlabel(<span class="s">&quot;alcohol (%)&quot;</span>); plt.ylabel(<span class="s">&quot;calidad&quot;</span>)
+plt.show()</code></pre></div>
+      <p class="callout warn"><b>Error típico:</b> un gráfico sin título ni nombres en los ejes no sirve para nada una semana después. Ponlos siempre.</p>
+      <p class="callout ia"><b>¿Dónde aparece en IA?</b> la curva de aprendizaje (el error en cada época) es un gráfico de líneas, y con ella se detecta el sobreajuste. Lo verás en el <a href="/lab/overfitting">laboratorio de sobreajuste</a>.</p></section><section id="p2-ejercicios" class="sec"><h2><span class="n">09</span>Ejercicios</h2>
+      <p>Escríbelos en Colab antes de abrir la solución. Si algo da error, lee el mensaje: casi siempre dice la línea y el motivo.</p>
+      <details class="card exercise"><summary><span class="exn">Ejercicio 1</span>¿Qué muestra <code>print(f"{2 + 3} manzanas")</code>? ¿Y <code>10 // 3</code> y <code>10 % 3</code>?</summary><div class="sol"><span class="eyebrow">Solución</span><p><code>5 manzanas</code>. <code>10 // 3</code> es <b>3</b> (división entera) y <code>10 % 3</code> es <b>1</b> (el resto).</p></div></details>
+      <details class="card exercise"><summary><span class="exn">Ejercicio 2</span>Con <code>edades = [23, 35, 18, 42, 29]</code>, obtén el primer y el último elemento, los tres primeros y la media.</summary><p class="hintline"><b>Pista:</b> la media es la suma entre el número de elementos.</p><div class="sol"><span class="eyebrow">Solución</span><p><code>edades[0]</code> → 23, <code>edades[-1]</code> → 29, <code>edades[:3]</code> → [23, 35, 18], <code>sum(edades) / len(edades)</code> → <b>29.4</b>.</p></div></details>
+      <details class="card exercise"><summary><span class="exn">Ejercicio 3</span>Escribe una función <code>es_par(n)</code> que devuelva <code>True</code> si n es par. Úsala para quedarte solo con los pares de <code>range(10)</code>.</summary><p class="hintline"><b>Pista:</b> un número es par si el resto de dividir entre 2 es 0.</p><div class="sol"><span class="eyebrow">Solución</span><pre><code>def es_par(n):
+    return n % 2 == 0
+
+[n for n in range(10) if es_par(n)]   # [0, 2, 4, 6, 8]</code></pre></div></details>
+      <details class="card exercise"><summary><span class="exn">Ejercicio 4</span>Con NumPy y sin bucles: dado <code>t = np.array([12, 18, 25, 31, 9])</code> (temperaturas en °C), pásalas a Fahrenheit (F = C · 1,8 + 32) y quédate con las mayores de 20 °C.</summary><div class="sol"><span class="eyebrow">Solución</span><pre><code>t * 1.8 + 32     # [53.6 64.4 77.  87.8 48.2]
+t[t > 20]        # [25 31]</code></pre></div></details>
+      <details class="card exercise"><summary><span class="exn">Ejercicio 5</span><b>El ejercicio del nivel.</b> Carga el <code>ventas.csv</code> de la lección, cuenta los nulos, rellénalos con la mediana y calcula las ventas totales por tienda.</summary><p class="hintline"><b>Pista:</b> si no tienes el archivo, créalo en Colab con el código del cuaderno de la lección.</p><div class="sol"><span class="eyebrow">Solución</span><p><code>df.isna().sum()</code> da 2 nulos en <code>ventas</code>. La mediana es 87,5. Tras <code>fillna</code>, <code>df.groupby("tienda")["ventas"].sum()</code> da Centro <b>207,5</b>, Playa <b>175</b> y Puerto <b>147,5</b>.</p></div></details>
+      <details class="card exercise"><summary><span class="exn">Ejercicio 6</span>Este código da error. ¿Por qué? <pre><code>def doble(x)
+    return x * 2</code></pre></summary><div class="sol"><span class="eyebrow">Solución</span><p>Faltan los <b>dos puntos</b> después de <code>def doble(x)</code>. Python responde <code>SyntaxError: expected ':'</code>.</p></div></details></section><section id="p2-proyecto" class="sec"><h2><span class="n">10</span>Proyecto: tu primer análisis de datos reales</h2>
+      <p>Vas a explorar <a href="/datasets">Wine Quality</a>: 1.599 vinos tintos portugueses con 11 medidas químicas cada uno y una nota de calidad del 0 al 10 que pusieron catadores expertos. La pregunta: <b>¿qué tienen en común los vinos buenos?</b></p>
+      <div class="code"><div class="lab">Solución de referencia<button type="button" data-copy>Copiar</button></div><pre><code><span class="k">import</span> pandas <span class="k">as</span> pd
+<span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+URL = <span class="s">&quot;https://raw.githubusercontent.com/vtarazona/mle-ai/main/notebooks/data/winequality-red.csv&quot;</span>
+vinos = pd.read_csv(URL, sep=<span class="s">&quot;;&quot;</span>)          <span class="c"># ¡este CSV separa con punto y coma!</span>
+
+<span class="c"># 1. Primer vistazo</span>
+print(vinos.shape)                          <span class="c"># (1599, 12)</span>
+print(vinos.head())
+print(vinos.isna().sum().sum())             <span class="c"># 0 nulos</span>
+print(vinos.duplicated().sum())             <span class="c"># 240 filas repetidas</span>
+
+<span class="c"># 2. ¿Cómo se reparte la calidad?</span>
+print(vinos[<span class="s">&quot;quality&quot;</span>].value_counts().sort_index())
+
+<span class="c"># 3. ¿Qué tienen en común los vinos buenos?</span>
+print(vinos.groupby(<span class="s">&quot;quality&quot;</span>)[<span class="s">&quot;alcohol&quot;</span>].mean().round(<span class="n">2</span>))
+print(vinos.corr()[<span class="s">&quot;quality&quot;</span>].sort_values().round(<span class="n">3</span>))
+
+<span class="c"># 4. Gráficos</span>
+fig, ax = plt.subplots(<span class="n">1</span>, <span class="n">3</span>, figsize=(<span class="n">15</span>, <span class="n">4</span>))
+vinos[<span class="s">&quot;quality&quot;</span>].value_counts().sort_index().plot.bar(ax=ax[<span class="n">0</span>], title=<span class="s">&quot;Vinos por calidad&quot;</span>)
+vinos.boxplot(column=<span class="s">&quot;alcohol&quot;</span>, by=<span class="s">&quot;quality&quot;</span>, ax=ax[<span class="n">1</span>])
+ax[<span class="n">2</span>].scatter(vinos[<span class="s">&quot;alcohol&quot;</span>], vinos[<span class="s">&quot;volatile acidity&quot;</span>], c=vinos[<span class="s">&quot;quality&quot;</span>], s=<span class="n">8</span>)
+ax[<span class="n">2</span>].set_xlabel(<span class="s">&quot;alcohol (%)&quot;</span>); ax[<span class="n">2</span>].set_ylabel(<span class="s">&quot;acidez volátil&quot;</span>)
+plt.tight_layout(); plt.show()</code></pre></div>
+      <h4>Lo que deberías encontrar</h4>
+      <p><b>1. Los datos están limpios, pero no del todo.</b> Hay 1.599 filas y 12 columnas, sin nulos. Sin embargo, 240 filas están repetidas: conviene saberlo, porque inflan algunos resultados.</p>
+      <p><b>2. La calidad está muy concentrada.</b> Casi todos los vinos son de 5 o 6. Los excelentes (7 u 8) son solo 217, un 13,6 %.</p>
+      <figure class="chart"><div class="hbars"><div class="hb"><span class="hbl">Calidad 3</span><span class="hbt"><i style="width:1.4684287812041115%"></i></span><span class="hbn">10</span></div><div class="hb"><span class="hbl">Calidad 4</span><span class="hbt"><i style="width:7.782672540381791%"></i></span><span class="hbn">53</span></div><div class="hb hl"><span class="hbl">Calidad 5</span><span class="hbt"><i style="width:100%"></i></span><span class="hbn">681</span></div><div class="hb hl"><span class="hbl">Calidad 6</span><span class="hbt"><i style="width:93.68575624082231%"></i></span><span class="hbn">638</span></div><div class="hb"><span class="hbl">Calidad 7</span><span class="hbt"><i style="width:29.22173274596182%"></i></span><span class="hbn">199</span></div><div class="hb"><span class="hbl">Calidad 8</span><span class="hbt"><i style="width:2.643171806167401%"></i></span><span class="hbn">18</span></div></div><figcaption>Número de vinos de cada calidad. Si algún día entrenas un modelo con estos datos, esta desigualdad importará: le costará aprender los extremos.</figcaption></figure>
+      <p><b>3. Más alcohol, mejor nota.</b> La media de alcohol sube casi siempre con la calidad: 9,90 % en los de calidad 5, 10,63 % en los de 6, 11,47 % en los de 7 y 12,09 % en los de 8.</p>
+      <p><b>4. Las dos pistas más fuertes.</b> La <b>correlación</b> es un número entre −1 y 1 que dice si dos columnas suben juntas (positiva) o una sube cuando la otra baja (negativa):</p>
+      <figure class="chart"><div class="hbars"><div class="hb hl"><span class="hbl">alcohol</span><span class="hbt"><i style="width:95.19999999999999%"></i></span><span class="hbn">+0,48</span></div><div class="hb"><span class="hbl">sulfatos</span><span class="hbt"><i style="width:50.2%"></i></span><span class="hbn">+0,25</span></div><div class="hb"><span class="hbl">ácido cítrico</span><span class="hbt"><i style="width:45.2%"></i></span><span class="hbn">+0,23</span></div><div class="hb"><span class="hbl">azúcar residual</span><span class="hbt"><i style="width:2.8000000000000003%"></i></span><span class="hbn">+0,01</span></div><div class="hb"><span class="hbl">densidad</span><span class="hbt"><i style="width:35%"></i></span><span class="hbn">−0,17</span></div><div class="hb"><span class="hbl">dióxido de azufre total</span><span class="hbt"><i style="width:37%"></i></span><span class="hbn">−0,18</span></div><div class="hb hl"><span class="hbl">acidez volátil</span><span class="hbt"><i style="width:78.2%"></i></span><span class="hbn">−0,39</span></div></div><figcaption>Correlación de algunas medidas químicas con la calidad. El alcohol va a favor y la acidez volátil (el sabor avinagrado) en contra.</figcaption></figure>
+      <p class="callout warn"><b>Error típico:</b> correlación no es causa. Que los vinos buenos tengan más alcohol no significa que añadir alcohol mejore un vino. Lo verás en el nivel 3.</p>
+      <p><b>Para ir más allá:</b> (1) quita los duplicados con <code>vinos.drop_duplicates()</code> y comprueba si cambian las conclusiones; (2) haz lo mismo con los vinos blancos (<code>winequality-white.csv</code>); (3) escribe en tres frases, para alguien que no sabe de datos, qué has descubierto.</p></section><section id="p2-test" class="sec"><h2><span class="n">11</span>Test de autoevaluación</h2><div class="quiz" data-quiz="nivel-2"><ol><li class="q" data-answer="1">
+    <p class="qt">¿Qué tipo de dato es <code>3.0</code>?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-0" value="0"> <span>int</span></label><label><input type="radio" name="nivel-2-0" value="1"> <span>float</span></label><label><input type="radio" name="nivel-2-0" value="2"> <span>str</span></label><label><input type="radio" name="nivel-2-0" value="3"> <span>bool</span></label></div>
+    <p class="fb" hidden>Tiene parte decimal (aunque sea 0), así que es un float.</p></li><li class="q" data-answer="1">
+    <p class="qt">Con <code>notas = [7, 5, 9, 6]</code>, ¿qué da <code>notas[1]</code>?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-1" value="0"> <span>7</span></label><label><input type="radio" name="nivel-2-1" value="1"> <span>5</span></label><label><input type="radio" name="nivel-2-1" value="2"> <span>9</span></label><label><input type="radio" name="nivel-2-1" value="3"> <span>Error</span></label></div>
+    <p class="fb" hidden>Los índices empiezan en 0: notas[0] es 7 y notas[1] es 5.</p></li><li class="q" data-answer="1">
+    <p class="qt">¿Cuándo es mejor un diccionario que una lista?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-2" value="0"> <span>Cuando los datos son todos números</span></label><label><input type="radio" name="nivel-2-2" value="1"> <span>Cuando quieres buscar cada valor por su nombre</span></label><label><input type="radio" name="nivel-2-2" value="2"> <span>Nunca, son iguales</span></label><label><input type="radio" name="nivel-2-2" value="3"> <span>Cuando hay más de 100 datos</span></label></div>
+    <p class="fb" hidden>Un diccionario asocia cada valor a una clave: vino["alcohol"] se entiende mejor que vino[0].</p></li><li class="q" data-answer="1">
+    <p class="qt">¿Qué indica en Python qué líneas están dentro de un <code>if</code> o un <code>for</code>?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-3" value="0"> <span>Las llaves { }</span></label><label><input type="radio" name="nivel-2-3" value="1"> <span>La sangría (espacios al principio de la línea)</span></label><label><input type="radio" name="nivel-2-3" value="2"> <span>Los paréntesis</span></label><label><input type="radio" name="nivel-2-3" value="3"> <span>Un punto y coma al final</span></label></div>
+    <p class="fb" hidden>En Python la sangría forma parte de la sintaxis; por eso un espacio de más o de menos puede dar error.</p></li><li class="q" data-answer="2">
+    <p class="qt">Una función no tiene <code>return</code>. ¿Qué devuelve?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-4" value="0"> <span>0</span></label><label><input type="radio" name="nivel-2-4" value="1"> <span>Un error</span></label><label><input type="radio" name="nivel-2-4" value="2"> <span>None</span></label><label><input type="radio" name="nivel-2-4" value="3"> <span>El último valor calculado</span></label></div>
+    <p class="fb" hidden>Sin return, la función devuelve None, y el fallo suele aparecer más adelante.</p></li><li class="q" data-answer="1">
+    <p class="qt">Con <code>x = np.array([1, 2, 3])</code>, ¿qué da <code>x * 2</code>?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-5" value="0"> <span>[1, 2, 3, 1, 2, 3]</span></label><label><input type="radio" name="nivel-2-5" value="1"> <span>[2, 4, 6]</span></label><label><input type="radio" name="nivel-2-5" value="2"> <span>12</span></label><label><input type="radio" name="nivel-2-5" value="3"> <span>Error</span></label></div>
+    <p class="fb" hidden>NumPy aplica la operación a cada elemento. (Con una lista normal, [1, 2, 3] * 2 repetiría la lista, que es la primera opción).</p></li><li class="q" data-answer="1">
+    <p class="qt">¿Por qué se usa NumPy en vez de bucles para operar con muchos números?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-6" value="0"> <span>Porque el código queda más largo</span></label><label><input type="radio" name="nivel-2-6" value="1"> <span>Porque es mucho más rápido y más corto</span></label><label><input type="radio" name="nivel-2-6" value="2"> <span>Porque los bucles no funcionan con decimales</span></label><label><input type="radio" name="nivel-2-6" value="3"> <span>Por costumbre</span></label></div>
+    <p class="fb" hidden>Las operaciones de NumPy se ejecutan en código compilado: en la prueba de la lección, unas 16 veces más rápido.</p></li><li class="q" data-answer="1">
+    <p class="qt">¿Qué hace <code>df.isna().sum()</code>?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-7" value="0"> <span>Borra los nulos</span></label><label><input type="radio" name="nivel-2-7" value="1"> <span>Cuenta los valores nulos de cada columna</span></label><label><input type="radio" name="nivel-2-7" value="2"> <span>Suma todas las columnas</span></label><label><input type="radio" name="nivel-2-7" value="3"> <span>Rellena los nulos con 0</span></label></div>
+    <p class="fb" hidden>isna() marca con True cada hueco y sum() cuenta cuántos True hay por columna.</p></li><li class="q" data-answer="1">
+    <p class="qt">Quieres la media de ventas de cada tienda. ¿Qué usas?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-8" value="0"> <span>df.mean()</span></label><label><input type="radio" name="nivel-2-8" value="1"> <span>df.groupby("tienda")["ventas"].mean()</span></label><label><input type="radio" name="nivel-2-8" value="2"> <span>df["tienda"].mean()</span></label><label><input type="radio" name="nivel-2-8" value="3"> <span>df.sort_values("tienda")</span></label></div>
+    <p class="fb" hidden>groupby separa la tabla por tienda y luego calcula la media de ventas en cada grupo.</p></li><li class="q" data-answer="1">
+    <p class="qt">Cargas un CSV y te sale una sola columna con todo el texto junto. ¿Qué es lo más probable?</p>
+    <div class="opts" role="radiogroup"><label><input type="radio" name="nivel-2-9" value="0"> <span>El archivo está vacío</span></label><label><input type="radio" name="nivel-2-9" value="1"> <span>El separador no es la coma: prueba sep=";"</span></label><label><input type="radio" name="nivel-2-9" value="2"> <span>Faltan datos</span></label><label><input type="radio" name="nivel-2-9" value="3"> <span>Hay que instalar otra librería</span></label></div>
+    <p class="fb" hidden>Muchos CSV europeos, como el de Wine Quality, separan con punto y coma.</p></li></ol>
+  <div class="quiz-bar"><button type="button" class="btn primary" data-check>Comprobar respuestas</button><button type="button" class="btn" data-reset>Volver a empezar</button><p class="score" aria-live="polite"></p></div></div></section><section id="p2-criterios" class="sec"><h2><span class="n">12</span>¿Has asimilado el nivel?</h2>
+      <p>Marca cada punto solo si puedes hacerlo <b>sin mirar la lección</b> (buscar en Google la sintaxis exacta sí vale: los profesionales lo hacen a diario). El progreso se guarda solo en este navegador.</p>
+      <ul class="checklist" data-checklist="nivel-2"><li><label><input type="checkbox" data-item="0"> <span>Sé crear variables de los cuatro tipos básicos y mostrarlas con una f-string.</span></label></li><li><label><input type="checkbox" data-item="1"> <span>Sé acceder a elementos de una lista por su posición (empezando en 0) y a los de un diccionario por su clave.</span></label></li><li><label><input type="checkbox" data-item="2"> <span>Sé escribir un if/elif/else y un bucle for, con la sangría correcta.</span></label></li><li><label><input type="checkbox" data-item="3"> <span>Sé escribir una función con parámetros y return.</span></label></li><li><label><input type="checkbox" data-item="4"> <span>Sé operar con un array de NumPy sin bucles y filtrarlo con una condición.</span></label></li><li><label><input type="checkbox" data-item="5"> <span>Sé cargar un CSV con Pandas, contar los nulos y decidir si quitarlos o rellenarlos.</span></label></li><li><label><input type="checkbox" data-item="6"> <span>Sé usar groupby para calcular un total o una media por grupo.</span></label></li><li><label><input type="checkbox" data-item="7"> <span>Sé hacer un histograma y un gráfico de dispersión con título y ejes.</span></label></li><li><label><input type="checkbox" data-item="8"> <span>He terminado el análisis de Wine Quality y sé explicar qué he encontrado.</span></label></li><li><label><input type="checkbox" data-item="9"> <span>He sacado al menos 8 de 10 en el test.</span></label></li></ul>
+  <div class="level-done"><button type="button" class="btn primary" data-complete-level="2">Marcar el nivel como completado</button><span class="note" data-level-status></span></div>
+      <h4>Para practicar más</h4>
+      <ol class="refs"><li>Documentación oficial de Python en español: <i>El tutorial de Python</i> (docs.python.org/es), capítulos 3 a 5.</li><li>Pandas: <i>10 minutes to pandas</i>, la guía rápida oficial.</li><li>J. VanderPlas (2023). <i>Python Data Science Handbook</i>, 2.ª ed. O'Reilly. Gratis en la web del autor; capítulos de NumPy, Pandas y Matplotlib.</li><li>P. Cortez et al. (2009). Modeling wine preferences by data mining from physicochemical properties. <i>Decision Support Systems</i>, 47(4). Origen del dataset Wine Quality (UCI, licencia CC BY 4.0).</li></ol>
+      <h4>Ejecuta el código de la lección</h4>
+      <p>Todos los ejemplos, los ejercicios y el proyecto, con los datos incluidos:</p>
+      <div class="repo-links"><a class="btn sm primary" href="https://colab.research.google.com/github/vtarazona/mle-ai/blob/main/notebooks/nivel2_python.ipynb" target="_blank" rel="noopener">Abrir en Google Colab ↗</a><a class="btn sm" href="https://github.com/vtarazona/mle-ai/blob/main/notebooks/nivel2_python.py" target="_blank" rel="noopener">Ver nivel2_python.py en GitHub ↗</a></div>
+      <p class="next-level">Anterior: <a href="/learning-path/mathematics">Nivel 1 · Matemáticas</a> · Siguiente: <a href="/learning-path">Nivel 3 · Estadística</a> (en preparación) · <a href="/learning-path">Volver a la ruta</a></p></section></article></div></main>
+
+<div class="search" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscador">
+  <div class="search-box">
+    <label for="search-input">⌕<input id="search-input" type="search" placeholder="Conceptos, algoritmos, papers, datasets…" autocomplete="off" maxlength="80"><kbd>Esc</kbd></label>
+    <div id="search-results"></div>
+    <div class="search-foot">↑ ↓ para moverte · Enter para abrir · búsqueda por texto sobre todo el contenido</div>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <span>MLE·AI · Machine Learning Engineering &amp; Artificial Intelligence</span>
+    <nav aria-label="Pie"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a><a href="/about">Arquitectura</a></nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js?v=b46f34a5e6" defer></script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>

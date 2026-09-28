@@ -4,21 +4,8 @@
    intuición primero y ejemplos pequeños que se pueden hacer a mano.
    Todos los números se comprueban con notebooks/nivel1_matematicas.py.
    ========================================================================= */
-const LESSONS = [];
 (() => {
-/* ---------- componentes propios de las lecciones ---------- */
-const idea = t => `<p class="idea"><span class="eyebrow">La idea en una frase</span>${t}</p>`;
-const enIA = t => `<p class="callout ia"><b>¿Dónde aparece en IA?</b> ${t}</p>`;
-const ojo  = t => `<p class="callout warn"><b>Error típico:</b> ${t}</p>`;
-const ex = (n, enunciado, solucion, pista) => `<details class="card exercise"><summary><span class="exn">Ejercicio ${n}</span>${enunciado}</summary>${pista ? `<p class="hintline"><b>Pista:</b> ${pista}</p>` : ''}<div class="sol"><span class="eyebrow">Solución</span>${solucion}</div></details>`;
-const quiz = (id, qs) => `<div class="quiz" data-quiz="${id}"><ol>${qs.map((q, i) => `<li class="q" data-answer="${q.ok}">
-    <p class="qt">${q.q}</p>
-    <div class="opts" role="radiogroup">${q.o.map((o, j) => `<label><input type="radio" name="${id}-${i}" value="${j}"> <span>${o}</span></label>`).join('')}</div>
-    <p class="fb" hidden>${q.why}</p></li>`).join('')}</ol>
-  <div class="quiz-bar"><button type="button" class="btn primary" data-check>Comprobar respuestas</button><button type="button" class="btn" data-reset>Volver a empezar</button><p class="score" aria-live="polite"></p></div></div>`;
-const checklist = (id, items) => `<ul class="checklist" data-checklist="${id}">${items.map((t, i) => `<li><label><input type="checkbox" data-item="${i}"> <span>${t}</span></label></li>`).join('')}</ul>
-  <div class="level-done"><button type="button" class="btn primary" data-complete-level="${id.replace('nivel-', '')}">Marcar el nivel como completado</button><span class="note" data-level-status></span></div>`;
-
+const { idea, enIA, ojo, ex, quiz, checklist } = LX;
 /* ---------- gráficos ---------- */
 const arrowDefs = (cls, sz = 7) => cls.map(c => `<marker id="ah-${c}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="${sz}" markerHeight="${sz}" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="${c}-f"/></marker>`).join('');
 
@@ -137,7 +124,7 @@ for eta in (0.1, 0.4):
 plt.legend(); plt.gca().set_aspect("equal"); plt.show()`;
 
 LESSONS.push({
-  id:'lesson-1', level:1, title:'Nivel 1 · Matemáticas para IA', short:'Matemáticas', prefix:'m1-',
+  id:'lesson-1', slug:'mathematics', level:1, time:'PT5H', teaches:'Vectores, matrices, derivadas, regla de la cadena, gradiente, descenso de gradiente y probabilidad básica', title:'Nivel 1 · Matemáticas para IA', short:'Matemáticas', prefix:'m1-',
   kicker:'Ruta de aprendizaje · Nivel 1 de 10',
   lede:'Las cinco ideas matemáticas que hay detrás de cualquier modelo de IA, explicadas desde cero: primero la intuición, luego un ejemplo que puedes hacer a mano y, al final, dónde aparece en la IA real.',
   meta:'Unas 4–6 horas · Solo necesitas saber sumar, multiplicar y qué es una función · Código de todos los ejemplos en notebooks/nivel1_matematicas.py',
@@ -305,7 +292,7 @@ LESSONS.push({
       <h4>Ejecuta el código de la lección</h4>
       <p>Todos los ejemplos, los ejercicios y el proyecto, listos para ejecutar y cambiar los números:</p>
       ${CH.repo('nivel1_matematicas.py')}
-      <p class="next-level">Siguiente paso: <a href="#path">volver a la ruta y empezar el Nivel 2 · Python</a>.</p>` },
+      <p class="next-level">Siguiente paso: <a href="#lesson-2">Nivel 2 · Python para IA</a> · <a href="#path">Volver a la ruta</a></p>` },
   ],
 });
 })();
