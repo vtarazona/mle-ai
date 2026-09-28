@@ -6,7 +6,8 @@ ART = {'linear_regression': 'machine-learning/linear-regression', 'logistic_regr
        'transformer': 'deep-learning/transformers', 'random_forest': 'machine-learning/random-forest',
        'nivel1_matematicas': 'learning-path/mathematics', 'nivel2_python': 'learning-path/python',
        'nivel3_estadistica': 'learning-path/statistics',
-       'churn_telco': 'projects/customer-churn'}
+       'churn_telco': 'projects/customer-churn',
+       'anomalias_red': 'projects/network-anomaly-detection'}
 PIP = {'gradient_boosting': '%pip install -q xgboost'}
 def md(t): return {'cell_type': 'markdown', 'metadata': {}, 'source': t}
 def code(t): return {'cell_type': 'code', 'metadata': {}, 'execution_count': None, 'outputs': [], 'source': t.strip('\n')}

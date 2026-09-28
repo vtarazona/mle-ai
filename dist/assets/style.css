@@ -491,3 +491,12 @@ pre.out .eyebrow{display:block;margin-bottom:6px}
 .cc-bar span.hi{background:var(--neg)}
 .cc-bar i{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
 .cc-res p{margin:0;font-size:14px}
+/* explorador de alertas (anomalías de red) */
+.anom-exp{margin:12px 0;display:flex;flex-direction:column;gap:16px}
+.ae-ctl{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+.ae-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.ae-ctl,.ae-kpi{grid-template-columns:1fr}}
+.ae-kpi div{background:var(--soft);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column}
+.ae-kpi b{font:800 30px/1.1 var(--display);letter-spacing:-.01em}
+.ae-kpi span{color:var(--muted);font-size:13px}
+.ae-bars{display:flex;flex-direction:column;gap:6px}

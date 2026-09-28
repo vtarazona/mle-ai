@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Detección de anomalías en tráfico de red · MLE·AI</title>
+<meta name="description" content="Proyecto completo con NSL-KDD: Isolation Forest y autoencoder entrenados solo con tráfico normal, evaluación con presupuesto de falsas alarmas, ataques nuevos frente a supervisado y explicación de alertas.">
+<link rel="canonical" href="https://mle-ai.vercel.app/projects/network-anomaly-detection">
+<meta name="theme-color" content="#0E1621">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MLE·AI">
+<meta property="og:title" content="Detección de anomalías en tráfico de red">
+<meta property="og:description" content="Proyecto completo con NSL-KDD: Isolation Forest y autoencoder entrenados solo con tráfico normal, evaluación con presupuesto de falsas alarmas, ataques nuevos frente a supervisado y explicación de alertas.">
+<meta property="og:url" content="https://mle-ai.vercel.app/projects/network-anomaly-detection">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="https://mle-ai.vercel.app/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mle-ai.vercel.app/img/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1621'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='11' font-weight='700' fill='%236E9BFF' text-anchor='middle'%3EML%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/assets/style.css?v=1870ed3eb2">
+<script>try{var t=JSON.parse(localStorage.getItem('mlai.theme'));if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Detección de anomalías en tráfico de red","inLanguage":"es","url":"https://mle-ai.vercel.app/projects/network-anomaly-detection","author":{"@type":"Organization","name":"MLE·AI","url":"https://mle-ai.vercel.app"},"publisher":{"@type":"Organization","name":"MLE·AI","url":"https://mle-ai.vercel.app"},"about":"Machine Learning"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://mle-ai.vercel.app"},{"@type":"ListItem","position":2,"name":"Proyectos","item":"https://mle-ai.vercel.app/projects"},{"@type":"ListItem","position":3,"name":"Anomalías en tráfico de red","item":"https://mle-ai.vercel.app/projects/network-anomaly-detection"}]}</script>
+</head>
+<body data-page="article">
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="MLE·AI, inicio"><span class="mk">ML/AI</span><span><b>MLE·AI</b><small>Machine Learning Engineering</small></span></a>
+    <nav class="mainnav" aria-label="Principal">
+      <button type="button" id="topics-btn" data-nav="topics" class="on" aria-expanded="false" aria-controls="mega">Temas ▾</button>
+      <a href="/lab" data-nav="lab">Laboratorio</a>
+      <a href="/llm/transformer-visualizer" data-nav="transformer">Transformer</a>
+      <a href="/learning-path" data-nav="path">Ruta</a>
+      <a href="/projects" data-nav="projects">Proyectos</a>
+      <a href="/papers" data-nav="papers">Papers</a>
+      <a href="/datasets" data-nav="datasets">Datasets</a>
+    </nav>
+    <span class="spacer"></span>
+    <button type="button" class="searchbtn" data-open-search aria-label="Buscar">⌕ Buscar en el portal<kbd>/</kbd></button>
+    <button type="button" class="iconbtn" id="theme-btn" aria-label="Cambiar tema">☾</button>
+    <button type="button" class="iconbtn" id="menu-btn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  </div>
+  <div class="mega" id="mega" hidden><div class="wrap" id="mega-inner"><a href="/machine-learning" class="mega-item"><b>Machine Learning</b><small>16 temas · Algoritmos clásicos</small></a><a href="/deep-learning" class="mega-item"><b>Deep Learning</b><small>13 temas · Redes neuronales</small></a><a href="/mathematics" class="mega-item"><b>Matemáticas para IA</b><small>10 temas · Fundamentos</small></a><a href="/programming" class="mega-item"><b>Programación</b><small>8 temas · Herramientas</small></a><a href="/llm" class="mega-item"><b>LLM</b><small>13 temas · Modelos de lenguaje</small></a><a href="/mlops" class="mega-item"><b>MLOps</b><small>12 temas · Producción</small></a><a href="/research" class="mega-item"><b>Investigación</b><small>8 temas · Estado del arte</small></a><a href="/llm/transformer-visualizer" class="mega-item hl"><b>Transformer Visualizer</b><small>13 etapas interactivas</small></a></div></div>
+</header>
+<nav class="drawer" aria-label="Menú móvil">
+  <button type="button" class="searchbtn mobile-search" data-open-search>⌕ Buscar en el portal</button>
+  <span class="dl">Secciones</span>
+  <a href="/">Inicio</a><a href="/lab">Laboratorio</a><a href="/llm/transformer-visualizer">Transformer Visualizer</a><a href="/learning-path">Ruta de aprendizaje</a><a href="/projects">Proyectos</a><a href="/papers">Papers</a><a href="/datasets">Datasets</a>
+  <span class="dl">Temas</span>
+  <div id="drawer-topics" style="display:contents"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas para IA</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a></div>
+</nav>
+
+<main id="app" class="wrap"><nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a><span class="sep">/</span><a href="/projects">Proyectos</a><span class="sep">/</span><span>Anomalías en tráfico de red</span></nav><div class="article">
+    <nav class="toc" aria-label="Contenido del artículo"><span class="toc-t">Contenido</span><ol><li><a href="#an-problema" data-target="an-problema"><span>01</span>Problema</a></li><li><a href="#an-datos" data-target="an-datos"><span>02</span>Datos</a></li><li><a href="#an-exploracion" data-target="an-exploracion"><span>03</span>Exploración</a></li><li><a href="#an-preprocesado" data-target="an-preprocesado"><span>04</span>Preprocesado</a></li><li><a href="#an-detectores" data-target="an-detectores"><span>05</span>Detectores</a></li><li><a href="#an-evaluacion" data-target="an-evaluacion"><span>06</span>Evaluación</a></li><li><a href="#an-tipos" data-target="an-tipos"><span>07</span>Por tipo de ataque</a></li><li><a href="#an-umbral" data-target="an-umbral"><span>08</span>Presupuesto de alertas</a></li><li><a href="#an-explicacion" data-target="an-explicacion"><span>09</span>¿Por qué salta la alarma?</a></li><li><a href="#an-despliegue" data-target="an-despliegue"><span>10</span>Despliegue</a></li><li><a href="#an-resultados" data-target="an-resultados"><span>11</span>Resultados y conclusiones</a></li></ol></nav>
+    <article class="prose"><header class="page-head in-article"><span class="kicker">Proyecto · Redes y ciberseguridad · Completado</span><h1>Detección de anomalías en tráfico de red</h1>
+     <p class="lede">Aprender cómo es el tráfico normal para detectar ataques, incluidos los que nunca se han visto antes: Isolation Forest y un autoencoder entrenados sin una sola etiqueta de ataque, evaluados con un presupuesto realista de falsas alarmas.</p>
+     <p class="meta">Dataset NSL-KDD (148.517 conexiones) · scikit-learn 1.8 y PyTorch · random_state = 42 · Todas las cifras se reproducen con notebooks/anomalias_red.py</p>
+     <ol class="pipeline"><li>Problema</li><li>Datos</li><li>Exploración</li><li>Preprocesado</li><li>Detectores</li><li>Evaluación</li><li>Por tipo de ataque</li><li>Presupuesto de alertas</li><li>¿Por qué salta la alarma?</li><li>Despliegue</li><li>Resultados y conclusiones</li></ol></header><section id="an-problema" class="sec"><h2><span class="n">01</span>Problema</h2>
+    <p>Los sistemas de detección de intrusiones clásicos funcionan con <b>firmas</b>: reglas escritas a mano para cada ataque conocido. Son precisos, pero ciegos ante un ataque que nadie ha visto todavía. La alternativa es darle la vuelta al problema: <b>aprender cómo es el tráfico normal</b> y avisar de todo lo que se aparte de él.</p>
+    <div class="tbl"><table><thead><tr><th>Pregunta</th><th>Respuesta en este proyecto</th></tr></thead><tbody><tr><td>Tipo de problema</td><td>Detección de anomalías (novelty detection): los modelos se entrenan <b>solo con tráfico normal</b>, sin ninguna etiqueta de ataque</td></tr><tr><td>Para qué sirven las etiquetas</td><td>Solo para evaluar al final, y para un modelo supervisado de referencia</td></tr><tr><td>Métrica principal</td><td>Porcentaje de ataques detectados con un presupuesto fijo de falsas alarmas (1 % del tráfico normal)</td></tr><tr><td>Pregunta clave</td><td>¿Detecta ataques que no existían cuando se entrenó?</td></tr></tbody></table></div></section><section id="an-datos" class="sec"><h2><span class="n">02</span>Datos</h2>
+    <p>Dataset <b>NSL-KDD</b> (Universidad de New Brunswick, 2009), una versión depurada del clásico KDD Cup 99. Cada fila es una <b>conexión de red</b> descrita con 41 variables en cuatro grupos:</p>
+    <div class="tbl"><table><thead><tr><th>Grupo</th><th>Ejemplos</th></tr></thead><tbody><tr><td>Básicas</td><td>Duración, protocolo (tcp, udp, icmp), servicio (http, ftp, telnet…), estado de la conexión, bytes enviados y recibidos</td></tr><tr><td>De contenido</td><td>Intentos fallidos de inicio de sesión, acceso de root, ficheros creados</td></tr><tr><td>De tráfico (últimos 2 s)</td><td>Conexiones al mismo host o servicio, porcentaje de errores SYN o de rechazo</td></tr><tr><td>De host (últimas 100 conexiones)</td><td>Cuántas van al mismo host de destino y con qué servicio</td></tr></tbody></table></div>
+    <div class="tbl"><table><thead><tr><th></th><th>Entrenamiento</th><th>Test</th></tr></thead><tbody><tr><td>Normal</td><td>67.343</td><td>9.711</td></tr><tr><td>DoS (denegación de servicio)</td><td>45.927</td><td>7.458</td></tr><tr><td>Probe (escaneos)</td><td>11.656</td><td>2.421</td></tr><tr><td>R2L (acceso remoto no autorizado)</td><td>995</td><td>2.887</td></tr><tr><td>U2R (escalada a root)</td><td>52</td><td>67</td></tr><tr><td>Total</td><td>125.973</td><td>22.544</td></tr></tbody></table></div>
+    <p><b>Lo que hace interesante este dataset:</b> el test incluye <b>17 tipos de ataque que no aparecen en el entrenamiento</b> (<code>mscan</code>, <code>apache2</code>, <code>snmpguess</code>, <code>processtable</code>…): 3.750 conexiones, el 29,2 % de los ataques del test. Es la situación real de un sistema en producción.</p>
+    <p class="callout warn"><b>Limitación:</b> NSL-KDD viene de un tráfico simulado de 1998. Sirve para aprender y comparar métodos, no para proteger una red actual. Para eso se usan datasets modernos como CIC-IDS2017 o UNSW-NB15, con la misma metodología de este proyecto.</p></section><section id="an-exploracion" class="sec"><h2><span class="n">03</span>Exploración</h2>
+    <p>Cada familia de ataques deja una huella distinta en las variables (medianas del entrenamiento):</p>
+    <div class="tbl"><table><thead><tr><th>Categoría</th><th>Bytes enviados</th><th>Bytes recibidos</th><th>Conexiones al mismo host (2 s)</th><th>Tasa de errores SYN</th><th>Mismo servicio</th></tr></thead><tbody><tr><td>Normal</td><td>233</td><td>379</td><td>4</td><td>0</td><td>100 %</td></tr><tr><td>DoS</td><td>0</td><td>0</td><td><b>172</b></td><td><b>100 %</b></td><td><b>7 %</b></td></tr><tr><td>Probe</td><td>1</td><td>0</td><td>1</td><td>0</td><td>100 %</td></tr><tr><td>R2L</td><td>334</td><td>0</td><td>1</td><td>0</td><td>100 %</td></tr><tr><td>U2R</td><td>273</td><td>2.907</td><td>1</td><td>0</td><td>100 %</td></tr></tbody></table></div>
+    <p>Un DoS como <code>neptune</code> (inundación SYN) abre cientos de conexiones medio abiertas contra el mismo host: se ve a la legua en las variables de tráfico. En cambio, un ataque <b>R2L</b> es una única conexión con un aspecto parecido al normal: la diferencia está en su contenido (por ejemplo, contraseñas probadas), no en su forma. Esta observación anticipa el resultado principal del proyecto.</p>
+    <p>Otros hallazgos: los bytes tienen colas enormes (el 39,2 % de las conexiones envía 0 bytes y el máximo pasa de 1.300 millones), el 35,5 % de los escaneos usa ICMP (ping) y la variable <code>num_outbound_cmds</code> vale siempre 0, así que se descarta.</p></section><section id="an-preprocesado" class="sec"><h2><span class="n">04</span>Preprocesado</h2>
+    <ul><li><b>Logaritmo</b> (<code>log1p</code>) en las 13 variables de cola larga (bytes, duración, contadores), para que un millón de bytes no aplaste todo lo demás. Después, estandarización.</li>
+    <li><b>One-hot</b> de protocolo, servicio y estado: 76 columnas en total.</li>
+    <li>El preprocesado se ajusta <b>solo con tráfico normal</b>: el detector no debe saber nada de los ataques.</li>
+    <li>El tráfico normal del entrenamiento se divide en 53.874 conexiones para ajustar los modelos y 13.469 para <b>fijar el umbral</b> de alarma.</li></ul>
+    <div class="code"><div class="lab">notebooks/anomalias_red.py<button type="button" data-copy>Copiar</button></div><pre><code>colas = [<span class="s">&quot;duration&quot;</span>, <span class="s">&quot;src_bytes&quot;</span>, <span class="s">&quot;dst_bytes&quot;</span>, <span class="s">&quot;count&quot;</span>, <span class="s">&quot;srv_count&quot;</span>, ...]
+prep = ColumnTransformer([
+    (<span class="s">&quot;colas&quot;</span>, Pipeline([(<span class="s">&quot;log&quot;</span>, FunctionTransformer(np.log1p, feature_names_out=<span class="s">&quot;one-to-one&quot;</span>)),
+                        (<span class="s">&quot;esc&quot;</span>, StandardScaler())]), colas),
+    (<span class="s">&quot;num&quot;</span>, StandardScaler(), resto),
+    (<span class="s">&quot;cat&quot;</span>, OneHotEncoder(handle_unknown=<span class="s">&quot;ignore&quot;</span>), [<span class="s">&quot;protocol_type&quot;</span>, <span class="s">&quot;service&quot;</span>, <span class="s">&quot;flag&quot;</span>]),
+], sparse_threshold=<span class="n">0</span>)
+
+normal = train[train[<span class="s">&quot;ataque&quot;</span>] == <span class="n">0</span>]
+n_fit, n_val = train_test_split(normal, test_size=<span class="n">0.2</span>, random_state=<span class="n">42</span>)
+prep.fit(n_fit)</code></pre></div></section><section id="an-detectores" class="sec"><h2><span class="n">05</span>Detectores</h2>
+    <p>Cuatro formas de medir «lo raro» que es una conexión, de la más simple a la más elaborada:</p>
+    <div class="tbl"><table><thead><tr><th>Detector</th><th>Idea</th><th>Puntuación de anomalía</th></tr></thead><tbody><tr><td>Distancia a la media</td><td>Lo normal está cerca del centro</td><td>Distancia euclídea al promedio del tráfico normal</td></tr><tr><td>PCA</td><td>El tráfico normal vive en un subespacio de 25 dimensiones (95 % de la varianza)</td><td>Error al proyectar y reconstruir</td></tr><tr><td>Isolation Forest</td><td>Lo raro se aísla con pocos cortes al azar</td><td>Profundidad media a la que queda aislado (300 árboles)</td></tr><tr><td>Autoencoder</td><td>Una red que comprime y reconstruye; solo sabe reconstruir bien lo normal</td><td>Error de reconstrucción (red 76 → 64 → 16 → 64 → 76)</td></tr></tbody></table></div>
+    <div class="code"><div class="lab">notebooks/anomalias_red.py<button type="button" data-copy>Copiar</button></div><pre><code>ae = nn.Sequential(nn.Linear(<span class="n">76</span>, <span class="n">64</span>), nn.ReLU(), nn.Linear(<span class="n">64</span>, <span class="n">16</span>), nn.ReLU(),
+                   nn.Linear(<span class="n">16</span>, <span class="n">64</span>), nn.ReLU(), nn.Linear(<span class="n">64</span>, <span class="n">76</span>))
+<span class="k">for</span> epoca <span class="k">in</span> range(<span class="n">60</span>):                           <span class="c"># 18 s en CPU</span>
+    <span class="k">for</span> b <span class="k">in</span> lotes(Xf, <span class="n">256</span>):
+        loss = ((ae(b) - b) ** <span class="n">2</span>).mean()          <span class="c"># aprende a copiar el tráfico normal</span>
+        opt.zero_grad(); loss.backward(); opt.step()
+
+anomalia = ((ae(X) - X) ** <span class="n">2</span>).sum(<span class="n">1</span>)              <span class="c"># lo que no sabe copiar, es raro</span></code></pre></div>
+    <p>El <b>umbral</b> de cada detector se fija sin mirar ningún ataque: es el percentil 99 de las puntuaciones del tráfico normal de validación. Por construcción, deberían saltar falsas alarmas en el 1 % de las conexiones normales.</p>
+    <p class="callout">La idea del autoencoder, comprimir y reconstruir, es la misma que la de las <a href="/deep-learning/neural-networks">redes neuronales</a> del portal con una capa estrecha en medio. Isolation Forest es primo del <a href="/machine-learning/random-forest">Random Forest</a>.</p></section><section id="an-evaluacion" class="sec"><h2><span class="n">06</span>Evaluación</h2>
+    <div class="tbl"><table><thead><tr><th>Detector</th><th>ROC-AUC</th><th>Detecta (1 % de falsas alarmas)</th><th>Con 2 %</th><th>Con 5 %</th><th>Falsas alarmas reales en test</th></tr></thead><tbody><tr><td>Distancia a la media</td><td>0,941</td><td>26,0 %</td><td>29,5 %</td><td>61,8 %</td><td>0,4 %</td></tr><tr><td>PCA</td><td>0,958</td><td>6,5 %</td><td>39,9 %</td><td>68,6 %</td><td>0,6 %</td></tr><tr><td>Isolation Forest</td><td>0,950</td><td>57,1 %</td><td>62,1 %</td><td>65,2 %</td><td>1,6 %</td></tr><tr><td>Autoencoder</td><td>0,963</td><td>35,0 %</td><td>57,1 %</td><td><b>84,0 %</b></td><td>1,4 %</td></tr><tr><td><b>Isolation Forest + Autoencoder</b></td><td>0,961</td><td><b>60,7 %</b></td><td><b>68,1 %</b></td><td>78,9 %</td><td>1,9 %</td></tr></tbody></table></div>
+    <p><b>Primera lección: el ROC-AUC engaña aquí.</b> Todos los detectores superan 0,94, pero con el presupuesto real de falsas alarmas el PCA solo detecta el 6,5 % de los ataques y el Isolation Forest, el 57,1 %. El AUC promedia todos los umbrales posibles, incluidos los que nadie usaría; en seguridad solo importa la esquina izquierda de la curva, la de muy pocas falsas alarmas.</p>
+    <figure class="chart"><svg viewBox="0 0 600 230" role="img" aria-label="Detección según el presupuesto de falsas alarmas"><line x1="54" x2="582" y1="186" y2="186" class="gl"/><text x="47" y="190" text-anchor="end" class="ax">0 %</text><line x1="54" x2="582" y1="144.5" y2="144.5" class="gl"/><text x="47" y="148.5" text-anchor="end" class="ax">25 %</text><line x1="54" x2="582" y1="103" y2="103" class="gl"/><text x="47" y="107" text-anchor="end" class="ax">50 %</text><line x1="54" x2="582" y1="61.5" y2="61.5" class="gl"/><text x="47" y="65.5" text-anchor="end" class="ax">75 %</text><line x1="54" x2="582" y1="20" y2="20" class="gl"/><text x="47" y="24" text-anchor="end" class="ax">100 %</text><text x="54" y="203" text-anchor="middle" class="ax">0,1 %</text><text x="159.60000000000002" y="203" text-anchor="middle" class="ax">0,5 %</text><text x="265.20000000000005" y="203" text-anchor="middle" class="ax">1 %</text><text x="370.8" y="203" text-anchor="middle" class="ax">2 %</text><text x="476.40000000000003" y="203" text-anchor="middle" class="ax">5 %</text><text x="582" y="203" text-anchor="middle" class="ax">10 %</text><text x="318" y="224" text-anchor="middle" class="ax">presupuesto de falsas alarmas (sobre el tráfico normal)</text><polyline points="54,182.68 159.60000000000002,145.828 265.20000000000005,127.9 370.8,91.21400000000001 476.40000000000003,46.56 582,31.121999999999982" class="ln"/><circle cx="54" cy="182.68" r="3.5" class="pt"/><circle cx="159.60000000000002" cy="145.828" r="3.5" class="pt"/><circle cx="265.20000000000005" cy="127.9" r="3.5" class="pt"/><circle cx="370.8" cy="91.21400000000001" r="3.5" class="pt"/><circle cx="476.40000000000003" cy="46.56" r="3.5" class="pt"/><circle cx="582" cy="31.121999999999982" r="3.5" class="pt"/><polyline points="54,120.596 159.60000000000002,98.518 265.20000000000005,91.21400000000001 370.8,82.914 476.40000000000003,77.768 582,65.31799999999998" class="ln2"/><circle cx="54" cy="120.596" r="3.5" class="pt2"/><circle cx="159.60000000000002" cy="98.518" r="3.5" class="pt2"/><circle cx="265.20000000000005" cy="91.21400000000001" r="3.5" class="pt2"/><circle cx="370.8" cy="82.914" r="3.5" class="pt2"/><circle cx="476.40000000000003" cy="77.768" r="3.5" class="pt2"/><circle cx="582" cy="65.31799999999998" r="3.5" class="pt2"/></svg><div class="legend"><span><i class="k1"></i>Autoencoder</span><span><i class="k2"></i>Isolation Forest</span></div><figcaption>Porcentaje de ataques del test detectados según el presupuesto de falsas alarmas. Isolation Forest es mejor con presupuestos muy estrictos; el autoencoder, con presupuestos más holgados.</figcaption></figure>
+    <p><b>Segunda lección: los detectores se complementan.</b> Por eso el modelo final los <b>combina</b>: cada puntuación se convierte en su percentil dentro del tráfico normal (así son comparables) y se promedian. Con un 1 % de presupuesto detecta el 60,7 %, más que cualquiera de los dos por separado, aunque también da algo más de falsas alarmas reales (1,9 % frente a 1,6 % y 1,4 %).</p>
+    <p><b>Tercera lección: el tráfico normal cambia.</b> El umbral prometía un 1 % de falsas alarmas y en el test salen un 1,9 %: el tráfico normal del test no es idéntico al del entrenamiento. En producción pasa siempre; por eso hay que medir las falsas alarmas reales y reajustar el umbral.</p></section><section id="an-tipos" class="sec"><h2><span class="n">07</span>Por tipo de ataque</h2>
+    <figure class="chart"><div class="hbars"><div class="hb hl"><span class="hbl">DoS</span><span class="hbt"><i style="width:74.3%"></i></span><span class="hbn">74,3 %</span></div><div class="hb hl"><span class="hbl">Probe</span><span class="hbt"><i style="width:83.9%"></i></span><span class="hbn">83,9 %</span></div><div class="hb"><span class="hbl">R2L</span><span class="hbt"><i style="width:7.1%"></i></span><span class="hbn">7,1 %</span></div><div class="hb"><span class="hbl">U2R</span><span class="hbt"><i style="width:28.4%"></i></span><span class="hbn">28,4 %</span></div></div><figcaption>Porcentaje detectado de cada familia con el modelo final (1 % de presupuesto de falsas alarmas).</figcaption></figure>
+    <p>Tal como anticipaba la exploración: los ataques que <b>cambian la forma del tráfico</b> (DoS, escaneos) se detectan bien; los que se esconden en una conexión de aspecto normal (<b>R2L</b>: adivinar contraseñas, subir ficheros por FTP…) apenas se ven. Para esos hacen falta otras fuentes de datos, como los registros de autenticación de los servidores.</p>
+    <h4>Comparación con un modelo supervisado</h4>
+    <p>Un Random Forest entrenado con las etiquetas de ataque del entrenamiento tiene el mismo ROC-AUC (0,962), pero su comportamiento es muy distinto:</p>
+    <div class="tbl"><table><thead><tr><th></th><th>Ataques conocidos</th><th>Ataques nuevos</th><th>Falsas alarmas</th></tr></thead><tbody><tr><td>Random Forest supervisado</td><td><b>76,7 %</b></td><td>31,2 %</td><td>2,7 %</td></tr><tr><td>Isolation Forest + Autoencoder</td><td>63,6 %</td><td><b>53,9 %</b></td><td>1,9 %</td></tr></tbody></table></div>
+    <p>El supervisado es mejor con lo que ya ha visto y mucho peor con lo nuevo: aprendió «cómo son los ataques de 1998», no «cómo es lo normal». En la práctica se usan <b>los dos juntos</b>: el supervisado (o las firmas) para lo conocido y el detector de anomalías como red de seguridad para lo desconocido.</p></section><section id="an-umbral" class="sec"><h2><span class="n">08</span>Presupuesto de alertas</h2>
+    <p>¿Cuántas falsas alarmas puede revisar el equipo de seguridad? Mueve el presupuesto y observa qué se detecta y qué precisión tendrían las alertas según lo frecuentes que sean los ataques en tu red.</p>
+    <div class="anom-exp card" data-anom-exp='[{"fpr":0.001,"fpr_test":0.0016,"det":0.2162,"prec":0.9943,"DoS":0.2462,"Probe":0.3775,"R2L":0.0042,"U2R":0.1791},{"fpr":0.005,"fpr_test":0.0066,"det":0.392,"prec":0.9874,"DoS":0.4472,"Probe":0.6729,"R2L":0.0177,"U2R":0.2388},{"fpr":0.01,"fpr_test":0.0192,"det":0.6073,"prec":0.9767,"DoS":0.7427,"Probe":0.8389,"R2L":0.071,"U2R":0.2836},{"fpr":0.02,"fpr_test":0.0284,"det":0.6811,"prec":0.9694,"DoS":0.8024,"Probe":0.9707,"R2L":0.1313,"U2R":0.403},{"fpr":0.05,"fpr_test":0.0416,"det":0.789,"prec":0.9616,"DoS":0.9127,"Probe":0.993,"R2L":0.302,"U2R":0.6269},{"fpr":0.1,"fpr_test":0.1067,"det":0.8337,"prec":0.9117,"DoS":0.9328,"Probe":0.9992,"R2L":0.4385,"U2R":0.8507}]'>
+      <div class="ae-ctl">
+        <label class="cc-f"><span>Presupuesto de falsas alarmas: <b data-o="fpr">1 %</b></span><input type="range" min="0" max="5" step="1" value="2" data-i></label>
+        <label class="cc-f"><span>Ataques en el tráfico</span><select data-prev><option value="0.569">56,9 % (como en el test)</option><option value="0.01">1 %</option><option value="0.001" selected>0,1 % (red real)</option></select></label>
+      </div>
+      <div class="ae-kpi"><div><b data-o="det">–</b><span>de los ataques detectados</span></div><div><b data-o="prec">–</b><span>de las alertas son ataques reales</span></div><div><b data-o="fa">–</b><span>falsas alarmas por cada millón de conexiones normales</span></div></div>
+      <div class="ae-bars" data-bars></div>
+    </div>
+    <p><b>La trampa de la tasa base.</b> En el test, el 97,7 % de las alertas son ataques reales, pero es porque allí más de la mitad del tráfico es ataque. En una red real, donde los ataques son quizá el 0,1 % de las conexiones, solo el <b>3,1 %</b> de las alertas sería un ataque real: el mismo fenómeno que los falsos positivos de un test médico del <a href="/learning-path/mathematics">nivel 1</a>. Con el presupuesto del 1 %, cada millón de conexiones normales genera unas 19.200 falsas alarmas.</p>
+    <p>Por eso ningún equipo revisa alertas sueltas: se <b>agrupan</b> por host y ventana de tiempo (un escaneo son cientos de conexiones anómalas seguidas desde la misma IP), se ordenan por puntuación y solo las más graves llegan a una persona.</p></section><section id="an-explicacion" class="sec"><h2><span class="n">09</span>¿Por qué salta la alarma?</h2>
+    <p>Una alerta sin explicación no sirve a un analista. El autoencoder permite ver <b>qué variables no ha sabido reconstruir</b>: son las que hacen rara a esa conexión.</p>
+    <div class="tbl"><table><thead><tr><th>Conexión (tipo real)</th><th>Puntuación · umbral</th><th>Variables que más contribuyen</th></tr></thead><tbody><tr><td><code>guess_passwd</code> (adivinar contraseñas)</td><td>10,1 · 9,1</td><td>Porcentaje de conexiones al mismo servicio del host (19 %), número de conexiones al host (13 %), duración (8 %), servicio telnet (7 %)</td></tr><tr><td><code>mscan</code> (escaneo, <b>ataque nuevo</b>)</td><td>9,7 · 9,1</td><td>Tasa de conexiones rechazadas (22 %), tasa de errores SYN (13 %), cierre por reset (10 %), servicio telnet (9 %)</td></tr></tbody></table></div>
+    <p>Las dos explicaciones tienen sentido para un experto: el escaneo provoca rechazos y conexiones incompletas; el ataque de contraseñas, sesiones telnet largas y repetidas. Y el escaneo <code>mscan</code> no existía en el entrenamiento.</p></section><section id="an-despliegue" class="sec"><h2><span class="n">10</span>Despliegue</h2>
+    <ol><li><b>Captura:</b> un sensor (Zeek, NetFlow o CICFlowMeter) resume cada conexión en variables como las de este dataset.</li>
+    <li><b>Puntuación:</b> un servicio aplica el mismo preprocesado y los dos detectores. Es barato: en nuestra prueba, preprocesado incluido, puntuó unas 60.000 conexiones por segundo en una CPU.</li>
+    <li><b>Agregación:</b> las conexiones anómalas se agrupan por IP de origen y ventana de tiempo antes de crear una alerta.</li>
+    <li><b>SIEM:</b> las alertas llegan a la consola del equipo de seguridad con su puntuación y sus variables explicativas.</li>
+    <li><b>Retroalimentación:</b> lo que el analista confirma como ataque alimenta al modelo supervisado; lo que descarta ayuda a recalibrar el umbral.</li></ol>
+    <div class="code"><div class="lab">notebooks/anomalias_red.py<button type="button" data-copy>Copiar</button></div><pre><code>UMBRAL = np.quantile(combinar(Xv), <span class="n">0.99</span>)               <span class="c"># 1 % de falsas alarmas previstas</span>
+
+<span class="k">def</span> puntuar(conexiones: pd.DataFrame) -&gt; pd.DataFrame:
+    s = combinar(prep.transform(conexiones).astype(np.float32))
+    <span class="k">return</span> pd.DataFrame({<span class="s">&quot;puntuacion&quot;</span>: s.round(<span class="n">3</span>), <span class="s">&quot;alerta&quot;</span>: s &gt; UMBRAL})
+
+<span class="c">#    puntuacion  alerta          real</span>
+<span class="c">#         0.990    True       neptune</span>
+<span class="c">#         0.378   False        normal</span>
+<span class="c">#         0.850   False   warezmaster     ← R2L: el punto débil</span>
+<span class="c">#         0.856   False  guess_passwd</span></code></pre></div>
+    <p><b>Mantenimiento:</b> el tráfico normal cambia (nuevas aplicaciones, teletrabajo, un servicio en la nube), y con él suben las falsas alarmas, como ya pasa entre el entrenamiento y el test. Hay que medir cada semana la tasa real de falsas alarmas y reentrenar con tráfico normal reciente, comprobando antes que ese tráfico no esté contaminado por un ataque en curso.</p></section><section id="an-resultados" class="sec"><h2><span class="n">11</span>Resultados y conclusiones</h2>
+    <div class="tbl"><table><thead><tr><th></th><th>Resultado</th></tr></thead><tbody><tr><td>Modelo final</td><td>Isolation Forest + autoencoder, entrenados solo con tráfico normal</td></tr><tr><td>Detección (1 % de falsas alarmas)</td><td>60,7 % de los ataques: DoS 74,3 %, escaneos 83,9 %, R2L 7,1 %, U2R 28,4 %</td></tr><tr><td>Ataques nuevos</td><td>53,9 % detectados, frente al 31,2 % de un Random Forest supervisado</td></tr><tr><td>Falsas alarmas reales</td><td>1,9 % en test (previsto: 1 %) por cambios en el tráfico normal</td></tr><tr><td>Con ataques raros (0,1 %)</td><td>Solo el 3,1 % de las alertas sería un ataque: hay que agregar y priorizar</td></tr></tbody></table></div>
+    <h4>Lo que enseña este proyecto</h4>
+    <ol><li><b>Evalúa en el punto de operación.</b> Un ROC-AUC de 0,96 puede esconder un detector que casi no detecta nada con un presupuesto realista.</li>
+    <li><b>Lo no supervisado protege frente a lo desconocido</b>, a cambio de detectar peor lo conocido. Supervisado y no supervisado se complementan.</li>
+    <li><b>Los datos ponen el límite.</b> Si un ataque no cambia las variables que mides (R2L), ningún modelo lo verá: hacen falta otras fuentes de datos.</li>
+    <li><b>La tasa base manda.</b> Con ataques raros, incluso un buen detector genera sobre todo falsas alarmas.</li></ol>
+    <p>Código completo, ejecutable en Colab (descarga NSL-KDD de una réplica pública):</p>
+    <div class="repo-links"><a class="btn sm primary" href="https://colab.research.google.com/github/vtarazona/mle-ai/blob/main/notebooks/anomalias_red.ipynb" target="_blank" rel="noopener">Abrir en Google Colab ↗</a><a class="btn sm" href="https://github.com/vtarazona/mle-ai/blob/main/notebooks/anomalias_red.py" target="_blank" rel="noopener">Ver anomalias_red.py en GitHub ↗</a></div></section></article></div></main>
+
+<div class="search" id="search" hidden role="dialog" aria-modal="true" aria-label="Buscador">
+  <div class="search-box">
+    <label for="search-input">⌕<input id="search-input" type="search" placeholder="Conceptos, algoritmos, papers, datasets…" autocomplete="off" maxlength="80"><kbd>Esc</kbd></label>
+    <div id="search-results"></div>
+    <div class="search-foot">↑ ↓ para moverte · Enter para abrir · búsqueda por texto sobre todo el contenido</div>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <span>MLE·AI · Machine Learning Engineering &amp; Artificial Intelligence</span>
+    <nav aria-label="Pie"><a href="/machine-learning">Machine Learning</a><a href="/deep-learning">Deep Learning</a><a href="/mathematics">Matemáticas</a><a href="/programming">Programación</a><a href="/llm">LLM</a><a href="/mlops">MLOps</a><a href="/research">Investigación</a><a href="/about">Arquitectura</a></nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js?v=8f5ab7043f" defer></script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>

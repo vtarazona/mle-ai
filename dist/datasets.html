@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="/assets/style.css?v=db4a8bef97">
+<link rel="stylesheet" href="/assets/style.css?v=1870ed3eb2">
 <script>try{var t=JSON.parse(localStorage.getItem('mlai.theme'));if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://mle-ai.vercel.app"},{"@type":"ListItem","position":2,"name":"Datasets","item":"https://mle-ai.vercel.app/datasets"}]}</script>
 </head>
@@ -63,7 +63,9 @@
         <dl class="kv"><dt>Registros</dt><dd>442 pacientes</dd><dt>Variables</dt><dd>10 numéricas (edad, sexo, índice de masa corporal, tensión media y seis análisis de sangre), ya centradas y escaladas</dd><dt>Tipos</dt><dd>float</dd><dt>Problema</dt><dd>Regresión de la progresión de la enfermedad al año (25–346)</dd><dt>Modelos</dt><dd>Regresión lineal, Ridge, gradient boosting</dd></dl>
         <a class="pill p-art" href="/machine-learning/linear-regression">Artículo: Regresión lineal</a><a class="pill p-art" href="/machine-learning/gradient-boosting">Artículo: Gradient Boosting y XGBoost</a></article><article class="card ds" id="d-california"><h3>California Housing</h3><p class="src">Censo de EE. UU. de 1990 · sklearn.datasets.fetch_california_housing</p>
         <dl class="kv"><dt>Registros</dt><dd>20.640 filas</dd><dt>Variables</dt><dd>8 numéricas (ingresos medios, edad de la vivienda, habitaciones, latitud, longitud…)</dd><dt>Tipos</dt><dd>float</dd><dt>Problema</dt><dd>Regresión del valor mediano de la vivienda</dd><dt>Modelos</dt><dd>Gradient boosting, Random Forest, regresión lineal</dd></dl>
-        </article><article class="card ds" id="d-telco"><h3>IBM Telco Customer Churn</h3><p class="src">IBM · ejemplo público (licencia Apache 2.0)</p>
+        </article><article class="card ds" id="d-nslkdd"><h3>NSL-KDD</h3><p class="src">Canadian Institute for Cybersecurity, Universidad de New Brunswick (2009)</p>
+        <dl class="kv"><dt>Registros</dt><dd>148.517 conexiones (125.973 de entrenamiento y 22.544 de test)</dd><dt>Variables</dt><dd>41 por conexión: básicas, de contenido, de tráfico en ventana de 2 s y de host</dd><dt>Tipos</dt><dd>categórica, int, float</dd><dt>Problema</dt><dd>Detección de intrusiones y de anomalías; el test incluye 17 tipos de ataque nuevos</dd><dt>Modelos</dt><dd>Isolation Forest, autoencoders, Random Forest</dd></dl>
+        <a class="pill p-art" href="/projects/network-anomaly-detection">Usado en un proyecto</a></article><article class="card ds" id="d-telco"><h3>IBM Telco Customer Churn</h3><p class="src">IBM · ejemplo público (licencia Apache 2.0)</p>
         <dl class="kv"><dt>Registros</dt><dd>7.043 clientes</dd><dt>Variables</dt><dd>19: perfil, antigüedad, contrato, servicios contratados, método de pago, cuota mensual y total facturado</dd><dt>Tipos</dt><dd>categórica, int, float</dd><dt>Problema</dt><dd>Clasificación de bajas de clientes (26,5 % de bajas)</dd><dt>Modelos</dt><dd>Regresión logística, gradient boosting</dd></dl>
         <a class="pill p-art" href="/projects/customer-churn">Usado en un proyecto</a></article><article class="card ds" id="d-ai4i"><h3>AI4I 2020 Predictive Maintenance</h3><p class="src">UCI Machine Learning Repository</p>
         <dl class="kv"><dt>Registros</dt><dd>10.000 filas</dd><dt>Variables</dt><dd>Tipo de producto, temperatura del aire y del proceso, velocidad de giro, par, desgaste de herramienta y 5 modos de fallo</dd><dt>Tipos</dt><dd>categórica, float, int, binaria</dd><dt>Problema</dt><dd>Clasificación de fallos de máquina (muy desbalanceada)</dd><dt>Modelos</dt><dd>Gradient boosting, Random Forest con class_weight</dd></dl>
@@ -94,7 +96,7 @@
   </div>
 </footer>
 
-<script src="/assets/app.js?v=62103c4ce8" defer></script>
+<script src="/assets/app.js?v=8f5ab7043f" defer></script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>

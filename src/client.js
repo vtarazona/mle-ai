@@ -154,6 +154,20 @@
     box.addEventListener('input', calc); calc();
   });
 
+  // explorador del presupuesto de alertas (proyecto de anomalías de red)
+  document.querySelectorAll('[data-anom-exp]').forEach(box => {
+    let T; try { T = JSON.parse(box.dataset.anomExp); } catch (e) { return; }
+    const q = s => box.querySelector(s), fmt = v => (v * 100).toLocaleString('es-ES', { maximumFractionDigits: v < 0.01 ? 2 : 1 }) + ' %';
+    const paint = () => {
+      const r = T[+q('[data-i]').value], prev = +q('[data-prev]').value;
+      const prec = prev * r.det / (prev * r.det + (1 - prev) * r.fpr_test);
+      q('[data-o="fpr"]').textContent = fmt(r.fpr); q('[data-o="det"]').textContent = fmt(r.det); q('[data-o="prec"]').textContent = fmt(prec);
+      q('[data-o="fa"]').textContent = Math.round(r.fpr_test * 1e6).toLocaleString('es-ES');
+      q('[data-bars]').innerHTML = ['DoS', 'Probe', 'R2L', 'U2R'].map(c => `<div class="hb${r[c] >= 0.5 ? ' hl' : ''}"><span class="hbl">${c}</span><span class="hbt"><i style="width:${r[c] * 100}%"></i></span><span class="hbn">${fmt(r[c])}</span></div>`).join('');
+    };
+    box.addEventListener('input', paint); paint();
+  });
+
   if (page === 'path') {
     const boxes = [...document.querySelectorAll('[data-level]')], bar = document.querySelector('.progress');
     const paint = () => {

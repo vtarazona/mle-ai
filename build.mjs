@@ -49,7 +49,7 @@ const LAB_SLUG = { gd:'gradient-descent', overfit:'overfitting', reg:'lasso-ridg
 const paperSlug = p => U.slug(p.t).slice(0, 80).replace(/-$/, '');
 const ROUTES = {
   home:'/', lab:'/lab', transformer:'/llm/transformer-visualizer', path:'/learning-path', papers:'/papers',
-  datasets:'/datasets', projects:'/projects', 'project-mantenimiento':'/projects/predictive-maintenance', 'project-churn':'/projects/customer-churn', about:'/about',
+  datasets:'/datasets', projects:'/projects', 'project-mantenimiento':'/projects/predictive-maintenance', 'project-churn':'/projects/customer-churn', 'project-anomalias':'/projects/network-anomaly-detection', about:'/about',
 };
 for (const [k, v] of Object.entries(AREA_SLUG)) ROUTES[k] = '/' + v;
 for (const l of LABS) { ROUTES['lab-' + l.id] = '/lab/' + LAB_SLUG[l.id]; l.url = '/' + l.file; }
@@ -95,6 +95,9 @@ add('project-mantenimiento', { page:'article', html: vm.runInContext('PM_PAGE()'
 add('project-churn', { page:'article', html: vm.runInContext('CHURN_PAGE()', ctx), title:'Predicción de bajas de clientes (churn)', desc:'Proyecto completo de churn en telecomunicaciones con IBM Telco: exploración, Pipeline de scikit-learn, regresión logística frente a XGBoost, umbral por coste-beneficio, calculadora de riesgo y API FastAPI.',
   ld:[{ '@context':'https://schema.org', '@type':'TechArticle', headline:'Predicción de bajas de clientes (churn)', inLanguage:'es', url: SITE + '/projects/customer-churn', author: org, publisher: org, about:'Machine Learning' },
       crumbLD([['Inicio', 'home'], ['Proyectos', 'projects'], ['Predicción de bajas', 'project-churn']])] });
+add('project-anomalias', { page:'article', html: vm.runInContext('ANOM_PAGE()', ctx), title:'Detección de anomalías en tráfico de red', desc:'Proyecto completo con NSL-KDD: Isolation Forest y autoencoder entrenados solo con tráfico normal, evaluación con presupuesto de falsas alarmas, ataques nuevos frente a supervisado y explicación de alertas.',
+  ld:[{ '@context':'https://schema.org', '@type':'TechArticle', headline:'Detección de anomalías en tráfico de red', inLanguage:'es', url: SITE + '/projects/network-anomaly-detection', author: org, publisher: org, about:'Machine Learning' },
+      crumbLD([['Inicio', 'home'], ['Proyectos', 'projects'], ['Anomalías en tráfico de red', 'project-anomalias']])] });
 add('about', { page:'about', html: PAGES.about(), title:'Arquitectura y hoja de ruta', desc:'Cómo está construido MLE·AI y hacia dónde evoluciona: Next.js, FastAPI, PostgreSQL con pgvector y búsqueda semántica.', ld:[crumbLD([['Inicio', 'home'], ['Arquitectura', 'about']])] });
 pages.push({ route:'404', url:'/404', page:'404', html: PAGES.notFound(), title:'Página no encontrada', desc:'Esta dirección no existe en MLE·AI.', ld:[], noindex:true });
 
