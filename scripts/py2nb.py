@@ -5,7 +5,8 @@ ART = {'linear_regression': 'machine-learning/linear-regression', 'logistic_regr
        'gradient_boosting': 'machine-learning/gradient-boosting', 'neural_networks': 'deep-learning/neural-networks',
        'transformer': 'deep-learning/transformers', 'random_forest': 'machine-learning/random-forest',
        'nivel1_matematicas': 'learning-path/mathematics', 'nivel2_python': 'learning-path/python',
-       'nivel3_estadistica': 'learning-path/statistics'}
+       'nivel3_estadistica': 'learning-path/statistics',
+       'churn_telco': 'projects/customer-churn'}
 PIP = {'gradient_boosting': '%pip install -q xgboost'}
 def md(t): return {'cell_type': 'markdown', 'metadata': {}, 'source': t}
 def code(t): return {'cell_type': 'code', 'metadata': {}, 'execution_count': None, 'outputs': [], 'source': t.strip('\n')}
@@ -13,7 +14,7 @@ for py in sorted(p for p in pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else '
     src = py.read_text()
     doc = re.match(r'\s*"""(.*?)"""', src, re.S); title = doc.group(1).strip() if doc else py.stem
     body = src[doc.end():] if doc else src
-    cells = [md(f'# {title}\n\nCódigo del artículo [MLE·AI](https://mle-ai.vercel.app/{ART.get(py.stem, "")}). Ejecuta las celdas en orden; todas las cifras del artículo salen de aquí.')]
+    cells = [md(f'# {title}\n\nCódigo de la página [MLE·AI](https://mle-ai.vercel.app/{ART.get(py.stem, "")}). Ejecuta las celdas en orden; todas las cifras de la página salen de aquí.')]
     if py.stem in PIP: cells.append(code(PIP[py.stem]))
     for part in re.split(r'\n(?=# --- )', body):
         m = re.match(r'# --- (.*?) ---\n', part)

@@ -4,6 +4,8 @@ Portal educativo de Machine Learning e IA: https://mle-ai.vercel.app
 
 - **6 artículos completos** (Random Forest, regresión lineal, regresión logística, gradient boosting, redes neuronales, Transformers) con la plantilla de 20 secciones y cifras obtenidas ejecutando el código.
 - **10 laboratorios interactivos** (uno de ellos, retos de Python ejecutados con Pyodide) y un **Transformer Visualizer** de 13 etapas.
+- **Proyecto completo de predicción de bajas de clientes** (IBM Telco): modelos, umbral por coste-beneficio, calculadora de riesgo y API FastAPI (`notebooks/api/churn_api.py`).
+- Lecciones de los niveles 1 a 3 de la ruta (matemáticas, Python y estadística).
 - Temario de 7 áreas, ruta de aprendizaje en 10 niveles, 17 papers con ficha propia, datasets y buscador.
 
 ## Estructura
@@ -16,6 +18,8 @@ src/
   pages.js           Plantillas de página (portada, áreas, laboratorios, papers…)
   content.js         Artículo de Random Forest, proyecto y página de arquitectura
   articles/          Un archivo por artículo + 00-charts.js (gráficos SVG)
+  lessons/           Lecciones de la ruta de aprendizaje (00-comun.js + una por nivel)
+  projects/          Proyectos completos con resultados reales (churn)
   client.js          JavaScript del navegador: menús, tema, buscador, montaje de componentes
   tv.js              Transformer Visualizer (un Transformer real de 1 capa en JS)
   tv-weights.js      Sus pesos entrenados (los genera notebooks/tv_train.py)

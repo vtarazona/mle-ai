@@ -473,3 +473,21 @@ pre.out .eyebrow{display:block;margin-bottom:6px}
 .chart .panel-t{min-height:2.7em}
 .t-prog{color:var(--a-prog);background:color-mix(in srgb,var(--a-prog) 12%,transparent)}
 .callout.lab-cta{background:color-mix(in srgb,var(--a-prog) 9%,var(--surface));border-color:color-mix(in srgb,var(--a-prog) 35%,var(--line))}
+/* calculadora de churn */
+.churn-calc{margin:12px 0;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:center}
+@media (max-width:720px){.churn-calc{grid-template-columns:1fr}}
+.cc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+@media (max-width:460px){.cc-grid{grid-template-columns:1fr}}
+.cc-f{display:flex;flex-direction:column;gap:5px;font-size:13.5px;color:var(--muted)}
+.cc-f b{color:var(--ink)}
+.cc-f select{font:14px var(--body);padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.cc-f select:disabled{opacity:.5}
+.cc-f input[type=range]{accent-color:var(--accent);width:100%}
+.cc-p{display:flex;flex-direction:column}
+.cc-p b{font:800 48px/1 var(--display);letter-spacing:-.02em}
+.cc-p span{color:var(--muted);font-size:13px}
+.cc-bar{position:relative;height:12px;background:var(--soft);border-radius:6px;margin:14px 0 10px;overflow:visible}
+.cc-bar span{display:block;height:100%;border-radius:6px;background:var(--ok);transition:width .2s}
+.cc-bar span.hi{background:var(--neg)}
+.cc-bar i{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.cc-res p{margin:0;font-size:14px}

@@ -51,5 +51,6 @@
   <url><loc>https://mle-ai.vercel.app/datasets</loc></url>
   <url><loc>https://mle-ai.vercel.app/projects</loc></url>
   <url><loc>https://mle-ai.vercel.app/projects/predictive-maintenance</loc></url>
+  <url><loc>https://mle-ai.vercel.app/projects/customer-churn</loc></url>
   <url><loc>https://mle-ai.vercel.app/about</loc></url>
 </urlset>

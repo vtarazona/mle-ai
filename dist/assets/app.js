@@ -564,6 +564,26 @@ const PixelHero = (() => {
     paint();
   });
 
+  // calculadora de riesgo de baja (proyecto de churn)
+  document.querySelectorAll('[data-churn-calc]').forEach(box => {
+    let M; try { M = JSON.parse(box.dataset.churnCalc); } catch (e) { return; }
+    const f = k => box.querySelector(`[data-k="${k}"]`);
+    const calc = () => {
+      const v = {}; box.querySelectorAll('[data-k]').forEach(el => { v[el.dataset.k] = el.type === 'range' ? +el.value : el.value; });
+      const sinInternet = v.InternetService === 'No';
+      ['TechSupport', 'OnlineSecurity'].forEach(k => { f(k).disabled = sinInternet; if (sinInternet) v[k] = 'No internet service'; });
+      let z = M.intercept;
+      for (const [k, p] of Object.entries(M.num)) z += p.w * (v[k] - p.mean) / p.std;
+      for (const [k, w] of Object.entries(M.cat)) z += w[v[k]] || 0;
+      const pr = 1 / (1 + Math.exp(-z));
+      box.querySelectorAll('[data-out]').forEach(o => { o.textContent = v[o.dataset.out]; });
+      box.querySelector('[data-p]').textContent = Math.round(pr * 100) + ' %';
+      const bar = box.querySelector('[data-bar]'); bar.style.width = (pr * 100).toFixed(1) + '%'; bar.className = pr >= 0.25 ? 'hi' : '';
+      box.querySelector('[data-verdict]').textContent = pr >= 0.25 ? 'Por encima del umbral de 0,25: entraría en la campaña de retención.' : 'Por debajo del umbral de 0,25: no se contactaría.';
+    };
+    box.addEventListener('input', calc); calc();
+  });
+
   if (page === 'path') {
     const boxes = [...document.querySelectorAll('[data-level]')], bar = document.querySelector('.progress');
     const paint = () => {

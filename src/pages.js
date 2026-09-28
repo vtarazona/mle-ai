@@ -182,7 +182,7 @@ const PAGES = {
 
   projects() {
     return C.crumbs([['Inicio', 'home'], ['Proyectos']]) + C.pageHead('Portfolio', 'Proyectos', 'Cada proyecto sigue el mismo recorrido: problema, datos, exploración, preprocesado, modelo, entrenamiento, evaluación, optimización, despliegue y resultados. Solo se publican resultados cuando el proyecto se ha ejecutado de verdad.') +
-      `<div class="grid g3">${PROJECTS.map(p => `<article class="card proj ${p.status === 'Planificado' ? 'planned' : ''}"><span class="tag t-mlops">${p.area}</span><h3>${p.id === 'mantenimiento' ? `<a href="#project-mantenimiento">${p.t}</a>` : p.t}</h3><p>${p.d}</p><span class="status">${p.status}</span></article>`).join('')}</div>`;
+      `<div class="grid g3">${PROJECTS.map(p => `<article class="card proj ${p.status === 'Planificado' ? 'planned' : ''}"><span class="tag t-mlops">${p.area}</span><h3>${p.route ? `<a href="#${p.route}">${p.t}</a>` : p.t}</h3><p>${p.d}</p><span class="status">${p.status}</span></article>`).join('')}</div>`;
   },
 
   paper(id) {
@@ -233,6 +233,7 @@ function buildIndex() {
   LESSONS.forEach(le => { INDEX.push({ type:'Lección', title:le.title, text:`${le.lede} ruta de aprendizaje`, route:le.id });
     le.sections.forEach(s => INDEX.push({ type:'Lección', title:`${le.title} · ${s.t}`, text:s.plain || '', route:le.id, anchor:le.prefix + s.id })); });
   INDEX.push({ type:'Visualizador', title:'Transformer Visualizer', text:'tokenización embeddings positional encoding qkv attention softmax multi-head feed forward logits probabilidades pytorch', route:'transformer' });
+  CHURN_STAGES.forEach(s => INDEX.push({ type:'Proyecto', title:`Predicción de bajas · ${s.t}`, text:s.plain || '', route:'project-churn', anchor:'ch-' + s.id }));
   PM_STAGES.forEach(s => INDEX.push({ type:'Proyecto', title:`Mantenimiento predictivo · ${s.t}`, text:s.plain || '', route:'project-mantenimiento', anchor:'pm-' + U.slug(s.t) }));
   INDEX.forEach((d, i) => { d.id = i; d._t = U.norm(d.title); d._x = U.norm(d.text); });
 }
