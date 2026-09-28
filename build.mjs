@@ -22,6 +22,8 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.join(ROOT, 'src');
 const OUT = path.join(ROOT, 'dist');
 const SITE = 'https://mle-ai.vercel.app';
+// Código de verificación de Google Search Console (etiqueta HTML). Vacío = sin etiqueta.
+const GOOGLE_SITE_VERIFICATION = '';
 const read = f => fs.readFileSync(path.join(SRC, f), 'utf8');
 
 /* ---------- 1. Cargar el contenido en un contexto aislado ---------- */
@@ -127,6 +129,7 @@ function render(pg) {
 <meta name="description" content="${esc(pg.desc)}">
 ${pg.noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${canonical}">`}
 <meta name="theme-color" content="#0E1621">
+${pg.route === 'home' && GOOGLE_SITE_VERIFICATION ? `<meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}">\n` : ''}
 <meta property="og:type" content="${pg.page === 'article' ? 'article' : 'website'}">
 <meta property="og:site_name" content="MLE·AI">
 <meta property="og:title" content="${esc(pg.title)}">
@@ -150,6 +153,8 @@ ${pg.ld.map(o => `<script type="application/ld+json">${JSON.stringify(o).replace
 `;
   const tail = `
 ${pg.route === 'home' ? `<script>window.__OLD_ROUTES=${JSON.stringify(OLD)}</script>\n` : ''}${pg.katex ? '<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" defer></script>\n' : ''}<script src="/assets/app.js?v=${V.js}" defer></script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
 `;
